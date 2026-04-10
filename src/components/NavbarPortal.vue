@@ -91,7 +91,7 @@
 </template>
 
 <script setup>
-import logo from "@/assets/images/logo.svg";
+import logo from "@/assets/images/logo/logo.svg";
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 

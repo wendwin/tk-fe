@@ -58,5 +58,5 @@
 
 <script setup>
 import pattern from "@/assets/images/hero-pattern.svg";
-import hero from "@/assets/images/hero.svg";
+import hero from "@/assets/images/logo/hero.svg";
 </script>
