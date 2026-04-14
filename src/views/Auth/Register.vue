@@ -106,11 +106,10 @@
                   >
                 </div>
               </div> -->
-              <form @submit.prevent="handleSubmit">
+              <form @submit.prevent="handleRegister">
                 <div class="space-y-5">
                   <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                    <!-- First Name -->
-                    <div class="sm:col-span-1">
+                    <!-- <div class="sm:col-span-1">
                       <label
                         for="fname"
                         class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
@@ -126,7 +125,7 @@
                         class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                       />
                     </div>
-                    <!-- Last Name -->
+
                     <div class="sm:col-span-1">
                       <label
                         for="lname"
@@ -142,7 +141,7 @@
                         placeholder="Enter your last name"
                         class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                       />
-                    </div>
+                    </div> -->
                   </div>
                   <!-- Email -->
                   <div>
@@ -295,6 +294,9 @@
                   >
                 </p>
               </div>
+
+              <p v-if="success" style="color: green">{{ success }}</p>
+              <p v-if="error" style="color: red">{{ error }}</p>
             </div>
           </div>
         </div>
@@ -325,15 +327,19 @@
 </template>
 
 <script setup>
-import CommonGridShape from "@/components/common/CommonGridShape.vue";
-import hero from "@/assets/images/logo/hero.svg";
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
+import { register } from "@/lib/services/authService";
 
-const firstName = ref("");
-const lastName = ref("");
+import CommonGridShape from "@/components/common/CommonGridShape.vue";
+import hero from "@/assets/images/logo/hero.svg";
+
+// const firstName = ref("");
+// const lastName = ref("");
 const email = ref("");
 const password = ref("");
+const error = ref("");
+const success = ref("");
 const showPassword = ref(false);
 const agreeToTerms = ref(false);
 
@@ -341,15 +347,36 @@ const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
 
-const handleSubmit = () => {
-  console.log("Form submitted", {
-    firstName: firstName.value,
-    lastName: lastName.value,
-    email: email.value,
-    password: password.value,
-    agreeToTerms: agreeToTerms.value,
-  });
+const handleRegister = async () => {
+  error.value = "";
+  success.value = "";
+
+  try {
+    const res = await register({
+      email: email.value,
+      password: password.value,
+    });
+
+    success.value = res.message; // dari Flask
+  } catch (err) {
+    error.value = err.message;
+
+    // kalau ada validasi dari backend
+    if (err.errors) {
+      console.log(err.errors);
+    }
+  }
 };
+
+// const handleRegister = () => {
+//   console.log("Form submitted", {
+//     firstName: firstName.value,
+//     lastName: lastName.value,
+//     email: email.value,
+//     password: password.value,
+//     agreeToTerms: agreeToTerms.value,
+//   });
+// };
 </script>
 
 <style lang="scss" scoped></style>

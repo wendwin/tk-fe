@@ -106,7 +106,7 @@
                     >
                   </div>
                 </div> -->
-                <form @submit.prevent="handleSubmit">
+                <form @submit.prevent="handleLogin">
                   <div class="space-y-5">
                     <!-- Email -->
                     <div>
@@ -253,6 +253,9 @@
                     >
                   </p>
                 </div>
+
+                <p v-if="success" style="color: green">{{ success }}</p>
+                <p v-if="error" style="color: red">{{ error }}</p>
               </div>
             </div>
           </div>
@@ -285,10 +288,19 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { login } from "@/lib/services/authService";
+
 import CommonGridShape from "@/components/common/CommonGridShape.vue";
 import hero from "@/assets/images/logo/hero.svg";
+
+const router = useRouter();
+
 const email = ref("");
 const password = ref("");
+const error = ref("");
+const success = ref("");
+
 const showPassword = ref(false);
 const keepLoggedIn = ref(false);
 
@@ -296,14 +308,46 @@ const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
 
-const handleSubmit = () => {
-  // Handle form submission
-  console.log("Form submitted", {
-    email: email.value,
-    password: password.value,
-    keepLoggedIn: keepLoggedIn.value,
-  });
+const handleLogin = async () => {
+  error.value = "";
+  success.value = "";
+
+  try {
+    const res = await login({
+      email: email.value,
+      password: password.value,
+    });
+
+    // console.log(res);
+
+    success.value = res.message;
+    const role = res.data.role;
+
+    if (role === "admin") {
+      router.push("/admin");
+    } else if (role === "guru") {
+      router.push("/teacher");
+    } else if (role === "orang_tua") {
+      router.push({ name: "Pendaftaran" });
+      // if (status === "accepted") {
+      //   router.push("/dashboard");
+      // } else {
+      //   router.push({ name: "Pendaftaran" });
+      // }
+    }
+  } catch (err) {
+    error.value = err.message;
+  }
 };
+
+// const handleLogin = () => {
+//   // Handle form submission
+//   console.log("Form submitted", {
+//     email: email.value,
+//     password: password.value,
+//     keepLoggedIn: keepLoggedIn.value,
+//   });
+// };
 </script>
 
 <style lang="scss" scoped></style>
