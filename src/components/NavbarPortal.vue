@@ -50,11 +50,24 @@
 
           <!-- RIGHT MENU -->
           <div class="hidden md:flex items-center gap-3">
-            <template v-if="isLogin">
+            <template v-if="isAuthenticated">
+              <router-link to="/pendaftaran" class="px-3 py-2 text-white">
+                Dashboard
+              </router-link>
+
+              <button
+                @click="handleLogout"
+                class="px-4 py-2 border text-white rounded-md"
+              >
+                Logout
+              </button>
+            </template>
+
+            <!-- <template v-if="isLogin">
               <router-link to="/dashboard" class="px-3 py-2 text-white">
                 Dashboard
               </router-link>
-            </template>
+            </template> -->
 
             <template v-else>
               <router-link
@@ -92,12 +105,24 @@
 
 <script setup>
 import logo from "@/assets/images/logo/logo.svg";
-
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 
-const isLogin = false;
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/lib/stores/auth";
+import { logout } from "@/lib/services/authService";
+import { storeToRefs } from "pinia";
+
+const auth = useAuthStore();
+const { isAuthenticated } = storeToRefs(auth);
+
+const router = useRouter();
+
+const handleLogout = async () => {
+  await logout();
+  auth.clearAuth();
+  router.push("/login");
+};
 
 const navigation = [
   { name: "Home", route: "/" },

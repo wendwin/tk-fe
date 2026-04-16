@@ -9,14 +9,18 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { logout } from "@/lib/services/authService";
+import { useAuthStore } from "@/lib/stores/auth";
 
 const router = useRouter();
+const auth = useAuthStore();
 
 const handleLogout = async () => {
-  try {
+    try {
     await logout();
 
+    auth.clearAuth();
     sessionStorage.removeItem("csrf_token");
+
     router.push("/login");
   } catch (err) {
     console.log(err.message);
