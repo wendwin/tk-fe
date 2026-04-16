@@ -324,6 +324,7 @@ const handleLogin = async () => {
   } catch (err) {
     fieldErrors.value = err.errors || {};
     error.value = err.message || "Terjadi kesalahan";
+    password.value = "";
   } finally {
     loading.value = false;
   }

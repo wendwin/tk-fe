@@ -39,7 +39,7 @@ const request = async (endpoint, options = {}) => {
   let response = await fetch(url, config);
 
   // refresh token
-  if (response.status === 401) {
+  if (response.status === 401 && !endpoint.startsWith("/auth/")) {
     const refreshRes = await fetch(`${BASE_URL}/auth/refresh`, {
       method: "POST",
       headers: {
@@ -51,7 +51,10 @@ const request = async (endpoint, options = {}) => {
 
     if (refreshRes.ok) {
       const newCsrf = refreshRes.headers.get("X-CSRF-TOKEN");
-      if (newCsrf) sessionStorage.setItem("csrf_token", newCsrf);
+      if (newCsrf) {
+        sessionStorage.setItem("csrf_token", newCsrf);
+        config.headers["X-CSRF-TOKEN"] = newCsrf;
+      }
 
       response = await fetch(url, config);
     } else {
@@ -77,24 +80,11 @@ const request = async (endpoint, options = {}) => {
     };
   }
 
-  if (response.status === 403) {
-    throw {
-      message: "Forbidden",
-      code: 403,
-    };
-  }
-
-  if (response.status === 401) {
-    throw {
-      message: result.message || "Unauthorized",
-      errors: {},
-    };
-  }
-
   if (!response.ok || result.success === false) {
     throw {
       message: result.message || "Terjadi kesalahan",
       errors: normalizeErrors(result.errors),
+      code: response.status,
     };
   }
 
