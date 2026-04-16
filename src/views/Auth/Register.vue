@@ -367,12 +367,9 @@ const handleRegister = async () => {
     password.value = "";
     agreeToTerms.value = false;
   } catch (err) {
-    error.value = err.message;
-
-    if (err.errors) {
-      fieldErrors.value = err.errors || {};
-      error.value = err.message || "Terjadi kesalahan";
-    }
+    fieldErrors.value = err.errors || {};
+    error.value = err.message || "Terjadi kesalahan";
+    password.value = "";
   } finally {
     loading.value = false;
   }
