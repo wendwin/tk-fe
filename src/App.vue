@@ -10,19 +10,18 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { RouterView } from "vue-router";
-import PortalLayout from "@/layouts/PortalLayout.vue";
+import MainLayout from "@/layouts/MainLayout.vue";
 import AuthLayout from "@/layouts/AuthLayout.vue";
+import PortalLayout from "./layouts/PortalLayout.vue";
 
 const route = useRoute();
 
-// Mapping nama string dari meta router ke komponen layout fisiknya
 const layouts = {
-  PortalLayout,
+  MainLayout,
   AuthLayout,
+  PortalLayout,
 };
 
-// Computed property untuk menentukan layout yang aktif.
-// Jika di router tidak ada meta layout, default ke AuthLayout.
 const currentLayout = computed(() => {
   return layouts[route.meta.layout] || layouts.AuthLayout;
 });

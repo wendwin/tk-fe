@@ -9,7 +9,7 @@ const router = createRouter({
       path: "/",
       name: "Home",
       component: () => import("../views/Home.vue"),
-      meta: { layout: "PortalLayout" },
+      meta: { layout: "MainLayout" },
     },
     {
       path: "/login",
@@ -27,7 +27,7 @@ const router = createRouter({
       path: "/pendaftaran",
       name: "Pendaftaran",
       component: () => import("../views/portal/Portal.vue"),
-      meta: { requiresAuth: true, role: ["orang_tua"] },
+      meta: { layout: "PortalLayout", requiresAuth: true, role: ["orang_tua"] },
     },
     {
       path: "/admin",
