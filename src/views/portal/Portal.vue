@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-blue-50 h-screen py-5">
+  <div class="bg-blue-50 py-5">
     <div
       class="max-w-6xl mx-auto bg-white p-6 border border-white rounded-lg shadow-md"
     >
@@ -27,7 +27,7 @@
 
       <!-- progress -->
       <div class="mb-5">
-        <div class="flex justify-between text-[12px] text-gray-500 mb-1.5">
+        <div class="flex justify-between text-sm text-gray-500 mb-1.5">
           <span>Kelengkapan Pendaftaran</span>
           <span>{{ Math.round(progressPct) }}%</span>
         </div>
@@ -66,6 +66,10 @@
           </span>
         </button>
       </div>
+
+      <div v-if="activeTab === 'formulir'" key="formulir">
+        <Form />
+      </div>
     </div>
 
     <button @click="handleLogout">Logout</button>
@@ -77,6 +81,8 @@ import { ref, reactive, computed } from "vue";
 import { useRouter } from "vue-router";
 import { logout } from "@/lib/services/authService";
 import { useAuthStore } from "@/lib/stores/auth";
+
+import Form from "@/components/form/portal/Form.vue";
 
 import pattern from "@/assets/images/hero-pattern.svg";
 
