@@ -1346,21 +1346,6 @@
           </button>
         </div>
       </div>
-
-      <div
-        v-if="toast.show"
-        :class="['alert', 'alert-' + toast.type]"
-        style="
-          position: fixed;
-          bottom: 24px;
-          right: 24px;
-          max-width: 320px;
-          z-index: 999;
-          box-shadow: var(--shadow-md);
-        "
-      >
-        {{ toast.msg }}
-      </div>
     </div>
   </div>
 </template>
@@ -1368,6 +1353,7 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { watch } from "vue";
+import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { createPendaftaran } from "@/lib/services/pendaftaranService";
 
 import {
@@ -1382,11 +1368,6 @@ import {
 
 const emit = defineEmits(["saved"]);
 const samaDenganKK = ref(true);
-const toast = reactive({
-  show: false,
-  msg: "",
-  type: "success",
-});
 
 const form = reactive({
   id_tahun: 1,
@@ -1486,13 +1467,6 @@ watch(
   { deep: true },
 );
 
-const showToast = (msg, type = "success") => {
-  toast.msg = msg;
-  toast.type = type;
-  toast.show = true;
-  setTimeout(() => (toast.show = false), 3000);
-};
-
 const copyAlamatKK = () => {
   if (samaDenganKK.value) {
     form.peserta.alamat_kk = { ...form.peserta.alamat_domisili };
@@ -1502,7 +1476,7 @@ const copyAlamatKK = () => {
 const simpanFormulir = async () => {
   try {
     if (!form.peserta.nama_lengkap || !form.peserta.tanggal_lahir) {
-      showToast("Nama dan tanggal lahir wajib diisi", "warning");
+      showWarning("Nama lengkap dan tanggal lahir wajib diisi");
       return;
     }
 
@@ -1526,7 +1500,7 @@ const simpanFormulir = async () => {
 
     await createPendaftaran(payload);
 
-    showToast("Formulir berhasil disimpan");
+    showSuccess("Formulir berhasil disimpan");
 
     setTimeout(() => {
       emit("saved");
@@ -1535,9 +1509,9 @@ const simpanFormulir = async () => {
     console.log(err);
 
     if (err.errors) {
-      showToast(Object.values(err.errors)[0][0], "warning");
+      showWarning(Object.values(err.errors)[0][0]);
     } else {
-      showToast(err.message, "error");
+      showError(err.message);
     }
   }
 };
