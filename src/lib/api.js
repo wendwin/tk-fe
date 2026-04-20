@@ -20,13 +20,16 @@ const request = async (endpoint, options = {}) => {
   const config = {
     method: options.method || "GET",
     headers: {
-      "Content-Type": "application/json",
       "X-CSRF-TOKEN": csrfToken || "",
       ...options.headers,
     },
     credentials: "include",
     ...options,
   };
+
+  if (!(config.body instanceof FormData)) {
+    config.headers["Content-Type"] = "application/json";
+  }
 
   if (
     config.body &&

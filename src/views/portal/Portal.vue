@@ -73,7 +73,7 @@
         <Form @saved="handleFormSaved" />
       </div>
       <div v-else-if="activeTab === 'berkas'" key="berkas">
-        <div class="text-center text-gray-500 py-20">Tab Berkas</div>
+        <UploadBerkas @saved="handleBerkasSaved" />
       </div>
       <div v-else-if="activeTab === 'pembayaran'" key="pembayaran">
         <div class="text-center text-gray-500 py-20">Tab Pembayaran</div>
@@ -98,8 +98,10 @@ import { ref, reactive, computed } from "vue";
 import { useRouter } from "vue-router";
 import { logout } from "@/lib/services/authService";
 import { useAuthStore } from "@/lib/stores/auth";
+import { clearPendaftaranId } from "@/lib/utils/storage";
 
-import Form from "@/components/form/portal/Form.vue";
+import Form from "@/components/portal/Form.vue";
+import UploadBerkas from "@/components/portal/UploadBerkas.vue";
 
 import pattern from "@/assets/images/hero-pattern.svg";
 
@@ -178,6 +180,7 @@ const handleLogout = async () => {
 
     auth.clearAuth();
     sessionStorage.removeItem("csrf_token");
+    clearPendaftaranId();
 
     router.push("/login");
   } catch (err) {
@@ -193,6 +196,10 @@ const goTab = (tab) => {
 const handleFormSaved = () => {
   formulirSaved.value = true;
   activeTab.value = "berkas";
+};
+
+const handleBerkasSaved = () => {
+  activeTab.value = "pembayaran";
 };
 </script>
 

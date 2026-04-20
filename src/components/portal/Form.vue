@@ -1355,6 +1355,7 @@ import { ref, reactive } from "vue";
 import { watch } from "vue";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { createPendaftaran } from "@/lib/services/pendaftaranService";
+import { setPendaftaranId } from "@/lib/utils/storage";
 
 import {
   School,
@@ -1498,7 +1499,10 @@ const simpanFormulir = async () => {
       },
     };
 
-    await createPendaftaran(payload);
+    const res = await createPendaftaran(payload);
+
+    // pendaftaranId.value = res.data.id;
+    setPendaftaranId(res.data.id);
 
     showSuccess("Formulir berhasil disimpan");
 

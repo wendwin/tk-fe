@@ -6,3 +6,17 @@ export const createPendaftaran = async (payload) => {
     body: payload,
   });
 };
+
+export const uploadBerkas = async (id, files) => {
+  const formData = new FormData();
+
+  if (files.kk) formData.append("kk", files.kk);
+  if (files.foto) formData.append("foto", files.foto);
+  if (files.kia) formData.append("kia", files.kia);
+  if (files.akta) formData.append("akta", files.akta);
+
+  return request(`/pendaftaran/${id}/upload-berkas`, {
+    method: "POST",
+    body: formData,
+  });
+};
