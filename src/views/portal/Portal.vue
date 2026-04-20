@@ -51,7 +51,9 @@
           :class="[
             activeTab === tab.id
               ? 'bg-[#005DA7] text-white'
-              : 'opacity-50 cursor-not-allowed bg-gray-300 text-gray-500 hover:bg-gray-100',
+              : tab.locked
+                ? 'opacity-50 cursor-not-allowed bg-gray-200 text-gray-400'
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 cursor-pointer',
           ]"
         >
           <span class="text-base leading-none">
@@ -68,7 +70,22 @@
       </div>
 
       <div v-if="activeTab === 'formulir'" key="formulir">
-        <Form />
+        <Form @saved="handleFormSaved" />
+      </div>
+      <div v-else-if="activeTab === 'berkas'" key="berkas">
+        <div class="text-center text-gray-500 py-20">Tab Berkas</div>
+      </div>
+      <div v-else-if="activeTab === 'pembayaran'" key="pembayaran">
+        <div class="text-center text-gray-500 py-20">Tab Pembayaran</div>
+      </div>
+      <!-- <div v-else-if="activeTab === 'status'" key="status">
+        <div class="text-center text-gray-500 py-20">Tab Status</div>
+      </div> -->
+      <div v-else-if="activeTab === 'asesmen'" key="asesmen">
+        <div class="text-center text-gray-500 py-20">Tab Asesmen</div>
+      </div>
+      <div v-else-if="activeTab === 'pengumuman'" key="pengumuman">
+        <div class="text-center text-gray-500 py-20">Tab Pengumuman</div>
       </div>
     </div>
 
@@ -166,6 +183,16 @@ const handleLogout = async () => {
   } catch (err) {
     console.log(err.message);
   }
+};
+
+const goTab = (tab) => {
+  if (tab.locked) return;
+  activeTab.value = tab.id;
+};
+
+const handleFormSaved = () => {
+  formulirSaved.value = true;
+  activeTab.value = "berkas";
 };
 </script>
 

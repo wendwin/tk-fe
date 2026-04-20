@@ -16,6 +16,55 @@
 
       <!-- body -->
       <div class="p-6">
+        <!-- program -->
+        <div class="mb-6">
+          <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
+            <School />Pilihan Pendaftaran
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label
+                for="jenis"
+                class="mb-1.5 block text-sm font-medium text-gray-700"
+              >
+                Jenis <span class="text-red-500">*</span>
+              </label>
+              <select
+                id="jenis"
+                name="jenis"
+                v-model="form.jenis"
+                class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="">Pilih</option>
+                <option value="kb">KB</option>
+                <option value="tk">TK</option>
+              </select>
+            </div>
+
+            <!-- program -->
+            <div>
+              <label
+                for="program"
+                class="mb-1.5 block text-sm font-medium text-gray-700"
+              >
+                Program <span class="text-red-500">*</span>
+              </label>
+              <select
+                id="program"
+                name="program"
+                v-model="form.program"
+                class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="">Pilih</option>
+                <option value="reguler">Reguler</option>
+                <option value="halfday">Half Day</option>
+                <option value="fullday">Full Day</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         <!-- section 1 peserta -->
         <div class="">
           <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
@@ -346,15 +395,15 @@
               <!-- desa/kelurahan -->
               <div>
                 <label
-                  for="desa_kelurahan"
+                  for="kelurahan"
                   class="mb-1.5 block text-sm font-medium text-gray-700"
                 >
                   Desa/Kelurahan <span class="text-red-500">*</span>
                 </label>
                 <input
-                  id="desa_kelurahan"
-                  name="desa_kelurahan"
-                  v-model="form.peserta.alamat_domisili.desa_kelurahan"
+                  id="kelurahan"
+                  name="kelurahan"
+                  v-model="form.peserta.alamat_domisili.kelurahan"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -489,15 +538,15 @@
               <!-- desa/kelurahan -->
               <div>
                 <label
-                  for="desa_kelurahan"
+                  for="kelurahan"
                   class="mb-1.5 block text-sm font-medium text-gray-700"
                 >
                   Desa/Kelurahan <span class="text-red-500">*</span>
                 </label>
                 <input
-                  id="desa_kelurahan"
-                  name="desa_kelurahan"
-                  v-model="form.peserta.alamat_kk.desa_kelurahan"
+                  id="kelurahan"
+                  name="kelurahan"
+                  v-model="form.peserta.alamat_kk.kelurahan"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -1297,6 +1346,21 @@
           </button>
         </div>
       </div>
+
+      <div
+        v-if="toast.show"
+        :class="['alert', 'alert-' + toast.type]"
+        style="
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          max-width: 320px;
+          z-index: 999;
+          box-shadow: var(--shadow-md);
+        "
+      >
+        {{ toast.msg }}
+      </div>
     </div>
   </div>
 </template>
@@ -1305,6 +1369,7 @@
 import { ref, reactive } from "vue";
 
 import {
+  School,
   User,
   MapPinCheck,
   MapPin,
@@ -1313,14 +1378,51 @@ import {
   Info,
 } from "lucide-vue-next";
 
+const emit = defineEmits(["saved"]);
 const samaDenganKK = ref(true);
+const toast = reactive({
+  show: false,
+  msg: "",
+  type: "success",
+});
 
 const form = reactive({
+  id_tahun: 1,
+  jenis: "",
+  program: "",
   peserta: {
     nama_lengkap: "",
+    nama_panggilan: "",
+    tempat_lahir: "",
     tanggal_lahir: "",
-    alamat_domisili: {},
-    alamat_kk: {},
+    jenis_kelamin: "",
+    kewarganegaraan: "",
+    nik: "",
+    no_kk: "",
+    no_akta: "",
+    agama: "",
+    no_telp: "",
+    anak_ke: null,
+    jumlah_saudara: null,
+    bahasa: "",
+    alamat_domisili: {
+      alamat_lengkap: "",
+      rt: "",
+      rw: "",
+      kelurahan: "",
+      kecamatan: "",
+      kabupaten: "",
+      kode_pos: "",
+    },
+    alamat_kk: {
+      alamat_lengkap: "",
+      rt: "",
+      rw: "",
+      kelurahan: "",
+      kecamatan: "",
+      kabupaten: "",
+      kode_pos: "",
+    },
     kesehatan: {
       berat_badan: null,
       tinggi_badan: null,
@@ -1333,21 +1435,69 @@ const form = reactive({
     orang_tua: [
       {
         nama: "",
+        tempat_lahir: "",
+        tanggal_lahir: "",
+        nik: "",
+        pendidikan: "",
+        pekerjaan: "",
+        pendapatan: null,
         no_hp: "",
+        email: "",
+        alamat_kantor: "",
       },
       {
         nama: "",
+        tempat_lahir: "",
+        tanggal_lahir: "",
+        nik: "",
+        pendidikan: "",
+        pekerjaan: "",
+        pendapatan: null,
         no_hp: "",
+        email: "",
+        alamat_kantor: "",
       },
     ],
-    informasi: {},
+    informasi: {
+      tinggal_dengan: "",
+      kendaraan: "",
+      jarak_sekolah: null,
+      waktu_tempuh: "",
+      pernah_sekolah: false,
+      nama_sekolah: "",
+      npsn: "",
+      nisn: "",
+      bakat: "",
+      hobi: "",
+      cita_cita: "",
+    },
   },
 });
+
+const showToast = (msg, type = "success") => {
+  toast.msg = msg;
+  toast.type = type;
+  toast.show = true;
+  setTimeout(() => (toast.show = false), 3000);
+};
 
 const copyAlamatKK = () => {
   if (samaDenganKK.value) {
     Object.assign(form.peserta.alamat_kk, form.peserta.alamat_domisili);
   }
+};
+
+const simpanFormulir = () => {
+  if (!form.peserta.nama_lengkap || !form.peserta.tanggal_lahir) {
+    showToast("Nama dan tanggal lahir wajib diisi", "warning");
+    return;
+  }
+
+  showToast("Formulir tersimpan");
+
+  setTimeout(() => {
+    emit("saved"); // kirim ke parent
+  }, 500);
 };
 </script>
 
