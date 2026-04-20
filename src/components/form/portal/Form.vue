@@ -395,15 +395,15 @@
               <!-- desa/kelurahan -->
               <div>
                 <label
-                  for="kelurahan"
+                  for="desa"
                   class="mb-1.5 block text-sm font-medium text-gray-700"
                 >
                   Desa/Kelurahan <span class="text-red-500">*</span>
                 </label>
                 <input
-                  id="kelurahan"
-                  name="kelurahan"
-                  v-model="form.peserta.alamat_domisili.kelurahan"
+                  id="desa"
+                  name="desa"
+                  v-model="form.peserta.alamat_domisili.desa"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -538,15 +538,15 @@
               <!-- desa/kelurahan -->
               <div>
                 <label
-                  for="kelurahan"
+                  for="desa"
                   class="mb-1.5 block text-sm font-medium text-gray-700"
                 >
                   Desa/Kelurahan <span class="text-red-500">*</span>
                 </label>
                 <input
-                  id="kelurahan"
-                  name="kelurahan"
-                  v-model="form.peserta.alamat_kk.kelurahan"
+                  id="desa"
+                  name="desa"
+                  v-model="form.peserta.alamat_kk.desa"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -1367,6 +1367,8 @@
 
 <script setup>
 import { ref, reactive } from "vue";
+import { watch } from "vue";
+import { createPendaftaran } from "@/lib/services/pendaftaranService";
 
 import {
   School,
@@ -1409,7 +1411,7 @@ const form = reactive({
       alamat_lengkap: "",
       rt: "",
       rw: "",
-      kelurahan: "",
+      desa: "",
       kecamatan: "",
       kabupaten: "",
       kode_pos: "",
@@ -1418,7 +1420,7 @@ const form = reactive({
       alamat_lengkap: "",
       rt: "",
       rw: "",
-      kelurahan: "",
+      desa: "",
       kecamatan: "",
       kabupaten: "",
       kode_pos: "",
@@ -1474,6 +1476,16 @@ const form = reactive({
   },
 });
 
+watch(
+  () => form.peserta.alamat_domisili,
+  (val) => {
+    if (samaDenganKK.value) {
+      form.peserta.alamat_kk = { ...val };
+    }
+  },
+  { deep: true },
+);
+
 const showToast = (msg, type = "success") => {
   toast.msg = msg;
   toast.type = type;
@@ -1483,21 +1495,51 @@ const showToast = (msg, type = "success") => {
 
 const copyAlamatKK = () => {
   if (samaDenganKK.value) {
-    Object.assign(form.peserta.alamat_kk, form.peserta.alamat_domisili);
+    form.peserta.alamat_kk = { ...form.peserta.alamat_domisili };
   }
 };
 
-const simpanFormulir = () => {
-  if (!form.peserta.nama_lengkap || !form.peserta.tanggal_lahir) {
-    showToast("Nama dan tanggal lahir wajib diisi", "warning");
-    return;
+const simpanFormulir = async () => {
+  try {
+    if (!form.peserta.nama_lengkap || !form.peserta.tanggal_lahir) {
+      showToast("Nama dan tanggal lahir wajib diisi", "warning");
+      return;
+    }
+
+    const payload = {
+      id_tahun: 1,
+      jenis: form.jenis,
+      program: form.program,
+      peserta: {
+        ...form.peserta,
+
+        orang_tua: form.peserta.orang_tua.map((item, index) => ({
+          ...item,
+          tipe: index === 0 ? "ayah" : "ibu",
+          alamat:
+            form.peserta.alamat_kk && form.peserta.alamat_kk.alamat_lengkap
+              ? form.peserta.alamat_kk
+              : form.peserta.alamat_domisili,
+        })),
+      },
+    };
+
+    await createPendaftaran(payload);
+
+    showToast("Formulir berhasil disimpan");
+
+    setTimeout(() => {
+      emit("saved");
+    }, 500);
+  } catch (err) {
+    console.log(err);
+
+    if (err.errors) {
+      showToast(Object.values(err.errors)[0][0], "warning");
+    } else {
+      showToast(err.message, "error");
+    }
   }
-
-  showToast("Formulir tersimpan");
-
-  setTimeout(() => {
-    emit("saved"); // kirim ke parent
-  }, 500);
 };
 </script>
 
