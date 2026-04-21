@@ -124,8 +124,9 @@ const hasilPengumuman = ref("pending");
 const kodePembayaran = ref("047");
 const statusPembayaran = ref("unpaid");
 const asesmenSubmitted = ref(false);
-const formulirSaved = ref(false);
+const formulirSaved = computed(() => !!pendaftaranId.value);
 const berkasSaved = ref(false);
+const pembayaranDone = ref(false);
 
 const pendaftaranId = ref(Number(getPendaftaranId()));
 
@@ -138,6 +139,9 @@ const loadPendaftaran = async () => {
 
     statusPembayaran.value = data.status_pembayaran;
     hasilPengumuman.value = data.status;
+
+    formulirSaved.value = !!data.id;
+    berkasSaved.value = data.dokumen?.length >= 4;
   } catch (err) {
     console.log(err);
   }
@@ -190,10 +194,21 @@ const berkasLengkap = computed(() =>
 
 const progressPct = computed(() => {
   let pts = 0;
+
   if (formulirSaved.value) pts += 25;
-  if (berkasLengkap.value) pts += 25;
-  if (statusPembayaran.value === "paid") pts += 25;
+  if (berkasSaved.value) pts += 25;
+
+  switch (statusPembayaran.value) {
+    case "pending":
+      pts += 10;
+      break;
+    case "paid":
+      pts += 25;
+      break;
+  }
+
   if (asesmenSubmitted.value) pts += 25;
+
   return pts;
 });
 
@@ -226,6 +241,7 @@ const handleFormSaved = async () => {
 };
 
 const handleBerkasSaved = () => {
+  berkasSaved.value = true;
   activeTab.value = "pembayaran";
 };
 
