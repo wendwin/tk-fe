@@ -32,9 +32,9 @@
           <span>{{ Math.round(progressPct) }}%</span>
         </div>
 
-        <div class="h-[6px] bg-gray-200 rounded overflow-hidden">
+        <div class="h-1.5 bg-gray-200 rounded overflow-hidden">
           <div
-            class="h-full rounded transition-all duration-400 ease-in-out bg-gradient-to-r from-[#1181B2] to-[#0a73a0]"
+            class="h-full rounded transition-all duration-400 ease-in-out bg-linear-to-r from-[#1181B2] to-[#0a73a0]"
             :style="{ width: progressPct + '%' }"
           ></div>
         </div>
@@ -73,10 +73,15 @@
         <Form @saved="handleFormSaved" />
       </div>
       <div v-else-if="activeTab === 'berkas'" key="berkas">
-        <div class="text-center text-gray-500 py-20">Tab Berkas</div>
+        <UploadBerkas @saved="handleBerkasSaved" />
       </div>
       <div v-else-if="activeTab === 'pembayaran'" key="pembayaran">
-        <div class="text-center text-gray-500 py-20">Tab Pembayaran</div>
+        <UploadPayment
+          :status-pembayaran="statusPembayaran"
+          :pendaftaran-id="pendaftaranId"
+          @update-status="statusPembayaran = $event"
+          @saved="handlePaymentSaved"
+        />
       </div>
       <!-- <div v-else-if="activeTab === 'status'" key="status">
         <div class="text-center text-gray-500 py-20">Tab Status</div>
@@ -94,12 +99,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { logout } from "@/lib/services/authService";
 import { useAuthStore } from "@/lib/stores/auth";
+import { logout } from "@/lib/services/authService";
+import { getPendaftaranById } from "@/lib/services/pendaftaranService";
+import { getPendaftaranId } from "@/lib/utils/storage";
+import { clearPendaftaranId } from "@/lib/utils/storage";
 
-import Form from "@/components/form/portal/Form.vue";
+import Form from "@/components/portal/Form.vue";
+import UploadBerkas from "@/components/portal/UploadBerkas.vue";
+import UploadPayment from "@/components/portal/UploadPayment.vue";
 
 import pattern from "@/assets/images/hero-pattern.svg";
 
@@ -112,10 +122,30 @@ const activeTab = ref("formulir");
 const samaDenganKK = ref(true);
 const hasilPengumuman = ref("pending");
 const kodePembayaran = ref("047");
-const statusPembayaran = ref("");
+const statusPembayaran = ref("unpaid");
 const asesmenSubmitted = ref(false);
-const formulirSaved = ref(false);
+const formulirSaved = computed(() => !!pendaftaranId.value);
 const berkasSaved = ref(false);
+const pembayaranDone = ref(false);
+
+const pendaftaranId = ref(Number(getPendaftaranId()));
+
+const loadPendaftaran = async () => {
+  if (!pendaftaranId.value) return;
+
+  try {
+    const res = await getPendaftaranById(pendaftaranId.value);
+    const data = res.data;
+
+    statusPembayaran.value = data.status_pembayaran;
+    hasilPengumuman.value = data.status;
+
+    formulirSaved.value = !!data.id;
+    berkasSaved.value = data.dokumen?.length >= 4;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const tabs = computed(() => [
   {
@@ -124,29 +154,28 @@ const tabs = computed(() => [
     locked: false,
     icon: "document-text-outline",
   },
-  { id: "berkas", label: "Berkas", locked: false, icon: "folder-outline" },
+  {
+    id: "berkas",
+    label: "Berkas",
+    locked: false,
+    icon: "folder-outline",
+  },
   {
     id: "pembayaran",
     label: "Pembayaran",
     locked: false,
     icon: "card-outline",
   },
-  // {
-  //   id: "status",
-  //   label: "Status",
-  //   locked: false,
-  //   icon: "information-circle-outline",
-  // },
   {
     id: "asesmen",
     label: "Asesmen",
-    locked: statusPembayaran.value !== "verified",
+    locked: statusPembayaran.value !== "paid",
     icon: "clipboard-outline",
   },
   {
     id: "pengumuman",
     label: "Pengumuman",
-    locked: hasilPengumuman.value === "pending",
+    locked: hasilPengumuman.value !== "approved",
     icon: "megaphone-outline",
   },
 ]);
@@ -165,10 +194,21 @@ const berkasLengkap = computed(() =>
 
 const progressPct = computed(() => {
   let pts = 0;
+
   if (formulirSaved.value) pts += 25;
-  if (berkasLengkap.value) pts += 25;
-  if (statusPembayaran.value === "verified") pts += 25;
+  if (berkasSaved.value) pts += 25;
+
+  switch (statusPembayaran.value) {
+    case "pending":
+      pts += 10;
+      break;
+    case "paid":
+      pts += 25;
+      break;
+  }
+
   if (asesmenSubmitted.value) pts += 25;
+
   return pts;
 });
 
@@ -178,6 +218,7 @@ const handleLogout = async () => {
 
     auth.clearAuth();
     sessionStorage.removeItem("csrf_token");
+    clearPendaftaranId();
 
     router.push("/login");
   } catch (err) {
@@ -190,10 +231,30 @@ const goTab = (tab) => {
   activeTab.value = tab.id;
 };
 
-const handleFormSaved = () => {
+const handleFormSaved = async () => {
   formulirSaved.value = true;
+
+  pendaftaranId.value = Number(getPendaftaranId());
+  await loadPendaftaran();
+
   activeTab.value = "berkas";
 };
+
+const handleBerkasSaved = () => {
+  berkasSaved.value = true;
+  activeTab.value = "pembayaran";
+};
+
+const handlePaymentSaved = async () => {
+  await loadPendaftaran();
+  activeTab.value = "pembayaran";
+};
+
+onMounted(() => {
+  if (pendaftaranId.value) {
+    loadPendaftaran();
+  }
+});
 </script>
 
 <style lang="scss" scoped></style>
