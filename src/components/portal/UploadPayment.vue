@@ -11,9 +11,52 @@
 
           <div class="flex items-start gap-2 text-sm text-gray-500">
             <CircleAlert class="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-            <p>
-              Lakukan transfer ke rekening berikut dan unggah bukti pembayaran.
-            </p>
+            <div class="">
+              <p>
+                Lakukan transfer sesuia nominal ke rekening berikut dan unggah
+                bukti pembayaran.
+              </p>
+              <p>
+                Jika ada kendala, silakan hubungi admin untuk bantuan lebih
+                lanjut.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-5">
+        <div
+          class="py-3 px-5 border flex items-center justify-between"
+          :class="statusBadgeClass"
+        >
+          <div class="flex items-center gap-3">
+            <div :class="statusIconClass">
+              <component
+                :is="statusIcon"
+                class="w-5 h-5"
+                :class="{
+                  'animate-pulse': props.statusPembayaran === 'pending',
+                }"
+              />
+            </div>
+
+            <div>
+              <div class="text-sm font-semibold text-gray-800">
+                Status Pembayaran
+              </div>
+
+              <div class="text-xs text-gray-500 mt-0.5">
+                {{ statusLabel }}
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="px-3 py-1 rounded-full text-xs font-medium"
+            :class="statusPillClass"
+          >
+            {{ statusText }}
           </div>
         </div>
       </div>
@@ -64,6 +107,10 @@
                   id="file-bukti"
                   class="hidden"
                   accept=".jpg,.jpeg,.png,.pdf"
+                  :disabled="
+                    props.statusPembayaran !== 'unpaid' &&
+                    props.statusPembayaran !== 'failed'
+                  "
                   @change="handleUpload('bukti_tf', $event)"
                 />
 
@@ -101,7 +148,9 @@
         <div class="mt-4 flex justify-end">
           <button
             @click="submitPembayaran"
-            :disabled="!uploadedDocs.bukti_tf"
+            :disabled="
+              !uploadedDocs.bukti_tf && props.statusPembayaran === 'unpaid'
+            "
             class="px-5 py-2.5 rounded-lg text-sm font-medium text-white transition"
             :class="
               uploadedDocs.bukti_tf
@@ -118,15 +167,31 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
-import { FileUp, CircleAlert } from "lucide-vue-next";
+import { ref, reactive, computed } from "vue";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { uploadPembayaran } from "@/lib/services/pendaftaranService";
 import { getPendaftaranId } from "@/lib/utils/storage";
 
-const pendaftaranId = ref(Number(getPendaftaranId()));
+import {
+  CircleAlert,
+  FileUp,
+  Clock,
+  CheckCircle,
+  XCircle,
+} from "lucide-vue-next";
+
 const uploadedDocs = reactive({});
-const emit = defineEmits(["saved"]);
+const props = defineProps({
+  statusPembayaran: {
+    type: String,
+    default: "unpaid",
+  },
+  pendaftaranId: {
+    type: Number,
+    required: true,
+  },
+});
+const emit = defineEmits(["saved", "update-status"]);
 
 const handleUpload = async (key, event) => {
   const file = event.target.files[0];
@@ -142,7 +207,7 @@ const handleUpload = async (key, event) => {
 };
 
 const submitPembayaran = async () => {
-  if (!pendaftaranId.value) {
+  if (!props.pendaftaranId) {
     showWarning("Silakan isi formulir terlebih dahulu");
     return;
   }
@@ -158,9 +223,12 @@ const submitPembayaran = async () => {
 
     console.log("Uploading pembayaran...");
 
-    await uploadPembayaran(pendaftaranId.value, formData);
+    await uploadPembayaran(props.pendaftaranId, formData);
 
+    // update ke parent
+    emit("update-status", "pending");
     showSuccess("Pembayaran berhasil diupload");
+    emit("saved");
   } catch (err) {
     console.log(err);
 
@@ -174,6 +242,96 @@ const submitPembayaran = async () => {
     }
   }
 };
+
+const statusText = computed(() => {
+  switch (props.statusPembayaran) {
+    case "unpaid":
+      return "Belum Bayar";
+    case "pending":
+      return "Menunggu Verifikasi";
+    case "paid":
+      return "Terverifikasi";
+    case "":
+      return "Ditolak";
+    default:
+      return "-";
+  }
+});
+
+const statusLabel = computed(() => {
+  switch (props.statusPembayaran) {
+    case "unpaid":
+      return "Silakan upload bukti pembayaran";
+    case "pending":
+      return "Pembayaran sedang diverifikasi admin";
+    case "paid":
+      return "Pembayaran sudah diverifikasi";
+    case "":
+      return "Bukti pembayaran ditolak, silakan upload ulang";
+    default:
+      return "";
+  }
+});
+
+const statusBadgeClass = computed(() => {
+  switch (props.statusPembayaran) {
+    case "unpaid":
+      return "bg-gray-50 border-gray-200";
+    case "pending":
+      return "bg-yellow-50 border-yellow-200";
+    case "paid":
+      return "bg-green-50 border-green-200";
+    case "":
+      return "bg-red-50 border-red-200";
+    default:
+      return "bg-gray-50 border-gray-200";
+  }
+});
+
+const statusPillClass = computed(() => {
+  switch (props.statusPembayaran) {
+    case "unpaid":
+      return "bg-gray-200 text-gray-700";
+    case "pending":
+      return "bg-yellow-200 text-yellow-800";
+    case "paid":
+      return "bg-green-200 text-green-800";
+    case "":
+      return "bg-red-200 text-red-800";
+    default:
+      return "bg-gray-200";
+  }
+});
+
+const statusIconClass = computed(() => {
+  switch (props.statusPembayaran) {
+    case "unpaid":
+      return "text-gray-500";
+    case "pending":
+      return "text-yellow-500";
+    case "paid":
+      return "text-green-500";
+    case "":
+      return "text-red-500";
+    default:
+      return "text-gray-500";
+  }
+});
+
+const statusIcon = computed(() => {
+  switch (props.statusPembayaran) {
+    case "unpaid":
+      return CircleAlert;
+    case "pending":
+      return Clock;
+    case "paid":
+      return CheckCircle;
+    case "":
+      return XCircle;
+    default:
+      return CircleAlert;
+  }
+});
 </script>
 
 <style lang="scss" scoped></style>

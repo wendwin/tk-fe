@@ -76,7 +76,12 @@
         <UploadBerkas @saved="handleBerkasSaved" />
       </div>
       <div v-else-if="activeTab === 'pembayaran'" key="pembayaran">
-        <UploadPayment @saved="handlePaymentSaved" />
+        <UploadPayment
+          :status-pembayaran="statusPembayaran"
+          :pendaftaran-id="pendaftaranId"
+          @update-status="statusPembayaran = $event"
+          @saved="handlePaymentSaved"
+        />
       </div>
       <!-- <div v-else-if="activeTab === 'status'" key="status">
         <div class="text-center text-gray-500 py-20">Tab Status</div>
@@ -94,10 +99,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { logout } from "@/lib/services/authService";
 import { useAuthStore } from "@/lib/stores/auth";
+import { logout } from "@/lib/services/authService";
+import { getPendaftaranById } from "@/lib/services/pendaftaranService";
+import { getPendaftaranId } from "@/lib/utils/storage";
 import { clearPendaftaranId } from "@/lib/utils/storage";
 
 import Form from "@/components/portal/Form.vue";
@@ -115,10 +122,26 @@ const activeTab = ref("formulir");
 const samaDenganKK = ref(true);
 const hasilPengumuman = ref("pending");
 const kodePembayaran = ref("047");
-const statusPembayaran = ref("");
+const statusPembayaran = ref("unpaid");
 const asesmenSubmitted = ref(false);
 const formulirSaved = ref(false);
 const berkasSaved = ref(false);
+
+const pendaftaranId = ref(Number(getPendaftaranId()));
+
+const loadPendaftaran = async () => {
+  if (!pendaftaranId.value) return;
+
+  try {
+    const res = await getPendaftaranById(pendaftaranId.value);
+    const data = res.data;
+
+    statusPembayaran.value = data.status_pembayaran;
+    hasilPengumuman.value = data.status;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const tabs = computed(() => [
   {
@@ -127,29 +150,28 @@ const tabs = computed(() => [
     locked: false,
     icon: "document-text-outline",
   },
-  { id: "berkas", label: "Berkas", locked: false, icon: "folder-outline" },
+  {
+    id: "berkas",
+    label: "Berkas",
+    locked: false,
+    icon: "folder-outline",
+  },
   {
     id: "pembayaran",
     label: "Pembayaran",
     locked: false,
     icon: "card-outline",
   },
-  // {
-  //   id: "status",
-  //   label: "Status",
-  //   locked: false,
-  //   icon: "information-circle-outline",
-  // },
   {
     id: "asesmen",
     label: "Asesmen",
-    locked: statusPembayaran.value !== "verified",
+    locked: statusPembayaran.value !== "paid",
     icon: "clipboard-outline",
   },
   {
     id: "pengumuman",
     label: "Pengumuman",
-    locked: hasilPengumuman.value === "pending",
+    locked: hasilPengumuman.value !== "approved",
     icon: "megaphone-outline",
   },
 ]);
@@ -170,7 +192,7 @@ const progressPct = computed(() => {
   let pts = 0;
   if (formulirSaved.value) pts += 25;
   if (berkasLengkap.value) pts += 25;
-  if (statusPembayaran.value === "verified") pts += 25;
+  if (statusPembayaran.value === "paid") pts += 25;
   if (asesmenSubmitted.value) pts += 25;
   return pts;
 });
@@ -194,8 +216,12 @@ const goTab = (tab) => {
   activeTab.value = tab.id;
 };
 
-const handleFormSaved = () => {
+const handleFormSaved = async () => {
   formulirSaved.value = true;
+
+  pendaftaranId.value = Number(getPendaftaranId());
+  await loadPendaftaran();
+
   activeTab.value = "berkas";
 };
 
@@ -203,9 +229,16 @@ const handleBerkasSaved = () => {
   activeTab.value = "pembayaran";
 };
 
-const handlePaymentSaved = () => {
-  activeTab.value = "asesmen";
+const handlePaymentSaved = async () => {
+  await loadPendaftaran();
+  activeTab.value = "pembayaran";
 };
+
+onMounted(() => {
+  if (pendaftaranId.value) {
+    loadPendaftaran();
+  }
+});
 </script>
 
 <style lang="scss" scoped></style>

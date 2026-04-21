@@ -27,3 +27,9 @@ export const uploadPembayaran = (id, formData) => {
     body: formData,
   });
 };
+
+export const getPendaftaranById = (id) => {
+  return request(`/pendaftaran/${id}`, {
+    method: "GET",
+  });
+};
