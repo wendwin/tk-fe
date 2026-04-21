@@ -70,7 +70,7 @@
       </div>
 
       <div v-if="activeTab === 'formulir'" key="formulir">
-        <Form @saved="handleFormSaved" />
+        <Form :initial-data="pendaftaranData" @saved="handleFormSaved" />
       </div>
       <div v-else-if="activeTab === 'berkas'" key="berkas">
         <UploadBerkas @saved="handleBerkasSaved" />
@@ -101,6 +101,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/stores/auth";
 import { logout } from "@/lib/services/authService";
 import { getMyPendaftaran } from "@/lib/services/pendaftaranService";
@@ -129,6 +130,7 @@ const berkasSaved = ref(false);
 const pembayaranDone = ref(false);
 
 const pendaftaranId = ref(Number(getPendaftaranId()));
+const pendaftaranData = ref(null);
 
 const loadPendaftaran = async () => {
   try {
@@ -144,8 +146,14 @@ const loadPendaftaran = async () => {
     berkasSaved.value =
       data.dokumen?.filter((d) => d.jenis_dokumen !== "bukti_pembayaran")
         .length >= 4;
+
+    pendaftaranData.value = data;
   } catch (err) {
     console.log(err);
+
+    if (err.message) {
+      showError(err.message);
+    }
   }
 };
 

@@ -34,6 +34,7 @@
                 id="jenis"
                 name="jenis"
                 v-model="form.jenis"
+                :readonly="isLocked"
                 class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
               >
                 <option value="">Pilih</option>
@@ -54,6 +55,7 @@
                 id="program"
                 name="program"
                 v-model="form.program"
+                :readonly="isLocked"
                 class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
               >
                 <option value="">Pilih</option>
@@ -86,6 +88,7 @@
                   id="nama_lengkap"
                   name="nama_lengkap"
                   v-model="form.peserta.nama_lengkap"
+                  :readonly="isLocked"
                   type="text"
                   placeholder="Nama sesuai akta kelahiran"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
@@ -104,6 +107,7 @@
                   id="nama_panggilan"
                   name="nama_panggilan"
                   v-model="form.peserta.nama_panggilan"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -121,6 +125,7 @@
                   id="tempat_lahir"
                   name="tempat_lahir"
                   v-model="form.peserta.tempat_lahir"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -138,6 +143,7 @@
                   id="tanggal_lahir"
                   name="tanggal_lahir"
                   v-model="form.peserta.tanggal_lahir"
+                  :readonly="isLocked"
                   type="date"
                   class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -155,6 +161,7 @@
                   id="jenis_kelamin"
                   name="jenis_kelamin"
                   v-model="form.peserta.jenis_kelamin"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 >
                   <option value="">Pilih</option>
@@ -175,6 +182,7 @@
                   id="kewarganegaraan"
                   name="kewarganegaraan"
                   v-model="form.peserta.kewarganegaraan"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -192,6 +200,7 @@
                   id="nik"
                   name="nik"
                   v-model="form.peserta.nik"
+                  :readonly="isLocked"
                   placeholder="Lihat di KK"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
@@ -213,6 +222,7 @@
                   id="no_kk"
                   name="no_kk"
                   v-model="form.peserta.no_kk"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -230,6 +240,7 @@
                   id="no_akta"
                   name="no_akta"
                   v-model="form.peserta.no_akta"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -247,6 +258,7 @@
                   id="agama"
                   name="agama"
                   v-model="form.peserta.agama"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 >
                   <option value="">Pilih Agama</option>
@@ -271,6 +283,7 @@
                   id="no_telp"
                   name="no_telp"
                   v-model="form.peserta.no_telp"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -288,6 +301,7 @@
                   id="anak_ke"
                   name="anak_ke"
                   v-model="form.peserta.anak_ke"
+                  :readonly="isLocked"
                   placeholder="Berdasarkan KK"
                   type="number"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
@@ -306,6 +320,7 @@
                   id="jumlah_saudara"
                   name="jumlah_saudara"
                   v-model="form.peserta.jumlah_saudara"
+                  :readonly="isLocked"
                   placeholder="Tidak termasuk anak ysb"
                   type="number"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
@@ -324,6 +339,7 @@
                   id="bahasa"
                   name="bahasa"
                   v-model="form.peserta.bahasa"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -349,6 +365,7 @@
               id="alamat_lengkap"
               name="alamat_lengkap"
               v-model="form.peserta.alamat_domisili.alamat_lengkap"
+              :readonly="isLocked"
               type="text"
               placeholder=""
               class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
@@ -370,6 +387,7 @@
                   id="rt"
                   name="rt"
                   v-model="form.peserta.alamat_domisili.rt"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -387,6 +405,7 @@
                   id="rw"
                   name="rw"
                   v-model="form.peserta.alamat_domisili.rw"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -404,6 +423,7 @@
                   id="desa"
                   name="desa"
                   v-model="form.peserta.alamat_domisili.desa"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -424,6 +444,7 @@
                   id="kecamatan"
                   name="kecamatan"
                   v-model="form.peserta.alamat_domisili.kecamatan"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -441,6 +462,7 @@
                   id="kabupaten"
                   name="kabupaten"
                   v-model="form.peserta.alamat_domisili.kabupaten"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -458,6 +480,7 @@
                   id="kode_pos"
                   name="kode_pos"
                   v-model="form.peserta.alamat_domisili.kode_pos"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -469,6 +492,7 @@
             <input
               type="checkbox"
               v-model="samaDenganKK"
+              :readonly="isLocked"
               @change="copyAlamatKK"
             />
             Alamat KK sama dengan domisili
@@ -492,6 +516,7 @@
               id="alamat_lengkap"
               name="alamat_lengkap"
               v-model="form.peserta.alamat_kk.alamat_lengkap"
+              :readonly="isLocked"
               type="text"
               placeholder=""
               class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
@@ -513,6 +538,7 @@
                   id="rt"
                   name="rt"
                   v-model="form.peserta.alamat_kk.rt"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -530,6 +556,7 @@
                   id="rw"
                   name="rw"
                   v-model="form.peserta.alamat_kk.rw"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -547,6 +574,7 @@
                   id="desa"
                   name="desa"
                   v-model="form.peserta.alamat_kk.desa"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -567,6 +595,7 @@
                   id="kecamatan"
                   name="kecamatan"
                   v-model="form.peserta.alamat_kk.kecamatan"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -584,6 +613,7 @@
                   id="kabupaten"
                   name="kabupaten"
                   v-model="form.peserta.alamat_kk.kabupaten"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -601,6 +631,7 @@
                   id="kode_pos"
                   name="kode_pos"
                   v-model="form.peserta.alamat_kk.kode_pos"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 />
@@ -628,6 +659,7 @@
                 id="berat_badan"
                 name="berat_badan"
                 v-model="form.peserta.kesehatan.berat_badan"
+                :readonly="isLocked"
                 type="number"
                 placeholder="kg"
                 class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
@@ -646,6 +678,7 @@
                 id="tinggi_badan"
                 name="tinggi_badan"
                 v-model="form.peserta.kesehatan.tinggi_badan"
+                :readonly="isLocked"
                 type="number"
                 placeholder="cm"
                 class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
@@ -664,6 +697,7 @@
                 id="lingkar_kepala"
                 name="lingkar_kepala"
                 v-model="form.peserta.kesehatan.lingkar_kepala"
+                :readonly="isLocked"
                 type="number"
                 class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
               />
@@ -681,6 +715,7 @@
                 id="golongan_darah"
                 name="golongan_darah"
                 v-model="form.peserta.kesehatan.golongan_darah"
+                :readonly="isLocked"
                 class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
               >
                 <option value="">-</option>
@@ -703,6 +738,7 @@
                 id="riwayat_penyakit"
                 name="riwayat_penyakit"
                 v-model="form.peserta.kesehatan.riwayat_penyakit"
+                :readonly="isLocked"
                 type="text"
                 placeholder="Tuliskan jika ada"
                 class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
@@ -721,6 +757,7 @@
                 id="alergi"
                 name="alergi"
                 v-model="form.peserta.kesehatan.alergi"
+                :readonly="isLocked"
                 type="text"
                 placeholder="Tuliskan jika ada"
                 class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
@@ -739,6 +776,7 @@
                 id="kebutuhan_khusus"
                 name="kebutuhan_khusus"
                 v-model="form.peserta.kesehatan.kebutuhan_khusus"
+                :readonly="isLocked"
                 type="text"
                 placeholder="Tuliskan jika ada"
                 class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
@@ -769,6 +807,7 @@
                   id="ayah_nama"
                   name="ayah_nama"
                   v-model="form.peserta.orang_tua[0].nama"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -786,6 +825,7 @@
                   id="ayah_tempat_lahir"
                   name="ayah_tempat_lahir"
                   v-model="form.peserta.orang_tua[0].tempat_lahir"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -803,6 +843,7 @@
                   id="ayah_tanggal_lahir"
                   name="ayah_tanggal_lahir"
                   v-model="form.peserta.orang_tua[0].tanggal_lahir"
+                  :readonly="isLocked"
                   type="date"
                   class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -820,6 +861,7 @@
                   id="ayah_nik"
                   name="ayah_nik"
                   v-model="form.peserta.orang_tua[0].nik"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -837,6 +879,7 @@
                   id="ayah_pendidikan"
                   name="ayah_pendidikan"
                   v-model="form.peserta.orang_tua[0].pendidikan"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="">Pilih</option>
@@ -865,6 +908,7 @@
                   id="ayah_pekerjaan"
                   name="ayah_pekerjaan"
                   v-model="form.peserta.orang_tua[0].pekerjaan"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -882,6 +926,7 @@
                   id="ayah_pendapatan"
                   name="ayah_pendapatan"
                   v-model="form.peserta.orang_tua[0].pendapatan"
+                  :readonly="isLocked"
                   type="number"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -899,6 +944,7 @@
                   id="ayah_no_hp"
                   name="ayah_no_hp"
                   v-model="form.peserta.orang_tua[0].no_hp"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -916,6 +962,7 @@
                   id="ayah_email"
                   name="ayah_email"
                   v-model="form.peserta.orang_tua[0].email"
+                  :readonly="isLocked"
                   type="email"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -933,6 +980,7 @@
                   id="ayah_alamat_kantor"
                   name="ayah_alamat_kantor"
                   v-model="form.peserta.orang_tua[0].alamat_kantor"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -956,6 +1004,7 @@
                   id="ibu_nama"
                   name="ibu_nama"
                   v-model="form.peserta.orang_tua[1].nama"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -973,6 +1022,7 @@
                   id="ibu_tempat_lahir"
                   name="ibu_tempat_lahir"
                   v-model="form.peserta.orang_tua[1].tempat_lahir"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -990,6 +1040,7 @@
                   id="ibu_tanggal_lahir"
                   name="ibu_tanggal_lahir"
                   v-model="form.peserta.orang_tua[1].tanggal_lahir"
+                  :readonly="isLocked"
                   type="date"
                   class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -1007,6 +1058,7 @@
                   id="ibu_nik"
                   name="ibu_nik"
                   v-model="form.peserta.orang_tua[1].nik"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -1024,6 +1076,7 @@
                   id="ibu_pendidikan"
                   name="ibu_pendidikan"
                   v-model="form.peserta.orang_tua[1].pendidikan"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="">Pilih</option>
@@ -1052,6 +1105,7 @@
                   id="ibu_pekerjaan"
                   name="ibu_pekerjaan"
                   v-model="form.peserta.orang_tua[1].pekerjaan"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -1069,6 +1123,7 @@
                   id="ibu_pendapatan"
                   name="ibu_pendapatan"
                   v-model="form.peserta.orang_tua[1].pendapatan"
+                  :readonly="isLocked"
                   type="number"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -1086,6 +1141,7 @@
                   id="ibu_no_hp"
                   name="ibu_no_hp"
                   v-model="form.peserta.orang_tua[1].no_hp"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -1103,6 +1159,7 @@
                   id="ibu_email"
                   name="ibu_email"
                   v-model="form.peserta.orang_tua[1].email"
+                  :readonly="isLocked"
                   type="email"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -1120,6 +1177,7 @@
                   id="ibu_alamat_kantor"
                   name="ibu_alamat_kantor"
                   v-model="form.peserta.orang_tua[1].alamat_kantor"
+                  :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
@@ -1149,6 +1207,7 @@
                   id="tinggal_dengan"
                   name="tinggal_dengan"
                   v-model="form.peserta.informasi.tinggal_dengan"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="orang tua">Orang Tua</option>
@@ -1169,6 +1228,7 @@
                   id="kendaraan"
                   name="kendaraan"
                   v-model="form.peserta.informasi.kendaraan"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="jalan kaki">Jalan Kaki</option>
@@ -1193,6 +1253,7 @@
                   type="number"
                   step="0.1"
                   v-model="form.peserta.informasi.jarak_sekolah"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
@@ -1211,6 +1272,7 @@
                   type="text"
                   placeholder="cth: 5 menit"
                   v-model="form.peserta.informasi.waktu_tempuh"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
@@ -1222,6 +1284,7 @@
                   name="pernah_sekolah"
                   type="checkbox"
                   v-model="form.peserta.informasi.pernah_sekolah"
+                  :readonly="isLocked"
                   class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <label for="pernah_sekolah" class="text-sm text-gray-700">
@@ -1243,6 +1306,7 @@
                     name="nama_sekolah"
                     type="text"
                     v-model="form.peserta.informasi.nama_sekolah"
+                    :readonly="isLocked"
                     class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
@@ -1259,6 +1323,7 @@
                     name="npsn"
                     type="text"
                     v-model="form.peserta.informasi.npsn"
+                    :readonly="isLocked"
                     class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
@@ -1275,6 +1340,7 @@
                     name="nisn"
                     type="text"
                     v-model="form.peserta.informasi.nisn"
+                    :readonly="isLocked"
                     class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
@@ -1296,6 +1362,7 @@
                   name="bakat"
                   type="text"
                   v-model="form.peserta.informasi.bakat"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
@@ -1313,6 +1380,7 @@
                   name="hobi"
                   type="text"
                   v-model="form.peserta.informasi.hobi"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
@@ -1330,6 +1398,7 @@
                   name="cita_cita"
                   type="text"
                   v-model="form.peserta.informasi.cita_cita"
+                  :readonly="isLocked"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
@@ -1340,7 +1409,13 @@
         <div class="mt-6 flex justify-end">
           <button
             @click="simpanFormulir"
-            class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+            :disabled="isLocked"
+            class="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+            :class="
+              isLocked
+                ? 'bg-gray-300 cursor-not-allowed'
+                : ' bg-blue-600 hover:bg-blue-700'
+            "
           >
             Simpan
           </button>
@@ -1351,7 +1426,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { watch } from "vue";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { createPendaftaran } from "@/lib/services/pendaftaranService";
@@ -1367,6 +1442,13 @@ import {
   Info,
 } from "lucide-vue-next";
 
+const props = defineProps({
+  initialData: {
+    type: Object,
+    default: null,
+  },
+});
+const isLocked = computed(() => !!props.initialData);
 const emit = defineEmits(["saved"]);
 const samaDenganKK = ref(true);
 
@@ -1519,6 +1601,26 @@ const simpanFormulir = async () => {
     }
   }
 };
+
+watch(
+  () => props.initialData,
+  (data) => {
+    if (!data) return;
+
+    form.jenis = data.jenis;
+    form.program = data.program;
+
+    Object.assign(form.peserta, data.peserta);
+
+    if (data.peserta?.orang_tua) {
+      form.peserta.orang_tua = [
+        data.peserta.orang_tua.find((o) => o.tipe === "ayah") || {},
+        data.peserta.orang_tua.find((o) => o.tipe === "ibu") || {},
+      ];
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped></style>
