@@ -20,3 +20,10 @@ export const uploadBerkas = async (id, files) => {
     body: formData,
   });
 };
+
+export const uploadPembayaran = (id, formData) => {
+  return request(`/pendaftaran/${id}/upload-pembayaran`, {
+    method: "POST",
+    body: formData,
+  });
+};

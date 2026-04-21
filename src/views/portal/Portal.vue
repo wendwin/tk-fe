@@ -32,9 +32,9 @@
           <span>{{ Math.round(progressPct) }}%</span>
         </div>
 
-        <div class="h-[6px] bg-gray-200 rounded overflow-hidden">
+        <div class="h-1.5 bg-gray-200 rounded overflow-hidden">
           <div
-            class="h-full rounded transition-all duration-400 ease-in-out bg-gradient-to-r from-[#1181B2] to-[#0a73a0]"
+            class="h-full rounded transition-all duration-400 ease-in-out bg-linear-to-r from-[#1181B2] to-[#0a73a0]"
             :style="{ width: progressPct + '%' }"
           ></div>
         </div>
@@ -76,7 +76,7 @@
         <UploadBerkas @saved="handleBerkasSaved" />
       </div>
       <div v-else-if="activeTab === 'pembayaran'" key="pembayaran">
-        <div class="text-center text-gray-500 py-20">Tab Pembayaran</div>
+        <UploadPayment @saved="handlePaymentSaved" />
       </div>
       <!-- <div v-else-if="activeTab === 'status'" key="status">
         <div class="text-center text-gray-500 py-20">Tab Status</div>
@@ -102,6 +102,7 @@ import { clearPendaftaranId } from "@/lib/utils/storage";
 
 import Form from "@/components/portal/Form.vue";
 import UploadBerkas from "@/components/portal/UploadBerkas.vue";
+import UploadPayment from "@/components/portal/UploadPayment.vue";
 
 import pattern from "@/assets/images/hero-pattern.svg";
 
@@ -200,6 +201,10 @@ const handleFormSaved = () => {
 
 const handleBerkasSaved = () => {
   activeTab.value = "pembayaran";
+};
+
+const handlePaymentSaved = () => {
+  activeTab.value = "asesmen";
 };
 </script>
 

@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap")
 layer(base);
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 
 @import "tailwindcss";
 
@@ -8,6 +9,7 @@ layer(base);
 @theme {
   --font-*: initial;
   --font-outfit: Outfit, sans-serif;
+  --font-roboto-mono: Roboto Mono, monospace;
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;
