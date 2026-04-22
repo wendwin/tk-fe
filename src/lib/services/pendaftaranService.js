@@ -33,3 +33,9 @@ export const getPendaftaranById = (id) => {
     method: "GET",
   });
 };
+
+export const getMyPendaftaran = () => {
+  return request("/pendaftaran/me", {
+    method: "GET",
+  });
+};

@@ -70,7 +70,7 @@
       </div>
 
       <div v-if="activeTab === 'formulir'" key="formulir">
-        <Form @saved="handleFormSaved" />
+        <Form :initial-data="pendaftaranData" @saved="handleFormSaved" />
       </div>
       <div v-else-if="activeTab === 'berkas'" key="berkas">
         <UploadBerkas @saved="handleBerkasSaved" />
@@ -101,9 +101,10 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/stores/auth";
 import { logout } from "@/lib/services/authService";
-import { getPendaftaranById } from "@/lib/services/pendaftaranService";
+import { getMyPendaftaran } from "@/lib/services/pendaftaranService";
 import { getPendaftaranId } from "@/lib/utils/storage";
 import { clearPendaftaranId } from "@/lib/utils/storage";
 
@@ -129,21 +130,30 @@ const berkasSaved = ref(false);
 const pembayaranDone = ref(false);
 
 const pendaftaranId = ref(Number(getPendaftaranId()));
+const pendaftaranData = ref(null);
 
 const loadPendaftaran = async () => {
-  if (!pendaftaranId.value) return;
-
   try {
-    const res = await getPendaftaranById(pendaftaranId.value);
+    const res = await getMyPendaftaran();
     const data = res.data;
 
+    if (!data) return;
+
+    pendaftaranId.value = data.id;
     statusPembayaran.value = data.status_pembayaran;
     hasilPengumuman.value = data.status;
 
-    formulirSaved.value = !!data.id;
-    berkasSaved.value = data.dokumen?.length >= 4;
+    berkasSaved.value =
+      data.dokumen?.filter((d) => d.jenis_dokumen !== "bukti_pembayaran")
+        .length >= 4;
+
+    pendaftaranData.value = data;
   } catch (err) {
     console.log(err);
+
+    if (err.message) {
+      showError(err.message);
+    }
   }
 };
 
@@ -232,8 +242,6 @@ const goTab = (tab) => {
 };
 
 const handleFormSaved = async () => {
-  formulirSaved.value = true;
-
   pendaftaranId.value = Number(getPendaftaranId());
   await loadPendaftaran();
 
@@ -250,9 +258,26 @@ const handlePaymentSaved = async () => {
   activeTab.value = "pembayaran";
 };
 
-onMounted(() => {
-  if (pendaftaranId.value) {
-    loadPendaftaran();
+onMounted(async () => {
+  await loadPendaftaran();
+
+  if (!pendaftaranId.value) {
+    activeTab.value = "formulir";
+    return;
+  }
+
+  if (!berkasSaved.value) {
+    activeTab.value = "berkas";
+    return;
+  }
+
+  if (["unpaid", "pending"].includes(statusPembayaran.value)) {
+    activeTab.value = "pembayaran";
+    return;
+  }
+
+  if (statusPembayaran.value === "paid") {
+    activeTab.value = "asesmen";
   }
 });
 </script>
