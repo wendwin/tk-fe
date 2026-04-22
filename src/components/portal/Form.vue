@@ -1409,18 +1409,26 @@
         <div class="mt-6 flex justify-end">
           <button
             @click="simpanFormulir"
-            :disabled="isLocked"
+            :disabled="isLocked || loading"
             class="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition focus:outline-none focus:ring-2 focus:ring-blue-500/30"
             :class="
-              isLocked
+              isLocked || loading
                 ? 'bg-gray-300 cursor-not-allowed'
-                : ' bg-blue-600 hover:bg-blue-700'
+                : 'bg-blue-600 hover:bg-blue-700'
             "
           >
-            Simpan
+            {{ loading ? "Menyimpan..." : "Simpan" }}
           </button>
         </div>
       </div>
+
+      <ConfirmModal
+        :show="showConfirm"
+        title="Konfirmasi"
+        message="Data yang sudah disimpan tidak dapat diubah. Apakah anda yakin?"
+        @confirm="doSubmit"
+        @cancel="showConfirm = false"
+      />
     </div>
   </div>
 </template>
@@ -1431,6 +1439,8 @@ import { watch } from "vue";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { createPendaftaran } from "@/lib/services/pendaftaranService";
 import { setPendaftaranId } from "@/lib/utils/storage";
+
+import ConfirmModal from "@/components/common/ConfirmModal.vue";
 
 import {
   School,
@@ -1451,6 +1461,9 @@ const props = defineProps({
 const isLocked = computed(() => !!props.initialData);
 const emit = defineEmits(["saved"]);
 const samaDenganKK = ref(true);
+const showConfirm = ref(false);
+const payloadRef = ref(null);
+const loading = ref(false);
 
 const form = reactive({
   id_tahun: 1,
@@ -1556,41 +1569,46 @@ const copyAlamatKK = () => {
   }
 };
 
-const simpanFormulir = async () => {
+const simpanFormulir = () => {
+  if (!form.peserta.nama_lengkap || !form.peserta.tanggal_lahir) {
+    showWarning("Nama lengkap dan tanggal lahir wajib diisi");
+    return;
+  }
+
+  payloadRef.value = {
+    id_tahun: 1,
+    jenis: form.jenis,
+    program: form.program,
+    peserta: {
+      ...form.peserta,
+      orang_tua: form.peserta.orang_tua.map((item, index) => ({
+        ...item,
+        tipe: index === 0 ? "ayah" : "ibu",
+        alamat:
+          form.peserta.alamat_kk && form.peserta.alamat_kk.alamat_lengkap
+            ? form.peserta.alamat_kk
+            : form.peserta.alamat_domisili,
+      })),
+    },
+  };
+
+  showConfirm.value = true;
+};
+
+const doSubmit = async () => {
+  if (!payloadRef.value) return;
+
+  showConfirm.value = false;
+  loading.value = true;
+
   try {
-    if (!form.peserta.nama_lengkap || !form.peserta.tanggal_lahir) {
-      showWarning("Nama lengkap dan tanggal lahir wajib diisi");
-      return;
-    }
+    const res = await createPendaftaran(payloadRef.value);
 
-    const payload = {
-      id_tahun: 1,
-      jenis: form.jenis,
-      program: form.program,
-      peserta: {
-        ...form.peserta,
-
-        orang_tua: form.peserta.orang_tua.map((item, index) => ({
-          ...item,
-          tipe: index === 0 ? "ayah" : "ibu",
-          alamat:
-            form.peserta.alamat_kk && form.peserta.alamat_kk.alamat_lengkap
-              ? form.peserta.alamat_kk
-              : form.peserta.alamat_domisili,
-        })),
-      },
-    };
-
-    const res = await createPendaftaran(payload);
-
-    // pendaftaranId.value = res.data.id;
     setPendaftaranId(res.data.id);
 
     showSuccess("Formulir berhasil disimpan");
 
-    setTimeout(() => {
-      emit("saved");
-    }, 500);
+    emit("saved");
   } catch (err) {
     console.log(err);
 
@@ -1599,6 +1617,9 @@ const simpanFormulir = async () => {
     } else {
       showError(err.message);
     }
+  } finally {
+    payloadRef.value = null;
+    loading.value = false;
   }
 };
 
