@@ -87,7 +87,12 @@
         <div class="text-center text-gray-500 py-20">Tab Status</div>
       </div> -->
       <div v-else-if="activeTab === 'asesmen'" key="asesmen">
-        <div class="text-center text-gray-500 py-20">Tab Asesmen</div>
+        <Asesmen
+          :pendaftaran-id="pendaftaranId"
+          :initial-jawaban="asesmenJawaban"
+          :pertanyaan="asesmenPertanyaan"
+          @submitted="handleAsesmenSubmitted"
+        />
       </div>
       <div v-else-if="activeTab === 'pengumuman'" key="pengumuman">
         <div class="text-center text-gray-500 py-20">Tab Pengumuman</div>
@@ -107,11 +112,15 @@ import { logout } from "@/lib/services/authService";
 import { getMyPendaftaran } from "@/lib/services/pendaftaranService";
 import { getPendaftaranId } from "@/lib/utils/storage";
 import { clearPendaftaranId } from "@/lib/utils/storage";
+import {
+  getPertanyaanAsesmen,
+  getJawabanAsesmen,
+} from "@/lib/services/asesmenService";
 
 import Form from "@/components/portal/Form.vue";
 import UploadBerkas from "@/components/portal/UploadBerkas.vue";
 import UploadPayment from "@/components/portal/UploadPayment.vue";
-
+import Asesmen from "@/components/portal/Asesmen.vue";
 import pattern from "@/assets/images/hero-pattern.svg";
 
 const router = useRouter();
@@ -128,9 +137,26 @@ const asesmenSubmitted = ref(false);
 const formulirSaved = computed(() => !!pendaftaranId.value);
 const berkasSaved = ref(false);
 const pembayaranDone = ref(false);
+const asesmenDone = computed(() => asesmenJawaban.value.length > 0);
 
 const pendaftaranId = ref(Number(getPendaftaranId()));
 const pendaftaranData = ref(null);
+const asesmenPertanyaan = ref([]);
+const asesmenJawaban = ref([]);
+
+const loadAsesmen = async (id) => {
+  try {
+    const [pertanyaanRes, jawabanRes] = await Promise.all([
+      getPertanyaanAsesmen(),
+      getJawabanAsesmen(id),
+    ]);
+
+    asesmenPertanyaan.value = pertanyaanRes.data;
+    asesmenJawaban.value = jawabanRes.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const loadPendaftaran = async () => {
   try {
@@ -148,6 +174,11 @@ const loadPendaftaran = async () => {
         .length >= 4;
 
     pendaftaranData.value = data;
+
+    const asesmenRes = await getJawabanAsesmen(data.id);
+    asesmenJawaban.value = asesmenRes.data;
+
+    await loadAsesmen(data.id);
   } catch (err) {
     console.log(err);
 
@@ -185,7 +216,7 @@ const tabs = computed(() => [
   {
     id: "pengumuman",
     label: "Pengumuman",
-    locked: hasilPengumuman.value !== "approved",
+    locked: false,
     icon: "megaphone-outline",
   },
 ]);
@@ -258,6 +289,11 @@ const handlePaymentSaved = async () => {
   activeTab.value = "pembayaran";
 };
 
+const handleAsesmenSubmitted = async () => {
+  await loadPendaftaran();
+  activeTab.value = "pengumuman";
+};
+
 onMounted(async () => {
   await loadPendaftaran();
 
@@ -278,6 +314,11 @@ onMounted(async () => {
 
   if (statusPembayaran.value === "paid") {
     activeTab.value = "asesmen";
+  }
+
+  if (asesmenDone.value) {
+    activeTab.value = "pengumuman";
+    return;
   }
 });
 </script>
