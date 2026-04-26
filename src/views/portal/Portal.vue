@@ -95,7 +95,7 @@
         />
       </div>
       <div v-else-if="activeTab === 'pengumuman'" key="pengumuman">
-        <div class="text-center text-gray-500 py-20">Tab Pengumuman</div>
+        <Informasi :data="pendaftaranData" />
       </div>
     </div>
 
@@ -122,6 +122,7 @@ import UploadBerkas from "@/components/portal/UploadBerkas.vue";
 import UploadPayment from "@/components/portal/UploadPayment.vue";
 import Asesmen from "@/components/portal/Asesmen.vue";
 import pattern from "@/assets/images/hero-pattern.svg";
+import Informasi from "@/components/portal/Informasi.vue";
 
 const router = useRouter();
 const auth = useAuthStore();
@@ -248,7 +249,9 @@ const progressPct = computed(() => {
       break;
   }
 
-  if (asesmenSubmitted.value) pts += 25;
+  if (asesmenDone.value) pts += 15;
+
+  if (hasilPengumuman.value === "accepted") pts = 100;
 
   return pts;
 });
