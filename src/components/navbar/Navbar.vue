@@ -104,7 +104,7 @@
 </template>
 
 <script setup>
-import logo from "@/assets/images/logo/logo.svg";
+import logo from "@/assets/images/logo/logo-tk.svg";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 

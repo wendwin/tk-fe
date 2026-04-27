@@ -23,7 +23,7 @@
         <img
           v-if="isExpanded || isHovered || isMobileOpen"
           class="dark:hidden"
-          src="/images/logo/logo.svg"
+          src="@/assets/images/logo/logo.svg"
           alt="Logo"
           width="150"
           height="40"
@@ -31,14 +31,14 @@
         <img
           v-if="isExpanded || isHovered || isMobileOpen"
           class="hidden dark:block"
-          src="/images/logo/logo-dark.svg"
+          src="@/assets/images/logo/logo-dark.svg"
           alt="Logo"
           width="150"
           height="40"
         />
         <img
           v-else
-          src="/images/logo/logo-icon.svg"
+          src="@/assets/images/logo/logo-icon.svg"
           alt="Logo"
           width="32"
           height="32"
@@ -64,7 +64,7 @@
               </template>
               <HorizontalDots v-else />
             </h2>
-            <ul class="flex flex-col gap-4">
+            <ul class="flex flex-col gap-1">
               <li v-for="(item, index) in menuGroup.items" :key="item.name">
                 <button
                   v-if="item.subItems"
@@ -87,14 +87,14 @@
                         : 'menu-item-icon-inactive',
                     ]"
                   >
-                    <component :is="item.icon" />
+                    <component :is="item.icon" class="w-5 h-5" />
                   </span>
                   <span
                     v-if="isExpanded || isHovered || isMobileOpen"
                     class="menu-item-text"
                     >{{ item.name }}</span
                   >
-                  <ChevronDownIcon
+                  <ChevronDown
                     v-if="isExpanded || isHovered || isMobileOpen"
                     :class="[
                       'ml-auto w-5 h-5 transition-transform duration-200',
@@ -125,7 +125,7 @@
                         : 'menu-item-icon-inactive',
                     ]"
                   >
-                    <component :is="item.icon" />
+                    <component :is="item.icon" class="w-5 h-5" />
                   </span>
                   <span
                     v-if="isExpanded || isHovered || isMobileOpen"
@@ -215,6 +215,7 @@ import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 
 import { useSidebar } from "@/composables/useSidebar";
+import { ChevronDown, LayoutGrid, Users } from "lucide-vue-next";
 
 const route = useRoute();
 
@@ -225,14 +226,15 @@ const menuGroups = [
     title: "Menu",
     items: [
       {
-        icon: "",
+        icon: LayoutGrid,
         name: "Dashboard",
-        subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+        path: "/dashborad/admin",
+        // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
       },
       {
-        icon: "",
-        name: "Calendar",
-        path: "/calendar",
+        icon: Users,
+        name: "Pendaftar",
+        path: "/pendaftar",
       },
       // {
       //   icon: UserCircleIcon,

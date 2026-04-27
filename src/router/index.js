@@ -30,7 +30,7 @@ const router = createRouter({
       meta: { layout: "PortalLayout", requiresAuth: true, role: ["orang_tua"] },
     },
     {
-      path: "/admin",
+      path: "/dashboard/admin",
       name: "Admin",
       component: () => import("../views/admin/Admin.vue"),
       meta: { requiresAuth: true, layout: "AdminLayout", role: ["admin"] },
