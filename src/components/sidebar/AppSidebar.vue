@@ -108,19 +108,19 @@
                   />
                 </button>
                 <router-link
-                  v-else-if="item.path"
-                  :to="item.path"
+                  v-else-if="item.to"
+                  :to="item.to"
                   :class="[
                     'menu-item group',
                     {
-                      'menu-item-active': isActive(item.path),
-                      'menu-item-inactive': !isActive(item.path),
+                      'menu-item-active': isActive(item.to),
+                      'menu-item-inactive': !isActive(item.to),
                     },
                   ]"
                 >
                   <span
                     :class="[
-                      isActive(item.path)
+                      isActive(item.to)
                         ? 'menu-item-icon-active'
                         : 'menu-item-icon-inactive',
                     ]"
@@ -148,15 +148,13 @@
                     <ul class="mt-2 space-y-1 ml-9">
                       <li v-for="subItem in item.subItems" :key="subItem.name">
                         <router-link
-                          :to="subItem.path"
+                          :to="subItem.to"
                           :class="[
                             'menu-dropdown-item',
                             {
-                              'menu-dropdown-item-active': isActive(
-                                subItem.path,
-                              ),
+                              'menu-dropdown-item-active': isActive(subItem.to),
                               'menu-dropdown-item-inactive': !isActive(
-                                subItem.path,
+                                subItem.to,
                               ),
                             },
                           ]"
@@ -169,10 +167,10 @@
                                 'menu-dropdown-badge',
                                 {
                                   'menu-dropdown-badge-active': isActive(
-                                    subItem.path,
+                                    subItem.to,
                                   ),
                                   'menu-dropdown-badge-inactive': !isActive(
-                                    subItem.path,
+                                    subItem.to,
                                   ),
                                 },
                               ]"
@@ -185,10 +183,10 @@
                                 'menu-dropdown-badge',
                                 {
                                   'menu-dropdown-badge-active': isActive(
-                                    subItem.path,
+                                    subItem.to,
                                   ),
                                   'menu-dropdown-badge-inactive': !isActive(
-                                    subItem.path,
+                                    subItem.to,
                                   ),
                                 },
                               ]"
@@ -228,13 +226,13 @@ const menuGroups = [
       {
         icon: LayoutGrid,
         name: "Dashboard",
-        path: "/dashborad/admin",
+        to: { name: "AdminDashboard" },
         // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
       },
       {
         icon: Users,
-        name: "Pendaftar",
-        path: "/pendaftar",
+        name: "Pendaftaran",
+        to: { name: "AdminPendaftaran" },
       },
       // {
       //   icon: UserCircleIcon,

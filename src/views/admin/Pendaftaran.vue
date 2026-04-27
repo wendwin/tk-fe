@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view />
+    <h1>Pendaftaran</h1>
   </div>
 </template>
 
