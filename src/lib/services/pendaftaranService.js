@@ -28,6 +28,12 @@ export const uploadPembayaran = (id, formData) => {
   });
 };
 
+export const getAllPendaftaran = (query = "") => {
+  return request(`/pendaftaran${query}`, {
+    method: "GET",
+  });
+};
+
 export const getPendaftaranById = (id) => {
   return request(`/pendaftaran/${id}`, {
     method: "GET",
