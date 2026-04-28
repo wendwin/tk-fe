@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen xl:flex">
+  <div class="min-h-screen xl:flex dark:bg-gray-900 dark:border-gray-800">
     <app-sidebar />
     <Backdrop />
     <div
@@ -7,7 +7,7 @@
       :class="[isExpanded || isHovered ? 'lg:ml-[290px]' : 'lg:ml-[90px]']"
     >
       <app-header />
-      <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+      <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:px-6">
         <slot></slot>
       </div>
     </div>

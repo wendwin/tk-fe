@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import logo from "@/assets/images/logo/logo.svg";
+import logo from "@/assets/images/logo/logo-tk.svg";
 </script>
 
 <style lang="scss" scoped></style>

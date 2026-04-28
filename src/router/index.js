@@ -30,10 +30,51 @@ const router = createRouter({
       meta: { layout: "PortalLayout", requiresAuth: true, role: ["orang_tua"] },
     },
     {
-      path: "/admin",
-      name: "Admin",
+      path: "/dashboard/admin",
       component: () => import("../views/admin/Admin.vue"),
       meta: { requiresAuth: true, layout: "AdminLayout", role: ["admin"] },
+      children: [
+        {
+          path: "",
+          name: "AdminDashboard",
+          component: () => import("../views/admin/Dashboard.vue"),
+        },
+        {
+          path: "pendaftar",
+          name: "AdminPendaftaran",
+          component: () => import("../views/admin/Pendaftaran.vue"),
+        },
+        // {
+        //   path: "observasi",
+        //   name: "Observasi",
+        //   component: () => import("../views/admin/Observasi.vue"),
+        // },
+        // {
+        //   path: "siswa",
+        //   name: "Siswa",
+        //   component: () => import("../views/admin/Siswa.vue"),
+        // },
+        // {
+        //   path: "monitoring",
+        //   name: "Monitoring",
+        //   component: () => import("../views/admin/Monitoring.vue"),
+        // },
+        // {
+        //   path: "pengumuman",
+        //   name: "Pengumuman",
+        //   component: () => import("../views/admin/Pengumuman.vue"),
+        // },
+        // {
+        //   path: "laporan",
+        //   name: "Laporan",
+        //   component: () => import("../views/admin/Laporan.vue"),
+        // },
+        // {
+        //   path: "master",
+        //   name: "MasterData",
+        //   component: () => import("../views/admin/Master.vue"),
+        // },
+      ],
     },
     {
       path: "/403",
