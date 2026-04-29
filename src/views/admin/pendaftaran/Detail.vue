@@ -15,7 +15,7 @@
 
         <ChevronRight class="w-4 h-4 text-slate-400 mx-1" />
 
-        <span class="text-slate-700 font-medium"> Detail </span>
+        <span class="text-slate-700 font-medium">Detail</span>
       </nav>
     </div>
 
@@ -34,22 +34,48 @@
             </div>
 
             <div class="">
-              <p class="text-gray-400 text-sm">Daftar: 12 Apr 2025</p>
+              <p class="text-gray-400 text-sm">
+                Daftar: {{ formatDateTimeID(detail.meta.tanggal_daftar) }}
+              </p>
             </div>
           </div>
 
           <div class="mt-4">
-            <h2 class="text-base font-semibold text-gray-800">Siti Aisya</h2>
+            <h2 class="text-base font-semibold text-gray-800 mb-1">
+              {{ detail.peserta.nama_lengkap || "-" }}
+            </h2>
 
             <div
               class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
             >
-              <div class="text-sm flex gap-3">
-                <span class="text-gray-700">PSB-2025-TK-001</span>
-                <span class="text-gray-700">Terverifikasi</span>
+              <div class="text-sm gap-3 space-y-1">
+                <p class="text-gray-700">
+                  Tahun Ajaran: {{ detail.meta.tahun_ajaran }}
+                </p>
+                <p class="text-gray-700">
+                  No. Pendaftaran: {{ detail.meta.no_pendaftaran }}
+                </p>
+
+                <p class="text-gray-700">
+                  Status:
+                  <span
+                    :class="[
+                      'capitalize',
+                      statusConfig(detail.meta.status).class,
+                    ]"
+                  >
+                    {{ statusConfig(detail.meta.status).label }}
+                  </span>
+                </p>
               </div>
 
-              <div class="flex flex-wrap items-center gap-2">
+              <div
+                class="flex flex-wrap items-center gap-2"
+                v-if="
+                  detail.meta.status_observasi === 'terjadwal' ||
+                  detail.meta.status_observasi === 'hadir'
+                "
+              >
                 <!-- <button
                   class="flex items-center gap-2 border border-slate-600 text-slate-600 px-3 py-1.5 rounded-lg text-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition"
                 >
@@ -98,14 +124,6 @@
 
           <!-- tombol edit/simpan -->
           <div class="flex gap-2">
-            <!-- <button
-                  v-if="!isEditPeserta"
-                  @click="startEdit"
-                  class="flex items-center gap-2 border border-slate-600 text-slate-600 px-3 py-1.5 rounded-lg text-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition"
-                >
-                  <SquarePen class="w-4 h-4" />
-                  Edit
-                </button> -->
             <button
               v-if="!isEditPeserta"
               @click="startEdit"
@@ -274,6 +292,8 @@ import { getPendaftaranById } from "@/lib/services/pendaftaranService";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { updatePendaftaran } from "@/lib/services/pendaftaranService";
 
+import { statusConfig, paymentConfig } from "@/lib/utils/status";
+import formatDateTimeID from "@/lib/utils/formatDateTimeID";
 import {
   SquarePen,
   ChevronRight,
@@ -382,6 +402,7 @@ const orangTuaIbuFields = [
 
 const isEditPeserta = ref(false);
 const detail = reactive({
+  meta: {},
   peserta: {},
   alamat: {},
   kesehatan: {},
@@ -408,6 +429,18 @@ const mapPendaftaran = (data) => {
   const ibu = orangTua.find((o) => o.tipe === "ibu");
 
   return {
+    meta: {
+      id: data.id,
+      no_pendaftaran: data.no_pendaftaran,
+      tanggal_daftar: data.tanggal_daftar,
+      status: data.status,
+      status_pembayaran: data.status_pembayaran,
+      program: data.program,
+      jenis: data.jenis,
+      gelombang: data.gelombang?.nama,
+      tahun_ajaran: data.tahun_ajaran?.label,
+      status_observasi: data.status_observasi,
+    },
     peserta: {
       jenis: data.jenis,
       program: data.program,
