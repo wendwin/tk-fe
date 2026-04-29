@@ -281,7 +281,7 @@
             <BerkasTab
               :detail="detail"
               :dokumen="detail.dokumen"
-              :status="detail.status"
+              :status="detail.meta.status"
               @verify="handleVerifyBerkas"
               @reject="handleRejectBerkas"
             />
@@ -306,7 +306,11 @@ import { ref, reactive, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import PesertaTab from "@/components/admin/PesertaTab.vue";
 import BerkasTab from "@/components/admin/BerkasTab.vue";
-import { getPendaftaranById } from "@/lib/services/pendaftaranService";
+import {
+  getPendaftaranById,
+  verifyPendaftaran,
+  rejectPendaftaran,
+} from "@/lib/services/pendaftaranService";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { updatePendaftaran } from "@/lib/services/pendaftaranService";
 
@@ -543,7 +547,7 @@ const mapPendaftaran = (data) => {
     },
   };
 };
-console.log(detail.dokumen[0]?.file_path);
+console.log(detail.meta.status);
 
 const fetchDetail = async () => {
   try {
@@ -680,6 +684,35 @@ const saveEdit = async () => {
     showError(err.message || "Gagal update");
   } finally {
     loading.value = false;
+  }
+};
+
+const handleVerifyBerkas = async () => {
+  try {
+    await verifyPendaftaran(detail.meta.id, "verified");
+    detail.meta.status = "verified";
+    showSuccess("Berhasil diverifikasi");
+  } catch (err) {
+    showError(err.message);
+  }
+};
+const handleAccept = async () => {
+  try {
+    await verifyPendaftaran(detail.meta.id, "accepted");
+    detail.meta.status = "accepted";
+    showSuccess("Pendaftaran diterima");
+  } catch (err) {
+    showError(err.message);
+  }
+};
+
+const handleRejectBerkas = async () => {
+  try {
+    await rejectPendaftaran(detail.meta.id, "rejected");
+    detail.meta.status = "rejected";
+    showSuccess("Berhasil ditolak");
+  } catch (err) {
+    showError(err.message);
   }
 };
 

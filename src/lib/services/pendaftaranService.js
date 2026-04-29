@@ -52,3 +52,16 @@ export const getMyPendaftaran = () => {
     method: "GET",
   });
 };
+
+export const verifyPendaftaran = (id, status) => {
+  return request(`/pendaftaran/${id}/verify`, {
+    method: "PATCH",
+    body: { status },
+  });
+};
+
+export const rejectPendaftaran = (id) => {
+  return request(`/pendaftaran/${id}/reject`, {
+    method: "PATCH",
+  });
+};

@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <div class="flex justify-end">
-      <div class="flex gap-2">
+      <div class="flex gap-2" v-if="status !== 'verified'">
         <button
           @click="$emit('verify')"
           class="text-sm border text-slate-600 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition px-2.5 py-2 rounded-md"
