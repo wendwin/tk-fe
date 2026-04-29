@@ -118,9 +118,10 @@
             <template v-else>
               <button
                 @click="saveEdit"
-                class="text-sm px-3 py-1 bg-blue-600 text-white rounded-lg"
+                :disabled="loading"
+                class="text-sm px-3 py-1 bg-blue-600 text-white rounded-lg disabled:opacity-50"
               >
-                Simpan
+                {{ loading ? "Menyimpan..." : "Simpan" }}
               </button>
               <button
                 @click="cancelEdit"
@@ -270,6 +271,9 @@ import { ref, reactive, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import PesertaTab from "@/components/admin/PesertaTab.vue";
 import { getPendaftaranById } from "@/lib/services/pendaftaranService";
+import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
+import { updatePendaftaran } from "@/lib/services/pendaftaranService";
+
 import {
   SquarePen,
   ChevronRight,
@@ -284,9 +288,7 @@ import {
 
 const route = useRoute();
 const id = route.params.id;
-console.log(id);
-console.log(route.params);
-
+const loading = ref(false);
 const activeTab = ref("Peserta");
 
 const tabs = [
@@ -494,6 +496,128 @@ const fetchDetail = async () => {
   }
 };
 
+const buildPayload = () => {
+  return {
+    jenis: form.peserta.jenis,
+    program: form.peserta.program,
+
+    peserta: {
+      nama_lengkap: form.peserta.nama_lengkap,
+      nama_panggilan: form.peserta.nama_panggilan,
+      tempat_lahir: form.peserta.tempat_lahir,
+      tanggal_lahir: form.peserta.tanggal_lahir,
+      jenis_kelamin: form.peserta.jenis_kelamin === "Perempuan" ? "P" : "L",
+      kewarganegaraan: form.peserta.kewarganegaraan,
+      nik: form.peserta.nik,
+      no_kk: form.peserta.no_kk,
+      no_akta: form.peserta.no_akta,
+      agama: form.peserta.agama,
+      no_telp: form.peserta.no_telepon,
+      anak_ke: form.peserta.anak_ke,
+      jumlah_saudara: form.peserta.jumlah_saudara,
+      bahasa: form.peserta.bahasa_sehari_hari,
+
+      alamat_domisili: {
+        alamat_lengkap: form.alamat.alamat_lengkap,
+        rt: form.alamat.rt,
+        rw: form.alamat.rw,
+        desa: form.alamat.desa_kelurahan,
+        kecamatan: form.alamat.kecamatan,
+        kabupaten: form.alamat.kabupaten,
+        kode_pos: form.alamat.kode_pos,
+      },
+
+      alamat_kk: {
+        alamat_lengkap: form.alamat.alamat_lengkap,
+        rt: form.alamat.rt,
+        rw: form.alamat.rw,
+        desa: form.alamat.desa_kelurahan,
+        kecamatan: form.alamat.kecamatan,
+        kabupaten: form.alamat.kabupaten,
+        kode_pos: form.alamat.kode_pos,
+      },
+
+      kesehatan: {
+        berat_badan: form.kesehatan.berat_badan,
+        tinggi_badan: form.kesehatan.tinggi_badan,
+        lingkar_kepala: form.kesehatan.lingkar_kepala,
+        golongan_darah: form.kesehatan.golongan_darah,
+        riwayat_penyakit: form.kesehatan.riwayat_penyakit,
+        alergi: form.kesehatan.alergi,
+        kebutuhan_khusus: form.kesehatan.kebutuhan_khusus,
+      },
+
+      orang_tua: [
+        {
+          tipe: "ayah",
+          nama: form.ayah.nama_ayah,
+          tempat_lahir: form.ayah.tempat_lahir_ayah,
+          tanggal_lahir: form.ayah.tanggal_lahir_ayah,
+          nik: form.ayah.nik_ayah,
+          pendidikan: form.ayah.pendidikan_ayah,
+          pekerjaan: form.ayah.pekerjaan_ayah,
+          pendapatan: form.ayah.pendapatan_ayah,
+          alamat_kantor: form.ayah.alamat_kantor_ayah,
+          no_hp: form.ayah.no_hp_ayah,
+          email: form.ayah.email_ayah,
+        },
+        {
+          tipe: "ibu",
+          nama: form.ibu.nama_ibu,
+          tempat_lahir: form.ibu.tempat_lahir_ibu,
+          tanggal_lahir: form.ibu.tanggal_lahir_ibu,
+          nik: form.ibu.nik_ibu,
+          pendidikan: form.ibu.pendidikan_ibu,
+          pekerjaan: form.ibu.pekerjaan_ibu,
+          pendapatan: form.ibu.pendapatan_ibu,
+          alamat_kantor: form.ibu.alamat_kantor_ibu,
+          no_hp: form.ibu.no_hp_ibu,
+          email: form.ibu.email_ibu,
+        },
+      ],
+
+      informasi: {
+        tinggal_dengan: form.informasi.tinggal_bersama,
+        jarak_sekolah: form.informasi.jarak_ke_sekolah,
+        waktu_tempuh: form.informasi.waktu_tempuh,
+        kendaraan: form.informasi.kendaraan_ke_sekolah,
+        nama_sekolah: form.informasi.nama_sekolah_sebelumnya,
+        npsn: form.informasi.npsn_sekolah,
+        nisn: form.informasi.nisn,
+        bakat: form.informasi.bakat,
+        hobi: form.informasi.hobi,
+        cita_cita: form.informasi.cita_cita,
+      },
+    },
+  };
+};
+
+const saveEdit = async () => {
+  if (loading.value) return;
+
+  try {
+    loading.value = true;
+
+    const payload = buildPayload();
+    await updatePendaftaran(id, payload);
+
+    Object.assign(detail.peserta, form.peserta);
+    Object.assign(detail.alamat, form.alamat);
+    Object.assign(detail.kesehatan, form.kesehatan);
+    Object.assign(detail.informasi, form.informasi);
+    Object.assign(detail.ayah, form.ayah);
+    Object.assign(detail.ibu, form.ibu);
+
+    isEditPeserta.value = false;
+
+    showSuccess("Data berhasil diupdate");
+  } catch (err) {
+    showError(err.message || "Gagal update");
+  } finally {
+    loading.value = false;
+  }
+};
+
 const startEdit = () => {
   Object.assign(form.peserta, detail.peserta);
   Object.assign(form.alamat, detail.alamat);
@@ -503,17 +627,6 @@ const startEdit = () => {
   Object.assign(form.ibu, detail.ibu);
 
   isEditPeserta.value = true;
-};
-
-const saveEdit = () => {
-  Object.assign(detail.peserta, form.peserta);
-  Object.assign(detail.alamat, form.alamat);
-  Object.assign(detail.kesehatan, form.kesehatan);
-  Object.assign(detail.informasi, form.informasi);
-  Object.assign(detail.ayah, form.ayah);
-  Object.assign(detail.ibu, form.ibu);
-
-  isEditPeserta.value = false;
 };
 
 const cancelEdit = () => {

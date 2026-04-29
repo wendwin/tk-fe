@@ -7,6 +7,13 @@ export const createPendaftaran = async (payload) => {
   });
 };
 
+export const updatePendaftaran = (id, payload) => {
+  return request(`/pendaftaran/${id}`, {
+    method: "PUT",
+    body: payload,
+  });
+};
+
 export const uploadBerkas = async (id, files) => {
   const formData = new FormData();
 
