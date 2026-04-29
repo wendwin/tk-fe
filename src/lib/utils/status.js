@@ -3,7 +3,7 @@ export const statusConfig = (status) => {
     case "pending":
       return {
         label: "pending",
-        class: "text-yellow-500",
+        class: "text-yellow-600",
       };
     case "verified":
       return {
@@ -38,7 +38,7 @@ export const paymentConfig = (status) => {
     case "pending":
       return {
         label: "pending",
-        class: "text-yellow-500",
+        class: "text-yellow-600",
       };
     case "paid":
       return {

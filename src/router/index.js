@@ -42,7 +42,12 @@ const router = createRouter({
         {
           path: "pendaftar",
           name: "AdminPendaftaran",
-          component: () => import("../views/admin/Pendaftaran.vue"),
+          component: () => import("../views/admin/pendaftaran/Index.vue"),
+        },
+        {
+          path: "pendaftar/:id",
+          name: "AdminPendaftarDetail",
+          component: () => import("../views/admin/pendaftaran/Detail.vue"),
         },
         // {
         //   path: "observasi",

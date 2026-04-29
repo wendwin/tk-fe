@@ -7,6 +7,13 @@ export const createPendaftaran = async (payload) => {
   });
 };
 
+export const updatePendaftaran = (id, payload) => {
+  return request(`/pendaftaran/${id}`, {
+    method: "PUT",
+    body: payload,
+  });
+};
+
 export const uploadBerkas = async (id, files) => {
   const formData = new FormData();
 
@@ -43,5 +50,21 @@ export const getPendaftaranById = (id) => {
 export const getMyPendaftaran = () => {
   return request("/pendaftaran/me", {
     method: "GET",
+  });
+};
+
+export const updateStatusPendaftaran = (id, status) => {
+  return request(`/pendaftaran/${id}/status`, {
+    method: "PATCH",
+    body: { status },
+  });
+};
+
+export const updateStatusPembayaran = (id, status) => {
+  return request(`/pendaftaran/${id}/status-pembayaran`, {
+    method: "PATCH",
+    body: {
+      status_pembayaran: status,
+    },
   });
 };
