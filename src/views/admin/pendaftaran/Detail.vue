@@ -79,31 +79,38 @@
                 </p>
               </div>
 
-              <div
-                class="flex flex-wrap items-center gap-2"
-                v-if="
-                  detail.meta.status_observasi === 'terjadwal' ||
-                  detail.meta.status_observasi === 'hadir'
-                "
-              >
-                <!-- <button
-                  class="flex items-center gap-2 border border-slate-600 text-slate-600 px-3 py-1.5 rounded-lg text-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition"
+              <div class="flex flex-wrap items-center gap-2">
+                <template
+                  v-if="
+                    ['hadir'].includes(detail.meta.status_observasi) &&
+                    detail.meta.status !== 'accepted'
+                  "
                 >
-                  <SquarePen class="w-4 h-4" />
-                  Edit
-                </button> -->
+                  <button
+                    @click="handleAccept"
+                    class="text-sm px-3 py-1 border rounded-lg text-slate-600 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition"
+                  >
+                    Terima
+                  </button>
 
-                <button
-                  class="text-sm px-3 py-1 border rounded-lg text-slate-600 px-3 py-1.5 rounded-lg text-sm hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition"
-                >
-                  Terima
-                </button>
+                  <button
+                    @click="handleRejectBerkas"
+                    class="text-sm px-3 py-1 border rounded-lg text-slate-600 hover:bg-red-600 hover:text-white hover:border-red-600 transition"
+                  >
+                    Tolak
+                  </button>
+                </template>
 
-                <button
-                  class="text-sm px-3 py-1 border rounded-lg text-slate-600 px-3 py-1.5 rounded-lg text-sm hover:bg-red-600 hover:text-white hover:border-red-600 transition"
-                >
-                  Tolak
-                </button>
+                <template v-else-if="detail.meta.status === 'accepted'">
+                  <button
+                    :href="downloadUrl"
+                    target="_blank"
+                    class="flex items-center gap-2 text-sm px-3 py-1.5 border rounded-lg text-slate-600 hover:bg-gray-100 transition"
+                  >
+                    <Download class="w-4 h-4" />
+                    Formulir
+                  </button>
+                </template>
               </div>
             </div>
           </div>
@@ -315,8 +322,7 @@ import BerkasTab from "@/components/admin/BerkasTab.vue";
 import PembayaranTab from "@/components/admin/PembayaranTab.vue";
 import {
   getPendaftaranById,
-  verifyPendaftaran,
-  rejectPendaftaran,
+  updateStatusPendaftaran,
 } from "@/lib/services/pendaftaranService";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import {
@@ -336,6 +342,7 @@ import {
   Hospital,
   Users,
   Info,
+  Download,
 } from "lucide-vue-next";
 
 const route = useRoute();
@@ -701,7 +708,7 @@ const saveEdit = async () => {
 
 const handleVerifyBerkas = async () => {
   try {
-    await verifyPendaftaran(detail.meta.id, "verified");
+    await updateStatusPendaftaran(detail.meta.id, "verified");
     detail.meta.status = "verified";
     showSuccess("Berhasil diverifikasi");
   } catch (err) {
@@ -710,7 +717,7 @@ const handleVerifyBerkas = async () => {
 };
 const handleAccept = async () => {
   try {
-    await verifyPendaftaran(detail.meta.id, "accepted");
+    await updateStatusPendaftaran(detail.meta.id, "accepted");
     detail.meta.status = "accepted";
     showSuccess("Pendaftaran diterima");
   } catch (err) {
@@ -720,7 +727,7 @@ const handleAccept = async () => {
 
 const handleRejectBerkas = async () => {
   try {
-    await rejectPendaftaran(detail.meta.id, "rejected");
+    await updateStatusPendaftaran(detail.meta.id, "rejected");
     detail.meta.status = "rejected";
     showSuccess("Berhasil ditolak");
   } catch (err) {
