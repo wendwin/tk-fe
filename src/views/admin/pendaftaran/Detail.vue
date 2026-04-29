@@ -102,14 +102,14 @@
                 </template>
 
                 <template v-else-if="detail.meta.status === 'accepted'">
-                  <button
+                  <a
                     :href="downloadUrl"
                     target="_blank"
-                    class="flex items-center gap-2 text-sm px-3 py-1.5 border rounded-lg text-slate-600 hover:bg-gray-100 transition"
+                    class="cursor-pointer flex items-center gap-2 text-sm px-3 py-1.5 border rounded-lg text-slate-600 hover:bg-gray-100 transition"
                   >
                     <Download class="w-4 h-4" />
                     Formulir
-                  </button>
+                  </a>
                 </template>
               </div>
             </div>
@@ -315,7 +315,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import PesertaTab from "@/components/admin/PesertaTab.vue";
 import BerkasTab from "@/components/admin/BerkasTab.vue";
@@ -349,6 +349,13 @@ const route = useRoute();
 const id = route.params.id;
 const loading = ref(false);
 const activeTab = ref("Peserta");
+
+const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_FILE_URL = import.meta.env.VITE_BASE_FILE_URL;
+
+const downloadUrl = computed(() => {
+  return `${BASE_URL}/pendaftaran/${detail.meta.id}/download`;
+});
 
 const tabs = [
   "Peserta",
@@ -462,7 +469,6 @@ const form = reactive({
   ibu: {},
 });
 
-const BASE_FILE_URL = import.meta.env.VITE_BASE_FILE_URL;
 const mapPendaftaran = (data) => {
   if (!data) return {};
 
@@ -566,7 +572,6 @@ const mapPendaftaran = (data) => {
     },
   };
 };
-console.log(detail.meta.status);
 
 const fetchDetail = async () => {
   try {
