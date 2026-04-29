@@ -28,9 +28,16 @@
         <div class="px-6 pb-6 -mt-10">
           <div class="flex items-end justify-between">
             <div
-              class="w-20 h-20 rounded-2xl bg-gray-200 flex items-center justify-center text-purple-700 font-semibold text-xl shadow"
+              class="w-20 h-20 rounded-2xl bg-gray-200 flex items-center justify-center overflow-hidden shadow"
             >
-              SA
+              <img
+                v-if="detail.foto?.file_path"
+                :src="detail.foto.file_path"
+                class="w-full h-full object-cover"
+              />
+              <span v-else class="text-purple-700 font-semibold text-xl">
+                {{ detail.peserta.nama_lengkap?.charAt(0) }}
+              </span>
             </div>
 
             <div class="">
@@ -46,7 +53,7 @@
             </h2>
 
             <div
-              class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+              class="flex flex-col md:flex-row md:items-end md:justify-between gap-4"
             >
               <div class="text-sm gap-3 space-y-1">
                 <p class="text-gray-700">
@@ -54,6 +61,9 @@
                 </p>
                 <p class="text-gray-700">
                   No. Pendaftaran: {{ detail.meta.no_pendaftaran }}
+                </p>
+                <p class="text-gray-700">
+                  {{ detail.meta.gelombang }}
                 </p>
 
                 <p class="text-gray-700">
@@ -268,6 +278,13 @@
           </div>
           <div v-if="activeTab === 'Berkas'">
             <h3 class="font-medium text-gray-700">Berkas Pendaftaran</h3>
+            <BerkasTab
+              :detail="detail"
+              :dokumen="detail.dokumen"
+              :status="detail.status"
+              @verify="handleVerifyBerkas"
+              @reject="handleRejectBerkas"
+            />
           </div>
           <div v-if="activeTab === 'Pembayaran'">
             <h3 class="font-medium text-gray-700">Pembayaran</h3>
@@ -288,6 +305,7 @@
 import { ref, reactive, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import PesertaTab from "@/components/admin/PesertaTab.vue";
+import BerkasTab from "@/components/admin/BerkasTab.vue";
 import { getPendaftaranById } from "@/lib/services/pendaftaranService";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { updatePendaftaran } from "@/lib/services/pendaftaranService";
@@ -403,6 +421,7 @@ const orangTuaIbuFields = [
 const isEditPeserta = ref(false);
 const detail = reactive({
   meta: {},
+  dokumen: [],
   peserta: {},
   alamat: {},
   kesehatan: {},
@@ -420,6 +439,7 @@ const form = reactive({
   ibu: {},
 });
 
+const BASE_FILE_URL = import.meta.env.VITE_BASE_FILE_URL;
 const mapPendaftaran = (data) => {
   if (!data) return {};
 
@@ -427,6 +447,11 @@ const mapPendaftaran = (data) => {
   const orangTua = Array.isArray(peserta.orang_tua) ? peserta.orang_tua : [];
   const ayah = orangTua.find((o) => o.tipe === "ayah");
   const ibu = orangTua.find((o) => o.tipe === "ibu");
+
+  const allDokumen = (data.dokumen || []).map((d) => ({
+    ...d,
+    file_path: `${BASE_FILE_URL}${d.file_path}`,
+  }));
 
   return {
     meta: {
@@ -441,6 +466,12 @@ const mapPendaftaran = (data) => {
       tahun_ajaran: data.tahun_ajaran?.label,
       status_observasi: data.status_observasi,
     },
+    dokumen: allDokumen.filter((d) =>
+      ["kk", "akta", "kia"].includes(d.jenis_dokumen),
+    ),
+    foto: allDokumen.find((d) => d.jenis_dokumen === "foto") || null,
+    pembayaran:
+      allDokumen.find((d) => d.jenis_dokumen === "bukti_pembayaran") || null,
     peserta: {
       jenis: data.jenis,
       program: data.program,
@@ -512,6 +543,7 @@ const mapPendaftaran = (data) => {
     },
   };
 };
+console.log(detail.dokumen[0]?.file_path);
 
 const fetchDetail = async () => {
   try {
