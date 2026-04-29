@@ -155,7 +155,7 @@
                         {{ field.label }}
                       </p>
                       <p class="text-sm text-gray-700 font-medium">
-                        {{ dataPeserta[field.key] || "-" }}
+                        {{ detail.peserta[field.key] || "-" }}
                       </p>
                     </div>
                   </div>
@@ -178,7 +178,7 @@
                         {{ field.label }}
                       </p>
                       <p class="text-sm text-gray-700 font-medium">
-                        {{ dataAlamat[field.key] || "-" }}
+                        {{ detail.alamat[field.key] || "-" }}
                       </p>
                     </div>
                   </div>
@@ -201,7 +201,7 @@
                         {{ field.label }}
                       </p>
                       <p class="text-sm text-gray-700 font-medium">
-                        {{ dataAlamat[field.key] || "-" }}
+                        {{ detail.alamat[field.key] || "-" }}
                       </p>
                     </div>
                   </div>
@@ -225,7 +225,7 @@
                         {{ field.label }}
                       </p>
                       <p class="text-sm text-gray-700 font-medium">
-                        {{ dataKesehatan[field.key] || "-" }}
+                        {{ detail.kesehatan[field.key] || "-" }}
                       </p>
                     </div>
                   </div>
@@ -248,7 +248,7 @@
                         {{ field.label }}
                       </p>
                       <p class="text-sm text-gray-700 font-medium">
-                        {{ dataInformasi[field.key] || "-" }}
+                        {{ detail.informasi[field.key] || "-" }}
                       </p>
                     </div>
                   </div>
@@ -271,7 +271,7 @@
                         {{ field.label }}
                       </label>
                       <input
-                        v-model="formPeserta[field.key]"
+                        v-model="form.peserta[field.key]"
                         class="w-full px-3 py-2 border rounded-lg text-sm"
                       />
                     </div>
@@ -296,7 +296,7 @@
                         {{ field.label }}
                       </label>
                       <input
-                        v-model="formAlamat[field.key]"
+                        v-model="form.alamat[field.key]"
                         class="w-full px-3 py-2 border rounded-lg text-sm"
                       />
                     </div>
@@ -321,7 +321,7 @@
                         {{ field.label }}
                       </label>
                       <input
-                        v-model="formAlamat[field.key]"
+                        v-model="form.alamat[field.key]"
                         class="w-full px-3 py-2 border rounded-lg text-sm"
                       />
                     </div>
@@ -346,7 +346,7 @@
                         {{ field.label }}
                       </label>
                       <input
-                        v-model="formKesehatan[field.key]"
+                        v-model="form.kesehatan[field.key]"
                         class="w-full px-3 py-2 border rounded-lg text-sm"
                       />
                     </div>
@@ -371,7 +371,7 @@
                         {{ field.label }}
                       </label>
                       <input
-                        v-model="formInformasi[field.key]"
+                        v-model="form.informasi[field.key]"
                         class="w-full px-3 py-2 border rounded-lg text-sm"
                       />
                     </div>
@@ -404,7 +404,7 @@
                         {{ field.label }}
                       </p>
                       <p class="text-sm text-gray-700 font-medium">
-                        {{ dataAyah[field.key] || "-" }}
+                        {{ detail.ayah[field.key] || "-" }}
                       </p>
                     </div>
                   </div>
@@ -422,7 +422,7 @@
                         {{ field.label }}
                       </p>
                       <p class="text-sm text-gray-700 font-medium">
-                        {{ dataIbu[field.key] || "-" }}
+                        {{ detail.ibu[field.key] || "-" }}
                       </p>
                     </div>
                   </div>
@@ -450,7 +450,7 @@
                           {{ field.label }}
                         </label>
                         <input
-                          v-model="formOrangTuaAyah[field.key]"
+                          v-model="form.ayah[field.key]"
                           class="w-full px-3 py-2 border rounded-lg text-sm"
                         />
                       </div>
@@ -469,7 +469,7 @@
                           {{ field.label }}
                         </label>
                         <input
-                          v-model="formOrangTuaIbu[field.key]"
+                          v-model="form.ibu[field.key]"
                           class="w-full px-3 py-2 border rounded-lg text-sm"
                         />
                       </div>
@@ -498,7 +498,9 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { getPendaftaranById } from "@/lib/services/pendaftaranService";
 import {
   SquarePen,
   ChevronRight,
@@ -511,6 +513,13 @@ import {
   Info,
 } from "lucide-vue-next";
 
+const route = useRoute();
+const id = route.params.id;
+console.log(id);
+console.log(route.params);
+
+const activeTab = ref("Peserta");
+
 const tabs = [
   "Peserta",
   "Orang Tua",
@@ -519,9 +528,8 @@ const tabs = [
   "Asesmen",
   "Catatan",
 ];
-const activeTab = ref("Peserta");
 
-/* data */
+/* field */
 const pesertaFields = [
   { label: "Jenis", key: "jenis" },
   { label: "Program", key: "program" },
@@ -601,116 +609,151 @@ const orangTuaIbuFields = [
   { label: "Alamat Kantor Ibu", key: "alamat_kantor_ibu" },
 ];
 
-const dataPeserta = reactive({
-  jenis: "TK",
-  program: "Reguler",
-  nama_lengkap: "Siti Aisyah Putri",
-  no_kk: "3322114455667788",
-  nama_panggilan: "Aisyah",
-  no_akta: "1234567890",
-  tempat_lahir: "Semarang",
-  agama: "Islam",
-  tanggal_lahir: "2019-03-16",
-  no_telepon: "081234567890",
-  jenis_kelamin: "Perempuan",
-  anak_ke: 2,
-  kewarganegaraan: "Indonesia",
-  jumlah_saudara: 3,
-  nik: "3322111603190001",
-  bahasa_sehari_hari: "Indonesia",
-});
-
-const dataAlamat = reactive({
-  alamat_lengkap: "Jl. Raya Semarang No. 1 Perumahan Semarang Baru",
-  rt: "01",
-  rw: "01",
-  desa_kelurahan: "Semarang Baru",
-  kecamatan: "Semarang Selatan",
-  kabupaten: "Kota Semarang",
-  kode_pos: "50151",
-});
-
-const dataKesehatan = reactive({
-  berat_badan: 18,
-  lingkar_kepala: 50,
-  golongan_darah: "O",
-  riwayat_penyakit: "Tidak ada",
-  alergi: "Tidak ada",
-  kebutuhan_khusus: "Tidak ada",
-});
-
-const dataInformasi = reactive({
-  tinggal_bersama: "Orang Tua",
-  kendaraan_ke_sekolah: "Diantar Orang Tua",
-  jarak_ke_sekolah: 3,
-  waktu_tempuh: "10 menit",
-  pernah_sekolah_sebelumnya: true,
-  nama_sekolah_sebelumnya: "TK Melati",
-  npsn_sekolah: "20345678",
-  nisn: "0098765432",
-  bakat: "Menggambar",
-  hobi: "Mewarnai",
-  cita_cita: "Dokter",
-});
-
-const dataAyah = reactive({
-  nama_ayah: "Budi Santoso",
-  tempat_lahir_ayah: "Semarang",
-  tanggal_lahir_ayah: "1985-06-12",
-  nik_ayah: "3322111206850001",
-  pendidikan_ayah: "S1",
-  pekerjaan_ayah: "Karyawan Swasta",
-  pendapatan_ayah: "5.000.000 - 7.000.000",
-  no_hp_ayah: "081234567891",
-  email_ayah: "budi.santoso@gmail.com",
-  alamat_kantor_ayah: "Jl. Industri No. 10, Semarang",
-});
-
-const dataIbu = reactive({
-  nama_ibu: "Siti Aminah",
-  tempat_lahir_ibu: "Semarang",
-  tanggal_lahir_ibu: "1988-09-20",
-  nik_ibu: "3322112009880002",
-  pendidikan_ibu: "SMA",
-  pekerjaan_ibu: "Ibu Rumah Tangga",
-  pendapatan_ibu: "Tidak Berpenghasilan",
-  no_hp_ibu: "081234567892",
-  email_ibu: "siti.aminah@gmail.com",
-  alamat_kantor_ibu: "-",
-});
-
 const isEditPeserta = ref(false);
-const formPeserta = reactive({});
-const formAlamat = reactive({});
-const formKesehatan = reactive({});
-const formInformasi = reactive({});
-const formOrangTuaAyah = reactive({});
-const formOrangTuaIbu = reactive({});
+const detail = reactive({
+  peserta: {},
+  alamat: {},
+  kesehatan: {},
+  informasi: {},
+  ayah: {},
+  ibu: {},
+});
+
+const form = reactive({
+  peserta: {},
+  alamat: {},
+  kesehatan: {},
+  informasi: {},
+  ayah: {},
+  ibu: {},
+});
+
+const mapPendaftaran = (data) => {
+  if (!data) return {};
+
+  const peserta = data.peserta || {};
+  const orangTua = Array.isArray(peserta.orang_tua) ? peserta.orang_tua : [];
+  const ayah = orangTua.find((o) => o.tipe === "ayah");
+  const ibu = orangTua.find((o) => o.tipe === "ibu");
+
+  return {
+    peserta: {
+      jenis: data.jenis,
+      program: data.program,
+      nama_lengkap: peserta.nama_lengkap,
+      no_kk: peserta.no_kk,
+      nama_panggilan: peserta.nama_panggilan,
+      no_akta: peserta.no_akta,
+      tempat_lahir: peserta.tempat_lahir,
+      agama: peserta.agama,
+      tanggal_lahir: peserta.tanggal_lahir,
+      no_telepon: peserta.no_telp,
+      jenis_kelamin: peserta.jenis_kelamin === "P" ? "Perempuan" : "Laki-laki",
+      anak_ke: peserta.anak_ke,
+      kewarganegaraan: peserta.kewarganegaraan,
+      jumlah_saudara: peserta.jumlah_saudara,
+      nik: peserta.nik,
+      bahasa_sehari_hari: peserta.bahasa,
+    },
+
+    alamat: {
+      alamat_lengkap: peserta.alamat_domisili?.alamat_lengkap,
+      rt: peserta.alamat_domisili?.rt,
+      rw: peserta.alamat_domisili?.rw,
+      desa_kelurahan: peserta.alamat_domisili?.desa,
+      kecamatan: peserta.alamat_domisili?.kecamatan,
+      kabupaten: peserta.alamat_domisili?.kabupaten,
+      kode_pos: peserta.alamat_domisili?.kode_pos,
+    },
+
+    kesehatan: peserta.kesehatan || {},
+
+    informasi: {
+      tinggal_bersama: peserta.informasi?.tinggal_dengan,
+      kendaraan_ke_sekolah: peserta.informasi?.kendaraan,
+      jarak_ke_sekolah: peserta.informasi?.jarak_sekolah,
+      waktu_tempuh: peserta.informasi?.waktu_tempuh,
+      nama_sekolah_sebelumnya: peserta.informasi?.nama_sekolah,
+      npsn_sekolah: peserta.informasi?.npsn,
+      nisn: peserta.informasi?.nisn,
+      bakat: peserta.informasi?.bakat,
+      hobi: peserta.informasi?.hobi,
+      cita_cita: peserta.informasi?.cita_cita,
+    },
+
+    ayah: {
+      nama_ayah: ayah?.nama,
+      tempat_lahir_ayah: ayah?.tempat_lahir,
+      tanggal_lahir_ayah: ayah?.tanggal_lahir,
+      nik_ayah: ayah?.nik,
+      pendidikan_ayah: ayah?.pendidikan,
+      pekerjaan_ayah: ayah?.pekerjaan,
+      pendapatan_ayah: ayah?.pendapatan,
+      no_hp_ayah: ayah?.no_hp,
+      email_ayah: ayah?.email,
+      alamat_kantor_ayah: ayah?.alamat_kantor,
+    },
+
+    ibu: {
+      nama_ibu: ibu?.nama,
+      tempat_lahir_ibu: ibu?.tempat_lahir,
+      tanggal_lahir_ibu: ibu?.tanggal_lahir,
+      nik_ibu: ibu?.nik,
+      pendidikan_ibu: ibu?.pendidikan,
+      pekerjaan_ibu: ibu?.pekerjaan,
+      pendapatan_ibu: ibu?.pendapatan,
+      no_hp_ibu: ibu?.no_hp,
+      email_ibu: ibu?.email,
+      alamat_kantor_ibu: ibu?.alamat_kantor,
+    },
+  };
+};
+
+const fetchDetail = async () => {
+  try {
+    const res = await getPendaftaranById(id);
+    console.log("res", res);
+
+    if (!res?.data) return;
+
+    const mapped = mapPendaftaran(res.data);
+    console.log("mapped", mapped);
+
+    Object.assign(detail, mapped);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const startEdit = () => {
-  Object.assign(formPeserta, dataPeserta);
-  Object.assign(formAlamat, dataAlamat);
-  Object.assign(formKesehatan, dataKesehatan);
-  Object.assign(formInformasi, dataInformasi);
-  Object.assign(formOrangTuaAyah, dataAyah);
-  Object.assign(formOrangTuaIbu, dataIbu);
+  Object.assign(form.peserta, detail.peserta);
+  Object.assign(form.alamat, detail.alamat);
+  Object.assign(form.kesehatan, detail.kesehatan);
+  Object.assign(form.informasi, detail.informasi);
+  Object.assign(form.ayah, detail.ayah);
+  Object.assign(form.ibu, detail.ibu);
 
   isEditPeserta.value = true;
 };
 
 const saveEdit = () => {
-  Object.assign(dataPeserta, formPeserta);
-  Object.assign(dataAlamat, formAlamat);
-  Object.assign(dataKesehatan, formKesehatan);
-  Object.assign(dataInformasi, formInformasi);
-  Object.assign(dataAyah, formOrangTuaAyah);
-  Object.assign(dataIbu, formOrangTuaIbu);
+  Object.assign(detail.peserta, form.peserta);
+  Object.assign(detail.alamat, form.alamat);
+  Object.assign(detail.kesehatan, form.kesehatan);
+  Object.assign(detail.informasi, form.informasi);
+  Object.assign(detail.ayah, form.ayah);
+  Object.assign(detail.ibu, form.ibu);
 
   isEditPeserta.value = false;
 };
+
 const cancelEdit = () => {
   isEditPeserta.value = false;
 };
+
+onMounted(async () => {
+  await fetchDetail();
+});
 </script>
 
 <style lang="scss" scoped></style>
