@@ -65,3 +65,12 @@ export const rejectPendaftaran = (id) => {
     method: "PATCH",
   });
 };
+
+export const updateStatusPembayaran = (id, status) => {
+  return request(`/pendaftaran/${id}/status-pembayaran`, {
+    method: "PATCH",
+    body: {
+      status_pembayaran: status,
+    },
+  });
+};

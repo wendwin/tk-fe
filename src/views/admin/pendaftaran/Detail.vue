@@ -288,6 +288,12 @@
           </div>
           <div v-if="activeTab === 'Pembayaran'">
             <h3 class="font-medium text-gray-700">Pembayaran</h3>
+            <PembayaranTab
+              :pembayaran="detail.pembayaran"
+              :status="detail.meta.status_pembayaran"
+              @verify="handleVerifyPembayaran"
+              @reject="handleRejectPembayaran"
+            />
           </div>
           <div v-if="activeTab === 'Asesmen'">
             <h3 class="font-medium text-gray-700">Hasil Asesmen</h3>
@@ -306,13 +312,17 @@ import { ref, reactive, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import PesertaTab from "@/components/admin/PesertaTab.vue";
 import BerkasTab from "@/components/admin/BerkasTab.vue";
+import PembayaranTab from "@/components/admin/PembayaranTab.vue";
 import {
   getPendaftaranById,
   verifyPendaftaran,
   rejectPendaftaran,
 } from "@/lib/services/pendaftaranService";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
-import { updatePendaftaran } from "@/lib/services/pendaftaranService";
+import {
+  updatePendaftaran,
+  updateStatusPembayaran,
+} from "@/lib/services/pendaftaranService";
 
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
 import formatDateTimeID from "@/lib/utils/formatDateTimeID";
@@ -426,6 +436,8 @@ const isEditPeserta = ref(false);
 const detail = reactive({
   meta: {},
   dokumen: [],
+  foto: null,
+  pembayaran: null,
   peserta: {},
   alamat: {},
   kesehatan: {},
@@ -711,6 +723,26 @@ const handleRejectBerkas = async () => {
     await rejectPendaftaran(detail.meta.id, "rejected");
     detail.meta.status = "rejected";
     showSuccess("Berhasil ditolak");
+  } catch (err) {
+    showError(err.message);
+  }
+};
+
+const handleVerifyPembayaran = async () => {
+  try {
+    await updateStatusPembayaran(detail.meta.id, "paid");
+    detail.meta.status_pembayaran = "paid";
+    showSuccess("Pembayaran diverifikasi");
+  } catch (err) {
+    showError(err.message);
+  }
+};
+
+const handleRejectPembayaran = async () => {
+  try {
+    await updateStatusPembayaran(detail.meta.id, "failed");
+    detail.meta.status_pembayaran = "failed";
+    showSuccess("Pembayaran ditolak");
   } catch (err) {
     showError(err.message);
   }
