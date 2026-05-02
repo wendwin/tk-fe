@@ -284,7 +284,9 @@
             </div>
           </div>
           <div v-if="activeTab === 'Berkas'">
-            <h3 class="font-medium text-gray-700">Berkas Pendaftaran</h3>
+            <h3 class="font-medium text-gray-700 flex items-center gap-2">
+              <FolderClosed class="w-5 h-5" /> Berkas Pendaftaran
+            </h3>
             <BerkasTab
               :detail="detail"
               :dokumen="detail.dokumen"
@@ -294,7 +296,9 @@
             />
           </div>
           <div v-if="activeTab === 'Pembayaran'">
-            <h3 class="font-medium text-gray-700">Pembayaran</h3>
+            <h3 class="font-medium text-gray-700 flex items-center gap-2">
+              <Banknote class="w-5 h-5" />Pembayaran
+            </h3>
             <PembayaranTab
               :pembayaran="detail.pembayaran"
               :status="detail.meta.status_pembayaran"
@@ -303,7 +307,9 @@
             />
           </div>
           <div v-if="activeTab === 'Asesmen'">
-            <h3 class="font-medium text-gray-700">Hasil Asesmen</h3>
+            <h3 class="font-medium text-gray-700 flex items-center gap-2">
+              <FileText class="w-5 h-5" /> Hasil Asesmen
+            </h3>
             <AsesmenView :data="hasilAsesmen" />
           </div>
           <div v-if="activeTab === 'Catatan'">
@@ -350,6 +356,9 @@ import {
   Users,
   Info,
   Download,
+  FolderClosed,
+  Banknote,
+  FileText,
 } from "lucide-vue-next";
 
 const route = useRoute();
