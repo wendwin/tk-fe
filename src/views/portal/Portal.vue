@@ -134,6 +134,7 @@ const activeTab = ref("formulir");
 const samaDenganKK = ref(true);
 const hasilPengumuman = ref("pending");
 const kodePembayaran = ref("047");
+const statusPendaftaran = ref("pending");
 const statusPembayaran = ref("unpaid");
 const asesmenSubmitted = ref(false);
 const formulirSaved = computed(() => !!pendaftaranId.value);
@@ -177,6 +178,7 @@ const loadPendaftaran = async () => {
     if (!data) return;
 
     pendaftaranId.value = data.id;
+    statusPendaftaran.value = data.status;
     statusPembayaran.value = data.status_pembayaran;
     hasilPengumuman.value = data.status;
 
@@ -223,7 +225,9 @@ const progressPct = computed(() => {
   if (berkasSaved.value) pts += 25;
 
   if (statusPembayaran.value === "pending") pts += 10;
-  if (statusPembayaran.value === "paid") pts += 25;
+  if (statusPembayaran.value === "paid") pts += 15;
+
+  if (statusPendaftaran.value === "verified") pts += 10;
 
   if (asesmenDone.value) pts += 15;
 
@@ -274,6 +278,14 @@ const handlePaymentSaved = async () => {
 
 const handleAsesmenSubmitted = async () => {
   await loadPendaftaran();
+
+  if (statusPembayaran.value === "unpaid") {
+    showSuccess("Asesmen berhasil disimpan, selesaikan pembayaran");
+    activeTab.value = "pembayaran";
+    return;
+  }
+
+  showSuccess("Asesmen berhasil disimpan");
   activeTab.value = "pengumuman";
 };
 

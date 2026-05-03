@@ -116,8 +116,6 @@ const submitAsesmen = async () => {
 
     isSubmitted.value = true;
     emit("submitted");
-
-    showSuccess("Jawaban berhasil disimpan");
   } catch (err) {
     showError(err.message || "Gagal menyimpan jawaban");
   } finally {
