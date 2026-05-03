@@ -23,9 +23,7 @@
       </div>
 
       <div class="px-6 py-5 space-y-5">
-        <div v-if="loading">Loading...</div>
-
-        <div v-else>
+        <div>
           <div
             v-for="item in pertanyaanList"
             :key="item.id"
@@ -67,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted, watch } from "vue";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { getPertanyaanAsesmen } from "@/lib/services/asesmenService";
 import { createJawabanAsesmen } from "@/lib/services/asesmenService";
@@ -118,8 +116,6 @@ const submitAsesmen = async () => {
 
     isSubmitted.value = true;
     emit("submitted");
-
-    showSuccess("Jawaban berhasil disimpan");
   } catch (err) {
     showError(err.message || "Gagal menyimpan jawaban");
   } finally {
@@ -127,22 +123,26 @@ const submitAsesmen = async () => {
   }
 };
 
-onMounted(() => {
-  pertanyaanList.value = props.pertanyaan.map((item) => {
-    const found = props.initialJawaban.find((j) => j.id_pertanyaan === item.id);
+watch(
+  () => [props.pertanyaan, props.initialJawaban],
+  ([pertanyaan, jawaban]) => {
+    if (!pertanyaan || pertanyaan.length === 0) return;
 
-    return {
-      id: item.id,
-      pertanyaan: item.pertanyaan,
-      urutan: item.urutan,
-      value: found ? found.jawaban : "",
-    };
-  });
+    pertanyaanList.value = pertanyaan.map((item) => {
+      const found = jawaban?.find((j) => j.id_pertanyaan === item.id);
 
-  if (props.initialJawaban.length > 0) {
-    isSubmitted.value = true;
-  }
-});
+      return {
+        id: item.id,
+        pertanyaan: item.pertanyaan,
+        urutan: item.urutan,
+        value: found ? found.jawaban : "",
+      };
+    });
+
+    isSubmitted.value = (jawaban || []).length > 0;
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped></style>

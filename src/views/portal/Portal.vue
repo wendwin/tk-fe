@@ -46,14 +46,12 @@
           v-for="tab in tabs"
           :key="tab.id"
           @click="goTab(tab)"
-          :title="tab.locked ? tab.lockMsg : tab.label"
-          class="flex-1 min-w-[120px] flex items-center justify-center gap-1 py-2 px-2 rounded-lg relative transition-all border-none"
+          :title="tab.label"
+          class="flex-1 min-w-[120px] flex items-center justify-center gap-1 py-2 px-2 rounded-lg transition-all"
           :class="[
             activeTab === tab.id
               ? 'bg-[#005DA7] text-white'
-              : tab.locked
-                ? 'opacity-50 cursor-not-allowed bg-gray-200 text-gray-400'
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 cursor-pointer',
+              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 cursor-pointer',
           ]"
         >
           <span class="text-base leading-none">
@@ -73,7 +71,10 @@
         <Form :initial-data="pendaftaranData" @saved="handleFormSaved" />
       </div>
       <div v-else-if="activeTab === 'berkas'" key="berkas">
-        <UploadBerkas @saved="handleBerkasSaved" />
+        <UploadBerkas
+          :pendaftaran-id="pendaftaranId"
+          @saved="handleBerkasSaved"
+        />
       </div>
       <div v-else-if="activeTab === 'pembayaran'" key="pembayaran">
         <UploadPayment
@@ -133,6 +134,7 @@ const activeTab = ref("formulir");
 const samaDenganKK = ref(true);
 const hasilPengumuman = ref("pending");
 const kodePembayaran = ref("047");
+const statusPendaftaran = ref("pending");
 const statusPembayaran = ref("unpaid");
 const asesmenSubmitted = ref(false);
 const formulirSaved = computed(() => !!pendaftaranId.value);
@@ -140,20 +142,27 @@ const berkasSaved = ref(false);
 const pembayaranDone = ref(false);
 const asesmenDone = computed(() => asesmenJawaban.value.length > 0);
 
-const pendaftaranId = ref(Number(getPendaftaranId()));
+const pendaftaranId = ref(null);
 const pendaftaranData = ref(null);
 const asesmenPertanyaan = ref([]);
 const asesmenJawaban = ref([]);
 
 const loadAsesmen = async (id) => {
   try {
-    const [pertanyaanRes, jawabanRes] = await Promise.all([
-      getPertanyaanAsesmen(),
-      getJawabanAsesmen(id),
-    ]);
-
+    const pertanyaanRes = await getPertanyaanAsesmen();
     asesmenPertanyaan.value = pertanyaanRes.data;
-    asesmenJawaban.value = jawabanRes.data;
+
+    if (!id) {
+      asesmenJawaban.value = [];
+      return;
+    }
+
+    try {
+      const jawabanRes = await getJawabanAsesmen(id);
+      asesmenJawaban.value = jawabanRes.data || [];
+    } catch {
+      asesmenJawaban.value = [];
+    }
   } catch (err) {
     console.log(err);
   }
@@ -164,9 +173,12 @@ const loadPendaftaran = async () => {
     const res = await getMyPendaftaran();
     const data = res.data;
 
+    console.log("dataaaaaa", data);
+
     if (!data) return;
 
     pendaftaranId.value = data.id;
+    statusPendaftaran.value = data.status;
     statusPembayaran.value = data.status_pembayaran;
     hasilPengumuman.value = data.status;
 
@@ -175,9 +187,6 @@ const loadPendaftaran = async () => {
         .length >= 4;
 
     pendaftaranData.value = data;
-
-    const asesmenRes = await getJawabanAsesmen(data.id);
-    asesmenJawaban.value = asesmenRes.data;
 
     await loadAsesmen(data.id);
   } catch (err) {
@@ -190,36 +199,11 @@ const loadPendaftaran = async () => {
 };
 
 const tabs = computed(() => [
-  {
-    id: "formulir",
-    label: "Formulir",
-    locked: false,
-    icon: "document-text-outline",
-  },
-  {
-    id: "berkas",
-    label: "Berkas",
-    locked: false,
-    icon: "folder-outline",
-  },
-  {
-    id: "pembayaran",
-    label: "Pembayaran",
-    locked: false,
-    icon: "card-outline",
-  },
-  {
-    id: "asesmen",
-    label: "Asesmen",
-    locked: statusPembayaran.value !== "paid",
-    icon: "clipboard-outline",
-  },
-  {
-    id: "pengumuman",
-    label: "Pengumuman",
-    locked: false,
-    icon: "megaphone-outline",
-  },
+  { id: "formulir", label: "Formulir", icon: "document-text-outline" },
+  { id: "berkas", label: "Berkas", icon: "folder-outline" },
+  { id: "pembayaran", label: "Pembayaran", icon: "card-outline" },
+  { id: "asesmen", label: "Asesmen", icon: "clipboard-outline" },
+  { id: "pengumuman", label: "Pengumuman", icon: "megaphone-outline" },
 ]);
 
 const uploadedDocs = reactive({
@@ -240,18 +224,16 @@ const progressPct = computed(() => {
   if (formulirSaved.value) pts += 25;
   if (berkasSaved.value) pts += 25;
 
-  switch (statusPembayaran.value) {
-    case "pending":
-      pts += 10;
-      break;
-    case "paid":
-      pts += 25;
-      break;
-  }
+  if (statusPembayaran.value === "pending") pts += 10;
+  if (statusPembayaran.value === "paid") pts += 15;
+
+  if (statusPendaftaran.value === "verified") pts += 10;
 
   if (asesmenDone.value) pts += 15;
 
-  if (hasilPengumuman.value === "accepted") pts = 100;
+  if (["accepted", "rejected"].includes(hasilPengumuman.value)) {
+    pts = 100;
+  }
 
   return pts;
 });
@@ -271,7 +253,6 @@ const handleLogout = async () => {
 };
 
 const goTab = (tab) => {
-  if (tab.locked) return;
   activeTab.value = tab.id;
 };
 
@@ -289,16 +270,28 @@ const handleBerkasSaved = () => {
 
 const handlePaymentSaved = async () => {
   await loadPendaftaran();
-  activeTab.value = "pembayaran";
+
+  setTimeout(() => {
+    activeTab.value = "asesmen";
+  }, 1500);
 };
 
 const handleAsesmenSubmitted = async () => {
   await loadPendaftaran();
+
+  if (statusPembayaran.value === "unpaid") {
+    showSuccess("Asesmen berhasil disimpan, selesaikan pembayaran");
+    activeTab.value = "pembayaran";
+    return;
+  }
+
+  showSuccess("Asesmen berhasil disimpan");
   activeTab.value = "pengumuman";
 };
 
 onMounted(async () => {
   await loadPendaftaran();
+  await loadAsesmen(pendaftaranId.value);
 
   if (!pendaftaranId.value) {
     activeTab.value = "formulir";

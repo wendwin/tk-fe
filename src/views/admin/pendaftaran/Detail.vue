@@ -284,7 +284,9 @@
             </div>
           </div>
           <div v-if="activeTab === 'Berkas'">
-            <h3 class="font-medium text-gray-700">Berkas Pendaftaran</h3>
+            <h3 class="font-medium text-gray-700 flex items-center gap-2">
+              <FolderClosed class="w-5 h-5" /> Berkas Pendaftaran
+            </h3>
             <BerkasTab
               :detail="detail"
               :dokumen="detail.dokumen"
@@ -294,7 +296,9 @@
             />
           </div>
           <div v-if="activeTab === 'Pembayaran'">
-            <h3 class="font-medium text-gray-700">Pembayaran</h3>
+            <h3 class="font-medium text-gray-700 flex items-center gap-2">
+              <Banknote class="w-5 h-5" />Pembayaran
+            </h3>
             <PembayaranTab
               :pembayaran="detail.pembayaran"
               :status="detail.meta.status_pembayaran"
@@ -303,7 +307,10 @@
             />
           </div>
           <div v-if="activeTab === 'Asesmen'">
-            <h3 class="font-medium text-gray-700">Hasil Asesmen</h3>
+            <h3 class="font-medium text-gray-700 flex items-center gap-2">
+              <FileText class="w-5 h-5" /> Hasil Asesmen
+            </h3>
+            <AsesmenView :data="hasilAsesmen" />
           </div>
           <div v-if="activeTab === 'Catatan'">
             <h3 class="font-medium text-gray-700">Catatan Admin</h3>
@@ -320,10 +327,16 @@ import { useRoute } from "vue-router";
 import PesertaTab from "@/components/admin/PesertaTab.vue";
 import BerkasTab from "@/components/admin/BerkasTab.vue";
 import PembayaranTab from "@/components/admin/PembayaranTab.vue";
+import AsesmenView from "@/components/admin/AsesmenView.vue";
 import {
   getPendaftaranById,
   updateStatusPendaftaran,
 } from "@/lib/services/pendaftaranService";
+import {
+  getPertanyaanAsesmen,
+  getJawabanAsesmen,
+} from "@/lib/services/asesmenService";
+
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import {
   updatePendaftaran,
@@ -343,12 +356,17 @@ import {
   Users,
   Info,
   Download,
+  FolderClosed,
+  Banknote,
+  FileText,
 } from "lucide-vue-next";
 
 const route = useRoute();
 const id = route.params.id;
 const loading = ref(false);
 const activeTab = ref("Peserta");
+const pertanyaan = ref([]);
+const jawaban = ref([]);
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 const BASE_FILE_URL = import.meta.env.VITE_BASE_FILE_URL;
@@ -711,6 +729,34 @@ const saveEdit = async () => {
   }
 };
 
+const fetchAsesmen = async () => {
+  try {
+    const [resPertanyaan, resJawaban] = await Promise.all([
+      getPertanyaanAsesmen(),
+      getJawabanAsesmen(id),
+    ]);
+
+    pertanyaan.value = resPertanyaan.data;
+    jawaban.value = resJawaban.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const hasilAsesmen = computed(() => {
+  return pertanyaan.value.map((q) => {
+    const j = jawaban.value.find((a) => a.id_pertanyaan === q.id);
+    console.log("j", j);
+
+    return {
+      id: q.id,
+      urutan: q.urutan,
+      pertanyaan: q.pertanyaan,
+      jawaban: j?.jawaban || "-",
+    };
+  });
+});
+
 const handleVerifyBerkas = async () => {
   try {
     await updateStatusPendaftaran(detail.meta.id, "verified");
@@ -777,6 +823,8 @@ const cancelEdit = () => {
 
 onMounted(async () => {
   await fetchDetail();
+  await fetchDetail();
+  await fetchAsesmen();
 });
 </script>
 

@@ -11,8 +11,7 @@
             <CircleAlert class="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
             <div class="max-w-xl">
               <p>
-                Berikut adalah informasi terbaru terkait proses pendaftaran dan
-                jadwal observasi.
+                Berikut adalah informasi terbaru terkait proses pendaftaran.
               </p>
             </div>
           </div>
@@ -20,7 +19,6 @@
       </div>
 
       <div class="px-6 py-8 space-y-6">
-        <!-- STATUS UTAMA -->
         <div class="text-center space-y-2">
           <h1
             class="text-2xl font-bold text-gray-800"
@@ -31,17 +29,14 @@
           <p class="text-sm text-gray-500">Status pendaftaran Anda saat ini</p>
         </div>
 
-        <!-- OBSERVASI + DOWNLOAD -->
         <div class="grid md:grid-cols-2 gap-4">
-          <!-- OBSERVASI -->
-          <div class="p-4 rounded-lg bg-yellow-50 border text-sm">
+          <div class="p-4 rounded-lg bg-gray-100 border text-sm">
             <p class="font-semibold text-gray-700 mb-1">Jadwal Observasi</p>
             <p class="text-gray-600">{{ observasiInfo }}</p>
           </div>
 
-          <!-- DOWNLOAD -->
           <div
-            class="p-4 rounded-lg bg-blue-50 border text-sm flex flex-col justify-between"
+            class="p-4 rounded-lg bg-gray-100 border text-sm flex flex-col justify-between"
           >
             <div>
               <p class="font-semibold text-gray-700 mb-1">Bukti Pendaftaran</p>
@@ -91,15 +86,17 @@ const statusClass = computed(() => {
 });
 
 const statusText = computed(() => {
+  const nama = data.value?.peserta?.nama_lengkap || "-";
+
   switch (data.value?.status) {
     case "pending":
       return "Berkas Anda sedang diverifikasi";
     case "verified":
-      return "Berkas pendaftaran berhasil diverifikasi";
+      return "Pendaftaran berhasil diverifikasi!";
     case "accepted":
-      return "Selamat! Anda diterima";
+      return `Selamat! ${nama} Diterima`;
     case "rejected":
-      return "Mohon maaf, Anda belum diterima";
+      return `Mohon maaf ${nama}, Anda Belum Diterima`;
     default:
       return "-";
   }
