@@ -148,13 +148,20 @@ const asesmenJawaban = ref([]);
 
 const loadAsesmen = async (id) => {
   try {
-    const [pertanyaanRes, jawabanRes] = await Promise.all([
-      getPertanyaanAsesmen(),
-      getJawabanAsesmen(id),
-    ]);
-
+    const pertanyaanRes = await getPertanyaanAsesmen();
     asesmenPertanyaan.value = pertanyaanRes.data;
-    asesmenJawaban.value = jawabanRes.data;
+
+    if (!id) {
+      asesmenJawaban.value = [];
+      return;
+    }
+
+    try {
+      const jawabanRes = await getJawabanAsesmen(id);
+      asesmenJawaban.value = jawabanRes.data || [];
+    } catch {
+      asesmenJawaban.value = [];
+    }
   } catch (err) {
     console.log(err);
   }
@@ -170,7 +177,6 @@ const loadPendaftaran = async () => {
     if (!data) return;
 
     pendaftaranId.value = data.id;
-    console.log("pendaftarannnnnnId", pendaftaranId.value);
     statusPembayaran.value = data.status_pembayaran;
     hasilPengumuman.value = data.status;
 
@@ -179,9 +185,6 @@ const loadPendaftaran = async () => {
         .length >= 4;
 
     pendaftaranData.value = data;
-
-    const asesmenRes = await getJawabanAsesmen(data.id);
-    asesmenJawaban.value = asesmenRes.data;
 
     await loadAsesmen(data.id);
   } catch (err) {
@@ -276,6 +279,7 @@ const handleAsesmenSubmitted = async () => {
 
 onMounted(async () => {
   await loadPendaftaran();
+  await loadAsesmen(pendaftaranId.value);
 
   if (!pendaftaranId.value) {
     activeTab.value = "formulir";
