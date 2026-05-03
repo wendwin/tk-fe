@@ -118,7 +118,12 @@ import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { uploadBerkas } from "@/lib/services/pendaftaranService";
 import { getPendaftaranId } from "@/lib/utils/storage";
 
-const pendaftaranId = ref(Number(getPendaftaranId()));
+const props = defineProps({
+  pendaftaranId: {
+    type: Number,
+    required: true,
+  },
+});
 const uploadedDocs = reactive({});
 const emit = defineEmits(["saved"]);
 
@@ -167,7 +172,7 @@ const handleUpload = (key, event) => {
 };
 
 const simpanBerkas = async () => {
-  if (!pendaftaranId.value) {
+  if (!props.pendaftaranId) {
     showWarning("Silakan isi formulir terlebih dahulu");
     return;
   }
@@ -182,7 +187,7 @@ const simpanBerkas = async () => {
 
     console.log("Uploading berkas with payload:", payload);
 
-    await uploadBerkas(pendaftaranId.value, payload);
+    await uploadBerkas(props.pendaftaranId, payload);
 
     showSuccess("Semua berkas berhasil diupload");
 

@@ -73,7 +73,10 @@
         <Form :initial-data="pendaftaranData" @saved="handleFormSaved" />
       </div>
       <div v-else-if="activeTab === 'berkas'" key="berkas">
-        <UploadBerkas @saved="handleBerkasSaved" />
+        <UploadBerkas
+          :pendaftaran-id="pendaftaranId"
+          @saved="handleBerkasSaved"
+        />
       </div>
       <div v-else-if="activeTab === 'pembayaran'" key="pembayaran">
         <UploadPayment
@@ -140,7 +143,7 @@ const berkasSaved = ref(false);
 const pembayaranDone = ref(false);
 const asesmenDone = computed(() => asesmenJawaban.value.length > 0);
 
-const pendaftaranId = ref(Number(getPendaftaranId()));
+const pendaftaranId = ref(null);
 const pendaftaranData = ref(null);
 const asesmenPertanyaan = ref([]);
 const asesmenJawaban = ref([]);
@@ -164,9 +167,12 @@ const loadPendaftaran = async () => {
     const res = await getMyPendaftaran();
     const data = res.data;
 
+    console.log("dataaaaaa", data);
+
     if (!data) return;
 
     pendaftaranId.value = data.id;
+    console.log("pendaftarannnnnnId", pendaftaranId.value);
     statusPembayaran.value = data.status_pembayaran;
     hasilPengumuman.value = data.status;
 
