@@ -23,9 +23,7 @@
       </div>
 
       <div class="px-6 py-5 space-y-5">
-        <div v-if="loading">Loading...</div>
-
-        <div v-else>
+        <div>
           <div
             v-for="item in pertanyaanList"
             :key="item.id"

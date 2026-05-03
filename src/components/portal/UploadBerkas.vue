@@ -189,7 +189,7 @@ const simpanBerkas = async () => {
 
     await uploadBerkas(props.pendaftaranId, payload);
 
-    showSuccess("Semua berkas berhasil diupload");
+    showSuccess("Berkas berhasil diupload");
 
     emit("saved");
   } catch (err) {

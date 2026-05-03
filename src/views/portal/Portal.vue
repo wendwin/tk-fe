@@ -46,14 +46,12 @@
           v-for="tab in tabs"
           :key="tab.id"
           @click="goTab(tab)"
-          :title="tab.locked ? tab.lockMsg : tab.label"
-          class="flex-1 min-w-[120px] flex items-center justify-center gap-1 py-2 px-2 rounded-lg relative transition-all border-none"
+          :title="tab.label"
+          class="flex-1 min-w-[120px] flex items-center justify-center gap-1 py-2 px-2 rounded-lg transition-all"
           :class="[
             activeTab === tab.id
               ? 'bg-[#005DA7] text-white'
-              : tab.locked
-                ? 'opacity-50 cursor-not-allowed bg-gray-200 text-gray-400'
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 cursor-pointer',
+              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 cursor-pointer',
           ]"
         >
           <span class="text-base leading-none">
@@ -196,36 +194,11 @@ const loadPendaftaran = async () => {
 };
 
 const tabs = computed(() => [
-  {
-    id: "formulir",
-    label: "Formulir",
-    locked: false,
-    icon: "document-text-outline",
-  },
-  {
-    id: "berkas",
-    label: "Berkas",
-    locked: false,
-    icon: "folder-outline",
-  },
-  {
-    id: "pembayaran",
-    label: "Pembayaran",
-    locked: false,
-    icon: "card-outline",
-  },
-  {
-    id: "asesmen",
-    label: "Asesmen",
-    locked: statusPembayaran.value !== "paid",
-    icon: "clipboard-outline",
-  },
-  {
-    id: "pengumuman",
-    label: "Pengumuman",
-    locked: false,
-    icon: "megaphone-outline",
-  },
+  { id: "formulir", label: "Formulir", icon: "document-text-outline" },
+  { id: "berkas", label: "Berkas", icon: "folder-outline" },
+  { id: "pembayaran", label: "Pembayaran", icon: "card-outline" },
+  { id: "asesmen", label: "Asesmen", icon: "clipboard-outline" },
+  { id: "pengumuman", label: "Pengumuman", icon: "megaphone-outline" },
 ]);
 
 const uploadedDocs = reactive({
@@ -246,18 +219,14 @@ const progressPct = computed(() => {
   if (formulirSaved.value) pts += 25;
   if (berkasSaved.value) pts += 25;
 
-  switch (statusPembayaran.value) {
-    case "pending":
-      pts += 10;
-      break;
-    case "paid":
-      pts += 25;
-      break;
-  }
+  if (statusPembayaran.value === "pending") pts += 10;
+  if (statusPembayaran.value === "paid") pts += 25;
 
   if (asesmenDone.value) pts += 15;
 
-  if (hasilPengumuman.value === "accepted") pts = 100;
+  if (["accepted", "rejected"].includes(hasilPengumuman.value)) {
+    pts = 100;
+  }
 
   return pts;
 });
@@ -277,7 +246,6 @@ const handleLogout = async () => {
 };
 
 const goTab = (tab) => {
-  if (tab.locked) return;
   activeTab.value = tab.id;
 };
 
@@ -295,7 +263,10 @@ const handleBerkasSaved = () => {
 
 const handlePaymentSaved = async () => {
   await loadPendaftaran();
-  activeTab.value = "pembayaran";
+
+  setTimeout(() => {
+    activeTab.value = "asesmen";
+  }, 1500);
 };
 
 const handleAsesmenSubmitted = async () => {
