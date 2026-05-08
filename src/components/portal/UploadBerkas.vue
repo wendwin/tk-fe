@@ -24,6 +24,16 @@
             <li>
               Kartu Identitas Anak (KIA)/KMS (Riwayat Imunisasi & Vaksinasi)
             </li>
+            <li>
+              Surat Pernyataan unduh
+              <button
+                type="button"
+                @click="handleDownloadSurat"
+                class="text-blue-500 hover:underline"
+              >
+                disini
+              </button>
+            </li>
           </ol>
         </div>
       </div>
@@ -115,7 +125,10 @@
 import { ref, reactive, computed } from "vue";
 import { CircleAlert, ImagePlus, FileUp } from "lucide-vue-next";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
-import { uploadBerkas } from "@/lib/services/pendaftaranService";
+import {
+  uploadBerkas,
+  downloadSuratPernyataan,
+} from "@/lib/services/pendaftaranService";
 import { getPendaftaranId } from "@/lib/utils/storage";
 
 const props = defineProps({
@@ -203,6 +216,19 @@ const simpanBerkas = async () => {
     } else {
       showError("Terjadi kesalahan saat upload berkas");
     }
+  }
+};
+
+const handleDownloadSurat = async () => {
+  if (!props.pendaftaranId) {
+    showWarning("Isi formulir pendaftaran terlebih dahulu");
+    return;
+  }
+
+  try {
+    await downloadSuratPernyataan();
+  } catch (err) {
+    showError(err.message);
   }
 };
 </script>

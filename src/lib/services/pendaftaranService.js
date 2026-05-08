@@ -68,3 +68,31 @@ export const updateStatusPembayaran = (id, status) => {
     },
   });
 };
+
+export const downloadSuratPernyataan = async () => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/pendaftaran/download-surat-pernyataan`,
+    {
+      method: "GET",
+      credentials: "include",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Gagal download surat pernyataan");
+  }
+
+  const blob = await response.blob();
+
+  const url = window.URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "surat_pernyataan.pdf";
+
+  document.body.appendChild(link);
+  link.click();
+
+  link.remove();
+  window.URL.revokeObjectURL(url);
+};
