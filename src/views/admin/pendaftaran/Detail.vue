@@ -514,7 +514,7 @@ const mapPendaftaran = (data) => {
       status_observasi: data.status_observasi,
     },
     dokumen: allDokumen.filter((d) =>
-      ["kk", "akta", "kia"].includes(d.jenis_dokumen),
+      ["kk", "akta", "kia", "surat_pernyataan"].includes(d.jenis_dokumen),
     ),
     foto: allDokumen.find((d) => d.jenis_dokumen === "foto") || null,
     pembayaran:

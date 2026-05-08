@@ -50,15 +50,19 @@
           class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto mb-10"
         >
           <label
-            v-for="doc in dokumen"
+            v-for="(doc, index) in dokumen"
             :key="doc.key"
             :for="'file-' + doc.key"
             class="cursor-pointer border-2 rounded-xl p-4 flex flex-col items-center text-center transition hover:border-[#1181B2] hover:shadow-sm"
-            :class="
+            :class="[
               uploadedDocs[doc.key]
                 ? 'border-[#1181B2] bg-[#1181B2]/5'
-                : 'border-gray-200  border-dashed'
-            "
+                : 'border-gray-200 border-dashed',
+
+              dokumen.length % 2 !== 0 && index === dokumen.length - 1
+                ? 'sm:col-span-2 sm:max-w-[50%] sm:justify-self-center w-full'
+                : '',
+            ]"
           >
             <input
               type="file"
@@ -165,6 +169,12 @@ const dokumen = [
     hint: "Upload KIA/KMS",
     icon: FileUp,
   },
+  {
+    key: "surat_pernyataan",
+    label: "Surat Pernyataan",
+    hint: "Upload Surat Pernyataan",
+    icon: FileUp,
+  },
 ];
 
 const berkasLengkap = computed(() => {
@@ -196,6 +206,7 @@ const simpanBerkas = async () => {
       foto: uploadedDocs.foto,
       kia: uploadedDocs.kia,
       akta: uploadedDocs.akta,
+      surat_pernyataan: uploadedDocs.surat_pernyataan,
     };
 
     console.log("Uploading berkas with payload:", payload);

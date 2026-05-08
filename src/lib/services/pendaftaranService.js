@@ -21,6 +21,8 @@ export const uploadBerkas = async (id, files) => {
   if (files.foto) formData.append("foto", files.foto);
   if (files.kia) formData.append("kia", files.kia);
   if (files.akta) formData.append("akta", files.akta);
+  if (files.surat_pernyataan)
+    formData.append("surat_pernyataan", files.surat_pernyataan);
 
   return request(`/pendaftaran/${id}/upload-berkas`, {
     method: "POST",
