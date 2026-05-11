@@ -262,12 +262,12 @@
                   class="h-9 w-full rounded-lg border border-gray-300 px-3 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
                 >
                   <option value="">Pilih Agama</option>
-                  <option>Islam</option>
-                  <option>Kristen</option>
-                  <option>Katolik</option>
-                  <option>Hindu</option>
-                  <option>Budha</option>
-                  <option>Konghucu</option>
+                  <option value="islam">Islam</option>
+                  <option value="kristen">Kristen</option>
+                  <option value="katolik">Katolik</option>
+                  <option value="hindu">Hindu</option>
+                  <option value="buddha">Buddha</option>
+                  <option value="konghucu">Konghucu</option>
                 </select>
               </div>
 
@@ -414,15 +414,15 @@
               <!-- desa/kelurahan -->
               <div>
                 <label
-                  for="desa"
+                  for="kelurahan"
                   class="mb-1.5 block text-sm font-medium text-gray-700"
                 >
                   Desa/Kelurahan <span class="text-red-500">*</span>
                 </label>
                 <input
-                  id="desa"
-                  name="desa"
-                  v-model="form.peserta.alamat_domisili.desa"
+                  id="kelurahan"
+                  name="kelurahan"
+                  v-model="form.peserta.alamat_domisili.kelurahan"
                   :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
@@ -565,15 +565,15 @@
               <!-- desa/kelurahan -->
               <div>
                 <label
-                  for="desa"
+                  for="kelurahan"
                   class="mb-1.5 block text-sm font-medium text-gray-700"
                 >
                   Desa/Kelurahan <span class="text-red-500">*</span>
                 </label>
                 <input
-                  id="desa"
-                  name="desa"
-                  v-model="form.peserta.alamat_kk.desa"
+                  id="kelurahan"
+                  name="kelurahan"
+                  v-model="form.peserta.alamat_kk.kelurahan"
                   :readonly="isLocked"
                   type="text"
                   class="h-9 w-full rounded-lg border border-gray-300 px-4 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
@@ -1466,7 +1466,7 @@ const payloadRef = ref(null);
 const loading = ref(false);
 
 const form = reactive({
-  id_tahun: 1,
+  tahun_ajaran_id: 1,
   jenis: "",
   program: "",
   peserta: {
@@ -1488,7 +1488,7 @@ const form = reactive({
       alamat_lengkap: "",
       rt: "",
       rw: "",
-      desa: "",
+      kelurahan: "",
       kecamatan: "",
       kabupaten: "",
       kode_pos: "",
@@ -1497,7 +1497,7 @@ const form = reactive({
       alamat_lengkap: "",
       rt: "",
       rw: "",
-      desa: "",
+      kelurahan: "",
       kecamatan: "",
       kabupaten: "",
       kode_pos: "",
@@ -1576,18 +1576,20 @@ const simpanFormulir = () => {
   }
 
   payloadRef.value = {
-    id_tahun: 1,
+    tahun_ajaran_id: 1,
     jenis: form.jenis,
     program: form.program,
+
     peserta: {
       ...form.peserta,
+
+      alamat_kk_same: samaDenganKK.value,
+
+      alamat_kk: samaDenganKK.value ? null : form.peserta.alamat_kk,
+
       orang_tua: form.peserta.orang_tua.map((item, index) => ({
         ...item,
         tipe: index === 0 ? "ayah" : "ibu",
-        alamat:
-          form.peserta.alamat_kk && form.peserta.alamat_kk.alamat_lengkap
-            ? form.peserta.alamat_kk
-            : form.peserta.alamat_domisili,
       })),
     },
   };
