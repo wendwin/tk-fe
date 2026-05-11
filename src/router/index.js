@@ -23,11 +23,42 @@ const router = createRouter({
       component: () => import("../views/auth/Register.vue"),
       meta: { layout: "AuthLayout", guestOnly: true },
     },
+    // {
+    //   path: "/pendaftaran",
+    //   name: "Pendaftaran",
+    //   component: () => import("../views/portal/Portal.vue"),
+    //   meta: { layout: "PortalLayout", requiresAuth: true, role: ["orang_tua"] },
+    // },
     {
-      path: "/pendaftaran",
-      name: "Pendaftaran",
+      path: "/portal",
       component: () => import("../views/portal/Portal.vue"),
-      meta: { layout: "PortalLayout", requiresAuth: true, role: ["orang_tua"] },
+      meta: {
+        requiresAuth: true,
+        layout: "PortalLayout",
+        role: ["orang_tua"],
+      },
+      children: [
+        {
+          path: "",
+          name: "HomePortal",
+          component: () => import("../views/portal/Home.vue"),
+        },
+        {
+          path: "pendaftaran",
+          name: "Pendaftaran",
+          component: () => import("../views/pendaftaran/Pendaftaran.vue"),
+        },
+        // {
+        //   path: "pendaftaran/:id",
+        //   name: "DetailPendaftaran",
+        //   component: () => import("../views/orang-tua/DetailPendaftaran.vue"),
+        // },
+        // {
+        //   path: "monitoring/:id",
+        //   name: "MonitoringAnak",
+        //   component: () => import("../views/orang-tua/Monitoring.vue"),
+        // },
+      ],
     },
     {
       path: "/dashboard/admin",

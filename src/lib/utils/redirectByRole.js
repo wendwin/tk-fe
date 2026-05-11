@@ -5,9 +5,11 @@ export const redirectByRole = (role) => {
     case ROLES.ADMIN:
       return "/dashboard/admin";
     case ROLES.GURU:
-      return "/teacher";
+      return "/dashboard/guru";
+    case ROLES.KEPSEK:
+      return "/dashboard/kepsek";
     case ROLES.ORTU:
-      return "/pendaftaran";
+      return "/portal";
     default:
       return "/";
   }
