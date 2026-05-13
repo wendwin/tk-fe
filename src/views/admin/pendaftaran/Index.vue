@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <h1 class="text-lg text-gray-700 font-medium dark:text-gray-400 mb-4">
       Data Pendaftaran
@@ -268,4 +268,16 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style> -->
+
+<template>
+  <div>
+    <h1 class="text-lg text-gray-700 font-medium mb-4">Data Pendaftaran</h1>
+
+    <PendaftaranTable />
+  </div>
+</template>
+
+<script setup>
+import PendaftaranTable from "@/components/admin/pendaftaran/PendaftaranTable.vue";
+</script>

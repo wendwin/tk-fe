@@ -213,7 +213,7 @@ import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 
 import { useSidebar } from "@/composables/useSidebar";
-import { ChevronDown, LayoutGrid, Users } from "lucide-vue-next";
+import { ChevronDown, LayoutGrid, Users, UserSearch } from "lucide-vue-next";
 
 const route = useRoute();
 

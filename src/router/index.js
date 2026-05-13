@@ -82,8 +82,8 @@ const router = createRouter({
         },
         // {
         //   path: "observasi",
-        //   name: "Observasi",
-        //   component: () => import("../views/admin/Observasi.vue"),
+        //   name: "AdminObservasi",
+        //   component: () => import("../views/admin/observasi/index.vue"),
         // },
         // {
         //   path: "siswa",
