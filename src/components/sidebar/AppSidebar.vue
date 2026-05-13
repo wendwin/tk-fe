@@ -234,6 +234,11 @@ const menuGroups = [
         name: "Pendaftaran",
         to: { name: "AdminPendaftaran" },
       },
+      {
+        icon: UserSearch,
+        name: "Observasi",
+        to: { name: "AdminObservasi" },
+      },
       // {
       //   icon: UserCircleIcon,
       //   name: "User Profile",

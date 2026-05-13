@@ -80,11 +80,11 @@ const router = createRouter({
           name: "AdminPendaftarDetail",
           component: () => import("../views/admin/pendaftaran/Detail.vue"),
         },
-        // {
-        //   path: "observasi",
-        //   name: "AdminObservasi",
-        //   component: () => import("../views/admin/observasi/index.vue"),
-        // },
+        {
+          path: "observasi",
+          name: "AdminObservasi",
+          component: () => import("../views/admin/observasi/index.vue"),
+        },
         // {
         //   path: "siswa",
         //   name: "Siswa",
