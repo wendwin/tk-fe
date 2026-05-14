@@ -165,7 +165,7 @@
           <td class="px-6 py-4">
             <router-link
               :to="{
-                name: 'AdminPendaftarDetail',
+                name: 'AdminObservasiDetail',
                 params: { id: item.id },
               }"
               class="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 inline-block"

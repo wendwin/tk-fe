@@ -1,4 +1,433 @@
 <template>
+  <div class="">
+    <DetailLayout
+      title="Detail Pendaftaran"
+      back-route-name="AdminPendaftaran"
+      :detail="detail"
+      :form="form"
+      :tabs="tabs"
+      :can-edit="true"
+      :is-edit-peserta="isEditPeserta"
+      :loading="loading"
+      :peserta-fields="pesertaFields"
+      :alamat-fields="alamatFields"
+      :kesehatan-fields="kesehatanFields"
+      :informasi-fields="informasiFields"
+      :orang-tua-ayah-fields="orangTuaAyahFields"
+      :orang-tua-ibu-fields="orangTuaIbuFields"
+      @start-edit="startEdit"
+      @save-edit="saveEdit"
+      @cancel-edit="cancelEdit"
+    >
+      <template #tab-content="{ activeTab }">
+        <BerkasTab
+          v-if="activeTab === 'Berkas'"
+          :detail="detail"
+          :dokumen="detail.dokumen"
+          :status="detail.meta.status"
+          @verify="handleVerifyBerkas"
+          @reject="handleRejectBerkas"
+        />
+
+        <PembayaranTab
+          v-else-if="activeTab === 'Pembayaran'"
+          :pembayaran="detail.pembayaran"
+          :status="detail.meta.status_pembayaran"
+          @verify="handleVerifyPembayaran"
+          @reject="handleRejectPembayaran"
+        />
+
+        <AsesmenView v-else-if="activeTab === 'Asesmen'" :data="hasilAsesmen" />
+
+        <div v-else-if="activeTab === 'Catatan'">
+          <h3 class="font-medium text-gray-700">Catatan Admin</h3>
+        </div>
+      </template>
+    </DetailLayout>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
+
+import DetailLayout from "@/components/admin/pendaftaran/DetailLayout.vue";
+import BerkasTab from "@/components/admin/BerkasTab.vue";
+import PembayaranTab from "@/components/admin/PembayaranTab.vue";
+import AsesmenView from "@/components/admin/AsesmenView.vue";
+
+import { usePendaftaranDetail } from "@/composables/usePendaftaranDetail";
+
+import {
+  updatePendaftaran,
+  updateStatusPendaftaran,
+  updateStatusPembayaran,
+} from "@/lib/services/pendaftaranService";
+
+import {
+  getPertanyaanAsesmen,
+  getJawabanAsesmen,
+} from "@/lib/services/asesmenService";
+
+import { showSuccess, showError } from "@/lib/utils/toast";
+
+const route = useRoute();
+const id = route.params.id;
+
+const { detail, form, loading, fetchDetail } = usePendaftaranDetail(id);
+
+const isEditPeserta = ref(false);
+const pertanyaan = ref([]);
+const jawaban = ref([]);
+
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+const tabs = [
+  "Peserta",
+  "Orang Tua",
+  "Berkas",
+  "Pembayaran",
+  "Asesmen",
+  "Catatan",
+];
+
+/* field */
+const pesertaFields = [
+  { label: "Jenis", key: "jenis" },
+  { label: "Program", key: "program" },
+  { label: "Nama Lengkap", key: "nama_lengkap" },
+  { label: "No. KK", key: "no_kk" },
+  { label: "Nama Panggilan", key: "nama_panggilan" },
+  { label: "No. Akta", key: "no_akta" },
+  { label: "Tempat Lahir", key: "tempat_lahir" },
+  { label: "Agama", key: "agama" },
+  { label: "Tanggal Lahir", key: "tanggal_lahir" },
+  { label: "No. Telepon", key: "no_telepon" },
+  { label: "Jenis Kelamin", key: "jenis_kelamin" },
+  { label: "Anak Ke-", key: "anak_ke" },
+  { label: "Kewarganegaraan", key: "kewarganegaraan" },
+  { label: "Jumlah Saudara", key: "jumlah_saudara" },
+  { label: "NIK", key: "nik" },
+  { label: "Bahasa Sehari-hari", key: "bahasa_sehari_hari" },
+];
+
+const alamatFields = [
+  { label: "Alamat Lengkap", key: "alamat_lengkap" },
+  { label: "RT", key: "rt" },
+  { label: "RW", key: "rw" },
+  { label: "Desa/Kelurahan", key: "desa_kelurahan" },
+  { label: "Kecamatan", key: "kecamatan" },
+  { label: "Kabupaten", key: "kabupaten" },
+  { label: "Kode Pos", key: "kode_pos" },
+];
+
+const kesehatanFields = [
+  { label: "Berat Badan (kg)", key: "berat_badan" },
+  { label: "Tinggi Badan (cm)", key: "tinggi_badan" },
+  { label: "Lingkar Kepala (cm)", key: "lingkar_kepala" },
+  { label: "Golongan Darah", key: "golongan_darah" },
+  { label: "Riwayat Penyakit", key: "riwayat_penyakit" },
+  { label: "Alergi", key: "alergi" },
+  { label: "Kebutuhan Khusus", key: "kebutuhan_khusus" },
+];
+
+const informasiFields = [
+  { label: "Tinggal Bersama", key: "tinggal_bersama" },
+  { label: "Kendaraan ke Sekolah", key: "kendaraan_ke_sekolah" },
+  { label: "Jarak ke Sekolah (km)", key: "jarak_ke_sekolah" },
+  { label: "Waktu Tempuh", key: "waktu_tempuh" },
+  { label: "Nama Sekolah Sebelumnya", key: "nama_sekolah_sebelumnya" },
+  { label: "NPSN Sekolah", key: "npsn_sekolah" },
+  { label: "NISN", key: "nisn" },
+  { label: "Bakat", key: "bakat" },
+  { label: "Hobi", key: "hobi" },
+  { label: "Cita-cita", key: "cita_cita" },
+];
+
+const orangTuaAyahFields = [
+  // Ayah
+  { label: "Nama Ayah", key: "nama_ayah" },
+  { label: "Tempat Lahir Ayah", key: "tempat_lahir_ayah" },
+  { label: "Tanggal Lahir Ayah", key: "tanggal_lahir_ayah" },
+  { label: "NIK Ayah", key: "nik_ayah" },
+  { label: "Pendidikan Ayah", key: "pendidikan_ayah" },
+  { label: "Pekerjaan Ayah", key: "pekerjaan_ayah" },
+  { label: "Pendapatan Ayah", key: "pendapatan_ayah" },
+  { label: "No. HP Ayah", key: "no_hp_ayah" },
+  { label: "Email Ayah", key: "email_ayah" },
+  { label: "Alamat Kantor Ayah", key: "alamat_kantor_ayah" },
+];
+
+const orangTuaIbuFields = [
+  { label: "Nama Ibu", key: "nama_ibu" },
+  { label: "Tempat Lahir Ibu", key: "tempat_lahir_ibu" },
+  { label: "Tanggal Lahir Ibu", key: "tanggal_lahir_ibu" },
+  { label: "NIK Ibu", key: "nik_ibu" },
+  { label: "Pendidikan Ibu", key: "pendidikan_ibu" },
+  { label: "Pekerjaan Ibu", key: "pekerjaan_ibu" },
+  { label: "Pendapatan Ibu", key: "pendapatan_ibu" },
+  { label: "No. HP Ibu", key: "no_hp_ibu" },
+  { label: "Email Ibu", key: "email_ibu" },
+  { label: "Alamat Kantor Ibu", key: "alamat_kantor_ibu" },
+];
+
+// const isEditPeserta = ref(false);
+// const detail = reactive({
+//   meta: {},
+//   dokumen: [],
+//   foto: null,
+//   pembayaran: null,
+//   peserta: {},
+//   alamat: {},
+//   kesehatan: {},
+//   informasi: {},
+//   ayah: {},
+//   ibu: {},
+// });
+
+// const form = reactive({
+//   peserta: {},
+//   alamat: {},
+//   kesehatan: {},
+//   informasi: {},
+//   ayah: {},
+//   ibu: {},
+// });
+
+const downloadUrl = computed(() => {
+  return `${BASE_URL}/pendaftaran/${detail.meta.id}/download`;
+});
+
+const buildPayload = () => {
+  return {
+    jenis: form.peserta.jenis,
+    program: form.peserta.program,
+
+    peserta: {
+      nama_lengkap: form.peserta.nama_lengkap,
+      nama_panggilan: form.peserta.nama_panggilan,
+      tempat_lahir: form.peserta.tempat_lahir,
+      tanggal_lahir: form.peserta.tanggal_lahir,
+      jenis_kelamin: form.peserta.jenis_kelamin === "Perempuan" ? "P" : "L",
+      kewarganegaraan: form.peserta.kewarganegaraan,
+      nik: form.peserta.nik,
+      no_kk: form.peserta.no_kk,
+      no_akta: form.peserta.no_akta,
+      agama: form.peserta.agama,
+      no_telp: form.peserta.no_telepon,
+      anak_ke: form.peserta.anak_ke,
+      jumlah_saudara: form.peserta.jumlah_saudara,
+      bahasa: form.peserta.bahasa_sehari_hari,
+
+      alamat_domisili: {
+        alamat_lengkap: form.alamat.alamat_lengkap,
+        rt: form.alamat.rt,
+        rw: form.alamat.rw,
+        desa: form.alamat.desa_kelurahan,
+        kecamatan: form.alamat.kecamatan,
+        kabupaten: form.alamat.kabupaten,
+        kode_pos: form.alamat.kode_pos,
+      },
+
+      alamat_kk: {
+        alamat_lengkap: form.alamat.alamat_lengkap,
+        rt: form.alamat.rt,
+        rw: form.alamat.rw,
+        desa: form.alamat.desa_kelurahan,
+        kecamatan: form.alamat.kecamatan,
+        kabupaten: form.alamat.kabupaten,
+        kode_pos: form.alamat.kode_pos,
+      },
+
+      kesehatan: {
+        berat_badan: form.kesehatan.berat_badan,
+        tinggi_badan: form.kesehatan.tinggi_badan,
+        lingkar_kepala: form.kesehatan.lingkar_kepala,
+        golongan_darah: form.kesehatan.golongan_darah,
+        riwayat_penyakit: form.kesehatan.riwayat_penyakit,
+        alergi: form.kesehatan.alergi,
+        kebutuhan_khusus: form.kesehatan.kebutuhan_khusus,
+      },
+
+      orang_tua: [
+        {
+          tipe: "ayah",
+          nama: form.ayah.nama_ayah,
+          tempat_lahir: form.ayah.tempat_lahir_ayah,
+          tanggal_lahir: form.ayah.tanggal_lahir_ayah,
+          nik: form.ayah.nik_ayah,
+          pendidikan: form.ayah.pendidikan_ayah,
+          pekerjaan: form.ayah.pekerjaan_ayah,
+          pendapatan: form.ayah.pendapatan_ayah,
+          alamat_kantor: form.ayah.alamat_kantor_ayah,
+          no_hp: form.ayah.no_hp_ayah,
+          email: form.ayah.email_ayah,
+        },
+        {
+          tipe: "ibu",
+          nama: form.ibu.nama_ibu,
+          tempat_lahir: form.ibu.tempat_lahir_ibu,
+          tanggal_lahir: form.ibu.tanggal_lahir_ibu,
+          nik: form.ibu.nik_ibu,
+          pendidikan: form.ibu.pendidikan_ibu,
+          pekerjaan: form.ibu.pekerjaan_ibu,
+          pendapatan: form.ibu.pendapatan_ibu,
+          alamat_kantor: form.ibu.alamat_kantor_ibu,
+          no_hp: form.ibu.no_hp_ibu,
+          email: form.ibu.email_ibu,
+        },
+      ],
+
+      informasi: {
+        tinggal_dengan: form.informasi.tinggal_bersama,
+        jarak_sekolah: form.informasi.jarak_ke_sekolah,
+        waktu_tempuh: form.informasi.waktu_tempuh,
+        kendaraan: form.informasi.kendaraan_ke_sekolah,
+        nama_sekolah: form.informasi.nama_sekolah_sebelumnya,
+        npsn: form.informasi.npsn_sekolah,
+        nisn: form.informasi.nisn,
+        bakat: form.informasi.bakat,
+        hobi: form.informasi.hobi,
+        cita_cita: form.informasi.cita_cita,
+      },
+    },
+  };
+};
+
+const startEdit = () => {
+  Object.assign(form.peserta, detail.peserta);
+  Object.assign(form.alamat, detail.alamat);
+  Object.assign(form.kesehatan, detail.kesehatan);
+  Object.assign(form.informasi, detail.informasi);
+  Object.assign(form.ayah, detail.ayah);
+  Object.assign(form.ibu, detail.ibu);
+
+  isEditPeserta.value = true;
+};
+
+const cancelEdit = () => {
+  isEditPeserta.value = false;
+};
+
+const saveEdit = async () => {
+  if (loading.value) return;
+
+  try {
+    loading.value = true;
+
+    const payload = buildPayload();
+    await updatePendaftaran(id, payload);
+
+    Object.assign(detail.peserta, form.peserta);
+    Object.assign(detail.alamat, form.alamat);
+    Object.assign(detail.kesehatan, form.kesehatan);
+    Object.assign(detail.informasi, form.informasi);
+    Object.assign(detail.ayah, form.ayah);
+    Object.assign(detail.ibu, form.ibu);
+
+    isEditPeserta.value = false;
+    showSuccess("Data berhasil diupdate");
+  } catch (err) {
+    showError(err.message || "Gagal update");
+  } finally {
+    loading.value = false;
+  }
+};
+
+const fetchAsesmen = async () => {
+  try {
+    const [resPertanyaan, resJawaban] = await Promise.all([
+      getPertanyaanAsesmen(),
+      getJawabanAsesmen(id),
+    ]);
+
+    pertanyaan.value = resPertanyaan.data;
+    jawaban.value = resJawaban.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const hasilAsesmen = computed(() => {
+  return pertanyaan.value.map((q) => {
+    const j = jawaban.value.find((a) => a.id_pertanyaan === q.id);
+
+    return {
+      id: q.id,
+      urutan: q.urutan,
+      pertanyaan: q.pertanyaan,
+      jawaban: j?.jawaban || "-",
+    };
+  });
+});
+
+const handleVerifyBerkas = async () => {
+  try {
+    await updateStatusPendaftaran(detail.meta.id, "verified");
+    detail.meta.status = "verified";
+    showSuccess("Berhasil diverifikasi");
+  } catch (err) {
+    showError(err.message);
+  }
+};
+
+const handleRejectBerkas = async () => {
+  try {
+    await updateStatusPendaftaran(detail.meta.id, "rejected");
+    detail.meta.status = "rejected";
+    showSuccess("Berhasil ditolak");
+  } catch (err) {
+    showError(err.message);
+  }
+};
+
+const handleVerifyPembayaran = async () => {
+  try {
+    await updateStatusPembayaran(detail.meta.id, "paid");
+    detail.meta.status_pembayaran = "paid";
+    showSuccess("Pembayaran diverifikasi");
+  } catch (err) {
+    showError(err.message);
+  }
+};
+
+const handleRejectPembayaran = async () => {
+  try {
+    await updateStatusPembayaran(detail.meta.id, "failed");
+    detail.meta.status_pembayaran = "failed";
+    showSuccess("Pembayaran ditolak");
+  } catch (err) {
+    showError(err.message);
+  }
+};
+
+const handleAccept = async () => {
+  try {
+    await updateStatusPendaftaran(detail.meta.id, "accepted");
+    detail.meta.status = "accepted";
+    showSuccess("Pendaftaran diterima");
+  } catch (err) {
+    showError(err.message);
+  }
+};
+
+const handleRejectPendaftaran = async () => {
+  try {
+    await updateStatusPendaftaran(detail.meta.id, "rejected");
+    detail.meta.status = "rejected";
+    showSuccess("Pendaftaran ditolak");
+  } catch (err) {
+    showError(err.message);
+  }
+};
+
+onMounted(async () => {
+  await fetchDetail();
+  await fetchAsesmen();
+});
+</script>
+
+<!-- <template>
   <div>
     <div class="flex items-center justify-between mb-4">
       <h1 class="text-lg text-gray-700 font-medium dark:text-gray-400">
@@ -139,7 +568,6 @@
             </button>
           </div>
 
-          <!-- tombol edit/simpan -->
           <div class="flex gap-2">
             <button
               v-if="!isEditPeserta"
@@ -169,7 +597,6 @@
         </div>
 
         <div class="mt-4">
-          <!-- data peserta -->
           <div v-if="activeTab === 'Peserta'">
             <PesertaTab
               :detail="detail"
@@ -187,9 +614,7 @@
 
           <div v-if="activeTab === 'Orang Tua'">
             <div class="mt-4">
-              <!--  view mode -->
               <div v-if="!isEditPeserta" class="">
-                <!-- orang tua -->
                 <div class="mb-4">
                   <h3
                     class="font-medium text-gray-700 flex items-center gap-2 mb-4"
@@ -233,7 +658,6 @@
                 </div>
               </div>
 
-              <!-- edit mode -->
               <div v-else class="space-y-8">
                 <div>
                   <div class="mb-4">
@@ -319,11 +743,12 @@
       </div>
     </div>
   </div>
-</template>
+</template> -->
 
-<script setup>
+<!-- <script setup>
 import { ref, reactive, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
+import PendaftaranDetailLayout from "@/components/admin/pendaftaran/DetailLayout.vue";
 import PesertaTab from "@/components/admin/PesertaTab.vue";
 import BerkasTab from "@/components/admin/BerkasTab.vue";
 import PembayaranTab from "@/components/admin/PembayaranTab.vue";
@@ -823,9 +1248,8 @@ const cancelEdit = () => {
 
 onMounted(async () => {
   await fetchDetail();
-  await fetchDetail();
   await fetchAsesmen();
 });
-</script>
+</script> -->
 
-<style lang="scss" scoped></style>
+<!-- <style lang="scss" scoped></style> -->

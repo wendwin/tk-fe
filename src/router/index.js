@@ -85,6 +85,11 @@ const router = createRouter({
           name: "AdminObservasi",
           component: () => import("../views/admin/observasi/index.vue"),
         },
+        {
+          path: "observasi",
+          name: "AdminObservasiDetail",
+          component: () => import("../views/admin/observasi/Detail.vue"),
+        },
         // {
         //   path: "siswa",
         //   name: "Siswa",
