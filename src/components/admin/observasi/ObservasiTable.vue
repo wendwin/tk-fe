@@ -5,6 +5,7 @@
         <TableToolbar>
           <template #right>
             <button
+              @click="showModal = true"
               class="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
             >
               Tambah Jadwal
@@ -92,7 +93,11 @@
       <template #head>
         <tr>
           <th class="p-4">
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              :checked="isAllSelected"
+              @change="toggleSelectAll"
+            />
           </th>
 
           <th class="px-6 py-3">No</th>
@@ -109,7 +114,13 @@
       <template #body>
         <tr v-for="item in list" :key="item.id" class="border-b">
           <td class="p-4">
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              class="w-4 h-4"
+              :value="item.id"
+              v-model="selectedIds"
+              @change="isAllSelected = false"
+            />
           </td>
 
           <td class="px-6 py-4">
@@ -169,12 +180,57 @@
         <TablePagination :meta="meta" @change="loadPendaftaran" />
       </template>
     </BaseTable>
+
+    <!-- Modal -->
+    <div
+      v-if="showModal"
+      class="fixed top-0 left-0 w-screen h-screen z-[9999] bg-black/40 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-8 max-w-md">
+        <h2 class="text-lg font-semibold mb-4">Jadwal Observasi</h2>
+
+        <div class="mb-5">
+          <label class="block text-sm mb-2"> Tanggal & Jam Observasi </label>
+
+          <div class="space-y-4">
+            <VueDatePicker
+              v-model="observasiAt"
+              inline
+              auto-apply
+              :enable-time-picker="true"
+            />
+          </div>
+        </div>
+
+        <div class="mb-4 space-y-1">
+          <div class="text-sm text-gray-500">
+            Dipilih: {{ selectedIds.length }} peserta
+          </div>
+          <div class="text-sm text-gray-500">
+            Jadwal:
+            {{ observasiAt ? observasiAt.toLocaleString("id-ID") : "-" }}
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2">
+          <button @click="closeModal" class="px-4 py-2 border rounded-lg">
+            Batal
+          </button>
+
+          <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onActivated } from "vue";
+import { ref, onMounted, onActivated, computed } from "vue";
 import { Eye, Search, Filter, Download } from "lucide-vue-next";
+import { VueDatePicker } from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 
 import BaseTable from "@/components/admin/common/BaseTable.vue";
 import TableToolbar from "@/components/admin/common/TableToolbar.vue";
@@ -189,9 +245,27 @@ const meta = ref({});
 const loading = ref(false);
 const search = ref("");
 const lastFetch = ref(null);
+const selectedIds = ref([]);
+const showModal = ref(false);
+const observasiAt = ref(null);
+const isAllSelected = ref(false);
 
-console.log("list", list.value);
-console.log("meta", meta.value);
+const toggleSelectAll = (event) => {
+  isAllSelected.value = event.target.checked;
+
+  if (event.target.checked) {
+    selectedIds.value = list.value.map((item) => item.id);
+  } else {
+    selectedIds.value = [];
+  }
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  selectedIds.value = [];
+  observasiAt.value = null;
+  isAllSelected.value = false;
+};
 
 const loadPendaftaran = async (page = 1) => {
   try {
