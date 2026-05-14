@@ -131,7 +131,7 @@
           </td>
 
           <td class="px-6 py-4">
-            {{ new Date(item.created_at).toLocaleDateString() }}
+            {{ formatDateTimeID(item.created_at) }}
           </td>
 
           <td class="px-6 py-4">
@@ -180,6 +180,7 @@ import StatusBadge from "@/components/admin/common/StatusBadge.vue";
 
 import { getAllPendaftaran } from "@/lib/services/pendaftaranService";
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
+import formatDateTimeID from "@/lib/utils/formatDateTimeID";
 
 const list = ref([]);
 const meta = ref({});

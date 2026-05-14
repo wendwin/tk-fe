@@ -42,7 +42,7 @@
 
             <div class="">
               <p class="text-gray-400 text-sm">
-                Daftar: {{ formatDateTimeID(detail.meta.tanggal_daftar) }}
+                Daftar: {{ formatDateTimeID(detail.meta.created_at) }}
               </p>
             </div>
           </div>
@@ -504,7 +504,7 @@ const mapPendaftaran = (data) => {
     meta: {
       id: data.id,
       no_pendaftaran: data.no_pendaftaran,
-      tanggal_daftar: data.tanggal_daftar,
+      created_at: data.created_at,
       status: data.status,
       status_pembayaran: data.status_pembayaran,
       program: data.program,

@@ -136,11 +136,11 @@
           </td>
 
           <td class="px-6 py-4">
-            {{ new Date(item.created_at).toLocaleDateString() }}
+            {{ formatDateTimeID(item.created_at) }}
           </td>
 
           <td class="px-6 py-4">
-            {{ item.observasi_at || "-" }}
+            {{ formatDateTimeID(item.observasi_at || "-") }}
           </td>
 
           <td class="px-6 py-4">
@@ -217,7 +217,10 @@
             Batal
           </button>
 
-          <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">
+          <button
+            @click="handleSetJadwal"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg"
+          >
             Simpan
           </button>
         </div>
@@ -238,7 +241,11 @@ import TablePagination from "@/components/admin/common/TablePagination.vue";
 import StatusBadge from "@/components/admin/common/StatusBadge.vue";
 
 import { getAllPendaftaran } from "@/lib/services/pendaftaranService";
+import { setJadwalObservasi } from "@/lib/services/pendaftaranService";
+
+import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
+import formatDateTimeID from "@/lib/utils/formatDateTimeID";
 
 const list = ref([]);
 const meta = ref({});
@@ -283,6 +290,49 @@ const loadPendaftaran = async (page = 1) => {
     console.error(err);
   } finally {
     loading.value = false;
+  }
+};
+
+const handleSetJadwal = async () => {
+  try {
+    if (!observasiAt.value) {
+      showWarning("Pilih tanggal dan jam observasi");
+      return;
+    }
+
+    if (selectedIds.value.length === 0) {
+      showWarning("Peserta belum dipilih");
+      return;
+    }
+
+    const date = new Date(observasiAt.value);
+
+    const formatted =
+      date.getFullYear() +
+      "-" +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(date.getDate()).padStart(2, "0") +
+      " " +
+      String(date.getHours()).padStart(2, "0") +
+      ":" +
+      String(date.getMinutes()).padStart(2, "0") +
+      ":" +
+      String(date.getSeconds()).padStart(2, "0");
+
+    await setJadwalObservasi({
+      pendaftaran_ids: selectedIds.value,
+      observasi_at: formatted,
+    });
+
+    closeModal();
+
+    await loadPendaftaran();
+
+    showSuccess("Jadwal observasi berhasil disimpan");
+  } catch (err) {
+    console.error(err);
+    showError("Gagal menyimpan jadwal observasi");
   }
 };
 
