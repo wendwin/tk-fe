@@ -86,7 +86,7 @@ const router = createRouter({
           component: () => import("../views/admin/observasi/index.vue"),
         },
         {
-          path: "observasi",
+          path: "observasi/:id",
           name: "AdminObservasiDetail",
           component: () => import("../views/admin/observasi/Detail.vue"),
         },

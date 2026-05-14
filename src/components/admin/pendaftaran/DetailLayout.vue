@@ -7,7 +7,7 @@
 
       <nav class="flex items-center text-sm text-slate-500 mr-5">
         <RouterLink :to="{ name: backRouteName }" class="hover:text-slate-700">
-          Home
+          {{ breadcrumbLabel }}
         </RouterLink>
         <ChevronRight class="w-4 h-4 text-slate-400 mx-1" />
         <span class="text-slate-700 font-medium">Detail</span>
@@ -169,6 +169,10 @@ const props = defineProps({
   backRouteName: {
     type: String,
     required: true,
+  },
+  breadcrumbLabel: {
+    type: String,
+    default: "Home",
   },
   detail: {
     type: Object,
