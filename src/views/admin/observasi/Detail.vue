@@ -67,7 +67,7 @@ const jawaban = ref([]);
 const fetchAsesmen = async () => {
   try {
     const [resPertanyaan, resJawaban] = await Promise.all([
-      getPertanyaanAsesmenSALAH(),
+      getPertanyaanAsesmen(),
       getJawabanAsesmen(id),
     ]);
 

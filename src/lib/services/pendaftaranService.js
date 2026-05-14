@@ -98,10 +98,3 @@ export const downloadSuratPernyataan = async () => {
   link.remove();
   window.URL.revokeObjectURL(url);
 };
-
-export const setJadwalObservasi = async (payload) => {
-  return await request("/observasi/set-jadwal", {
-    method: "PUT",
-    body: payload,
-  });
-};

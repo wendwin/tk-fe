@@ -241,7 +241,7 @@ import TablePagination from "@/components/admin/common/TablePagination.vue";
 import StatusBadge from "@/components/admin/common/StatusBadge.vue";
 
 import { getAllPendaftaran } from "@/lib/services/pendaftaranService";
-import { setJadwalObservasi } from "@/lib/services/pendaftaranService";
+import { setJadwalObservasi } from "@/lib/services/observasiService";
 
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
