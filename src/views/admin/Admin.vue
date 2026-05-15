@@ -1,9 +1,13 @@
 <template>
   <div>
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <KeepAlive>
+        <component :is="Component" />
+      </KeepAlive>
+    </router-view>
   </div>
 </template>
 
-<script setup></script>
-
-<style lang="scss" scoped></style>
+<script setup>
+import { KeepAlive } from "vue";
+</script>

@@ -1,18 +1,6 @@
 // lib/api.js
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-const normalizeErrors = (errors) => {
-  if (!errors) return {};
-
-  const result = {};
-
-  Object.keys(errors).forEach((key) => {
-    result[key] = Array.isArray(errors[key]) ? errors[key] : [errors[key]];
-  });
-
-  return result;
-};
-
 const request = async (endpoint, options = {}) => {
   const url = `${BASE_URL}${endpoint}`;
   const csrfToken = sessionStorage.getItem("csrf_token");
@@ -86,7 +74,7 @@ const request = async (endpoint, options = {}) => {
   if (!response.ok || result.success === false) {
     throw {
       message: result.message || "Terjadi kesalahan",
-      errors: normalizeErrors(result.errors),
+      errors: result.errors || {},
       code: response.status,
     };
   }

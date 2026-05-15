@@ -24,6 +24,16 @@
             <li>
               Kartu Identitas Anak (KIA)/KMS (Riwayat Imunisasi & Vaksinasi)
             </li>
+            <li>
+              Surat Pernyataan unduh
+              <button
+                type="button"
+                @click="handleDownloadSurat"
+                class="text-blue-500 hover:underline"
+              >
+                disini
+              </button>
+            </li>
           </ol>
         </div>
       </div>
@@ -40,15 +50,19 @@
           class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto mb-10"
         >
           <label
-            v-for="doc in dokumen"
+            v-for="(doc, index) in dokumen"
             :key="doc.key"
             :for="'file-' + doc.key"
             class="cursor-pointer border-2 rounded-xl p-4 flex flex-col items-center text-center transition hover:border-[#1181B2] hover:shadow-sm"
-            :class="
+            :class="[
               uploadedDocs[doc.key]
                 ? 'border-[#1181B2] bg-[#1181B2]/5'
-                : 'border-gray-200  border-dashed'
-            "
+                : 'border-gray-200 border-dashed',
+
+              dokumen.length % 2 !== 0 && index === dokumen.length - 1
+                ? 'sm:col-span-2 sm:max-w-[50%] sm:justify-self-center w-full'
+                : '',
+            ]"
           >
             <input
               type="file"
@@ -115,7 +129,10 @@
 import { ref, reactive, computed } from "vue";
 import { CircleAlert, ImagePlus, FileUp } from "lucide-vue-next";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
-import { uploadBerkas } from "@/lib/services/pendaftaranService";
+import {
+  uploadBerkas,
+  downloadSuratPernyataan,
+} from "@/lib/services/pendaftaranService";
 import { getPendaftaranId } from "@/lib/utils/storage";
 
 const props = defineProps({
@@ -152,6 +169,12 @@ const dokumen = [
     hint: "Upload KIA/KMS",
     icon: FileUp,
   },
+  {
+    key: "surat_pernyataan",
+    label: "Surat Pernyataan",
+    hint: "Upload Surat Pernyataan",
+    icon: FileUp,
+  },
 ];
 
 const berkasLengkap = computed(() => {
@@ -183,6 +206,7 @@ const simpanBerkas = async () => {
       foto: uploadedDocs.foto,
       kia: uploadedDocs.kia,
       akta: uploadedDocs.akta,
+      surat_pernyataan: uploadedDocs.surat_pernyataan,
     };
 
     console.log("Uploading berkas with payload:", payload);
@@ -203,6 +227,19 @@ const simpanBerkas = async () => {
     } else {
       showError("Terjadi kesalahan saat upload berkas");
     }
+  }
+};
+
+const handleDownloadSurat = async () => {
+  if (!props.pendaftaranId) {
+    showWarning("Isi formulir pendaftaran terlebih dahulu");
+    return;
+  }
+
+  try {
+    await downloadSuratPernyataan();
+  } catch (err) {
+    showError(err.message);
   }
 };
 </script>
