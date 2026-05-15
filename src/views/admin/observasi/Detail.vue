@@ -21,7 +21,7 @@
         <AsesmenView v-if="activeTab === 'Asesmen'" :data="hasilAsesmen" />
 
         <ObservasiForm
-          v-else-if="activeTab === 'Observasi'"
+          v-else-if="activeTab === 'Observasi' && detail.meta.id"
           :pendaftaran-id="detail.meta.id"
           :detail="detail"
         />
@@ -36,7 +36,8 @@ import { useRoute } from "vue-router";
 
 import DetailLayout from "@/components/admin/pendaftaran/DetailLayout.vue";
 import AsesmenView from "@/components/admin/AsesmenView.vue";
-// import ObservasiForm from "@/components/admin/observasi/ObservasiForm.vue";
+import ObservasiForm from "@/components/admin/observasi/ObservasiForm.vue";
+
 import { usePendaftaranDetail } from "@/composables/usePendaftaranDetail";
 
 import {

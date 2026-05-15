@@ -17,3 +17,7 @@ export const createObservasiGpph = async (payload) => {
     body: payload,
   });
 };
+
+export const getHasilObservasiGpph = async (pendaftaranId) => {
+  return await request(`/observasi/gpph/${pendaftaranId}`);
+};
