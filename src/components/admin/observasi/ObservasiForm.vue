@@ -3,13 +3,13 @@
   <div class="space-y-10">
     <GpphForm :pendaftaran-id="pendaftaranId" />
 
-    <!-- <KpspForm :pendaftaran-id="pendaftaranId" :umur="umur" /> -->
+    <KpspForm :pendaftaran-id="pendaftaranId" :umur="umur" />
   </div>
 </template>
 
 <script setup>
 import GpphForm from "./GpphForm.vue";
-// import KpspForm from "./KpspForm.vue";
+import KpspForm from "./KpspForm.vue";
 
 defineProps({
   pendaftaranId: {

@@ -94,6 +94,7 @@
         <tr>
           <th class="p-4">
             <input
+              class="w-4 h-4"
               type="checkbox"
               :checked="isAllSelected"
               @change="toggleSelectAll"

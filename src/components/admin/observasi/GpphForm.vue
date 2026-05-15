@@ -5,14 +5,14 @@
         Deteksi Dini Gangguan Pemusatan Perhatian Hiperaktivitas (GPPH) Anak
         Prasekolah
       </h3>
-      <p class="text-sm text-gray-600 mb-1">
+      <p class="text-sm text-gray-500 mb-1">
         {{
           isSubmitted
             ? "Data hasil observasi GPPH"
             : "Isi nilai setiap pertanyaan dengan skala 0 sampai 3."
         }}
       </p>
-      <div class="text-sm text-gray-600 space-y-2">
+      <div class="text-sm text-gray-500 space-y-2">
         <p class="">Skala penilaian:</p>
         <ul class="space-y-2">
           <li>0 = Tidak ditemukan pada anak</li>
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div v-if="loading" class="text-sm text-gray-600">Memuat pertanyaan...</div>
+    <div v-if="loading" class="text-sm text-gray-500">Memuat pertanyaan...</div>
 
     <div v-else class="space-y-3">
       <div
@@ -33,7 +33,7 @@
       >
         <div class="flex items-start gap-3">
           <!-- <div
-            class="w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm flex items-center justify-center shrink-0"
+            class="w-7 h-7 rounded-full bg-blue-50 text-blue-500 text-sm flex items-center justify-center shrink-0"
           >
             {{ item.nomor }}
           </div> -->
@@ -47,7 +47,7 @@
               <label
                 v-for="nilai in nilaiOptions"
                 :key="nilai.value"
-                class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"
+                class="flex items-center gap-2 text-sm text-gray-500 cursor-pointer"
               >
                 <input
                   v-model="jawaban[item.id]"
@@ -65,7 +65,7 @@
       </div>
 
       <div class="flex items-center justify-end pt-4">
-        <!-- <p class="text-sm text-gray-600">
+        <!-- <p class="text-sm text-gray-500">
           Total Skor:
           <span class="font-semibold text-gray-800">{{ totalSkor }}</span>
         </p> -->
@@ -73,7 +73,7 @@
           v-if="!isSubmitted"
           @click="handleSubmit"
           :disabled="submitting"
-          class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-50"
+          class="px-4 py-2 rounded-lg bg-blue-500 text-white text-sm hover:bg-blue-700 disabled:opacity-50"
         >
           {{ submitting ? "Menyimpan..." : "Simpan" }}
         </button>
@@ -117,7 +117,7 @@
           <div
             class="bg-blue-50 border border-blue-200 rounded-lg p-2 text-center min-w-0"
           >
-            <p class="text-blue-600 text-[11px]">Total</p>
+            <p class="text-blue-500 text-[11px]">Total</p>
             <p class="font-bold text-base text-blue-700">
               {{ hasil.total_nilai }}
             </p>
