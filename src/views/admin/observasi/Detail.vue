@@ -23,7 +23,7 @@
         <ObservasiForm
           v-else-if="activeTab === 'Observasi' && detail.meta.id"
           :pendaftaran-id="detail.meta.id"
-          :detail="detail"
+          :umur="detail.meta.umur"
         />
       </template>
     </DetailLayout>

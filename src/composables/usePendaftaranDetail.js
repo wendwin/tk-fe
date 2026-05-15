@@ -54,6 +54,7 @@ export function usePendaftaranDetail(id) {
         gelombang: data.gelombang?.nama,
         tahun_ajaran: data.tahun_ajaran?.label,
         status_observasi: data.status_observasi,
+        umur: data.umur,
       },
 
       dokumen: allDokumen.filter((d) =>
@@ -143,7 +144,7 @@ export function usePendaftaranDetail(id) {
       loading.value = true;
 
       const res = await getPendaftaranById(id);
-
+      console.log("fetchDetail", res);
       if (!res?.data) return;
 
       const mapped = mapPendaftaran(res.data);

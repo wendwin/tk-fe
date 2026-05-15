@@ -21,3 +21,18 @@ export const createObservasiGpph = async (pendaftaranId, payload) => {
 export const getHasilObservasiGpph = async (pendaftaranId) => {
   return await request(`/observasi/${pendaftaranId}/gpph`);
 };
+
+export const getPertanyaanKpsp = async (pendaftaranId) => {
+  return await request(`/observasi/${pendaftaranId}/kpsp/soal`);
+};
+
+export const createObservasiKpsp = async (pendaftaranId, payload) => {
+  return await request(`/observasi/${pendaftaranId}/kpsp`, {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const getHasilObservasiKpsp = async (pendaftaranId) => {
+  return await request(`/observasi/${pendaftaranId}/kpsp`);
+};
