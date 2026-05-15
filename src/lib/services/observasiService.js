@@ -11,13 +11,13 @@ export const getPertanyaanGpph = async () => {
   return await request("/observasi/gpph/pertanyaan");
 };
 
-export const createObservasiGpph = async (payload) => {
-  return await request("/observasi/gpph", {
+export const createObservasiGpph = async (pendaftaranId, payload) => {
+  return await request(`/observasi/${pendaftaranId}/gpph`, {
     method: "POST",
     body: payload,
   });
 };
 
 export const getHasilObservasiGpph = async (pendaftaranId) => {
-  return await request(`/observasi/gpph/${pendaftaranId}`);
+  return await request(`/observasi/${pendaftaranId}/gpph`);
 };

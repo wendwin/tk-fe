@@ -200,14 +200,13 @@ const handleSubmit = async () => {
     submitting.value = true;
 
     const payload = {
-      pendaftaran_id: props.pendaftaranId,
       jawaban: pertanyaan.value.map((item) => ({
         pertanyaan_id: item.id,
         nilai: Number(jawaban.value[item.id]),
       })),
     };
 
-    await createObservasiGpph(payload);
+    await createObservasiGpph(props.pendaftaranId, payload);
 
     showSuccess("Observasi GPPH berhasil disimpan");
 
