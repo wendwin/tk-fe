@@ -20,6 +20,40 @@
       @save-edit="saveEdit"
       @cancel-edit="cancelEdit"
     >
+      <template #header-action>
+        <div class="flex flex-wrap items-center gap-2">
+          <template
+            v-if="
+              detail.meta.status_observasi === 'hadir' &&
+              detail.meta.status !== 'accepted'
+            "
+          >
+            <button
+              @click="handleAccept"
+              class="text-sm px-3 py-1 border rounded-lg text-slate-600 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition"
+            >
+              Terima
+            </button>
+
+            <button
+              @click="handleRejectPendaftaran"
+              class="text-sm px-3 py-1 border rounded-lg text-slate-600 hover:bg-red-600 hover:text-white hover:border-red-600 transition"
+            >
+              Tolak
+            </button>
+          </template>
+
+          <a
+            :href="downloadUrl"
+            target="_blank"
+            class="cursor-pointer flex items-center gap-2 text-sm px-3 py-1.5 border rounded-lg text-slate-600 hover:bg-gray-100 transition"
+          >
+            <Download class="w-4 h-4" />
+            Formulir
+          </a>
+        </div>
+      </template>
+
       <template #tab-content="{ activeTab }">
         <BerkasTab
           v-if="activeTab === 'Berkas'"
@@ -79,6 +113,7 @@ import {
 } from "@/lib/services/asesmenService";
 
 import { showSuccess, showError } from "@/lib/utils/toast";
+import { Download } from "lucide-vue-next";
 
 const route = useRoute();
 const id = route.params.id;
@@ -649,9 +684,9 @@ onMounted(async () => {
       </div>
     </div>
   </div>
-</template> -->
+</template>
 
-<!-- <script setup>
+<script setup>
 import { ref, reactive, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import PendaftaranDetailLayout from "@/components/admin/pendaftaran/DetailLayout.vue";
@@ -1156,6 +1191,6 @@ onMounted(async () => {
   await fetchDetail();
   await fetchAsesmen();
 });
-</script> -->
+</script>
 
-<!-- <style lang="scss" scoped></style> -->
+<style lang="scss" scoped></style> -->

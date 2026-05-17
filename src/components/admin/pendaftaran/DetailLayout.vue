@@ -34,7 +34,7 @@
               </span>
             </div>
 
-            <p class="text-gray-400 text-sm">
+            <p class="text-gray-600 text-sm">
               Daftar: {{ formatDateTimeID(detail.meta.created_at) }}
             </p>
           </div>
