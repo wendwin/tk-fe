@@ -112,7 +112,8 @@
                 </h3>
 
                 <p class="text-sm text-gray-500">
-                  {{ siswa.umur_bulan }} bulan | {{ siswa.jenis_kelamin }} |
+                  {{ siswa.jenis.toUpperCase() }} | {{ siswa.umur }} |
+                  {{ siswa.jenis_kelamin }} |
                   {{ siswa.program }}
                 </p>
 
@@ -186,13 +187,13 @@
                 </h3>
 
                 <p class="text-sm text-gray-500">
-                  {{ item.umur_bulan || "-" }} bulan |
+                  {{ item.umur || "-" }} bulan |
                   {{ item.jenis_kelamin || "-" }}
                 </p>
 
-                <p v-if="item.isDraft" class="text-xs text-blue-600 mt-1">
+                <!-- <p v-if="item.isDraft" class="text-xs text-blue-600 mt-1">
                   Belum disimpan
-                </p>
+                </p> -->
               </div>
 
               <button
@@ -200,7 +201,7 @@
                 @click="removeDraft(item.id)"
                 class="text-xs px-3 py-1 rounded-lg bg-red-50 text-red-600"
               >
-                Batal
+                <UserMinus class="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -222,7 +223,7 @@ import {
   bulkAssignSiswaKelas,
 } from "@/lib/services/pembagianKelasService";
 
-import { UserPlus } from "lucide-vue-next";
+import { UserMinus, UserPlus } from "lucide-vue-next";
 
 const kelasList = ref([]);
 const tahunAjaranId = ref("");
@@ -291,9 +292,17 @@ const targetStudents = computed(() => {
 const buildQuery = () => {
   const params = new URLSearchParams();
 
-  if (tahunAjaranId.value)
+  if (tahunAjaranId.value) {
     params.append("tahun_ajaran_id", tahunAjaranId.value);
-  if (program.value) params.append("program", program.value);
+  }
+
+  if (kelasId.value) {
+    params.append("kelas_id", kelasId.value);
+  }
+
+  if (program.value) {
+    params.append("program", program.value);
+  }
 
   return `?${params.toString()}`;
 };
