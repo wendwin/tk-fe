@@ -146,6 +146,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const loading = ref(false);
@@ -240,6 +244,14 @@ const fetchHasil = async () => {
     hasil.value = data;
     isSubmitted.value = true;
 
+    if (props.readonly) {
+      pertanyaan.value = data.jawaban.map((item) => ({
+        id: item.pertanyaan_id,
+        nomor: item.nomor,
+        pertanyaan: item.pertanyaan,
+      }));
+    }
+
     data.jawaban.forEach((item) => {
       jawaban.value[item.pertanyaan_id] = item.nilai;
     });
@@ -254,6 +266,11 @@ const fetchHasil = async () => {
 };
 
 onMounted(async () => {
+  if (props.readonly) {
+    await fetchHasil();
+    return;
+  }
+
   await fetchPertanyaan();
   await fetchHasil();
 });
