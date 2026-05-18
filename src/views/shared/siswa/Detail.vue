@@ -16,6 +16,7 @@
       :informasi-fields="informasiFields"
       :orang-tua-ayah-fields="orangTuaAyahFields"
       :orang-tua-ibu-fields="orangTuaIbuFields"
+      :show-created-at="false"
     >
       <template #meta-info>
         <p class="text-gray-700">NISN: {{ detail.siswa.nisn || "-" }}</p>
@@ -36,6 +37,16 @@
         </p>
       </template>
 
+      <template #header-action>
+        <button
+          @click="openEditSiswa = true"
+          class="flex items-center gap-2 text-sm px-3 py-1.5 text-slate-600 border rounded-lg hover:bg-gray-100"
+        >
+          <SquarePen class="w-4 h-4" />
+          Edit Data Siswa
+        </button>
+      </template>
+
       <template #tab-content="{ activeTab }">
         <AsesmenView v-if="activeTab === 'Asesmen'" :data="hasilAsesmen" />
 
@@ -47,16 +58,24 @@
         />
       </template>
     </DetailLayout>
+    <EditSiswaModal
+      :open="openEditSiswa"
+      :siswa="detail"
+      @close="openEditSiswa = false"
+      @updated="handleUpdatedSiswa"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { SquarePen } from "lucide-vue-next";
 
 import DetailLayout from "@/components/admin/pendaftaran/DetailLayout.vue";
 import AsesmenView from "@/components/admin/AsesmenView.vue";
 import ObservasiForm from "@/components/admin/observasi/ObservasiForm.vue";
+import EditSiswaModal from "@/components/admin/common/EditSiswaModal.vue";
 
 import { getSiswaById } from "@/lib/services/siswaService";
 import {
@@ -78,6 +97,7 @@ import { showError } from "@/lib/utils/toast";
 const route = useRoute();
 const id = route.params.id;
 
+const openEditSiswa = ref(false);
 const tabs = ["Peserta Didik", "Orang Tua", "Asesmen", "Observasi"];
 
 const loading = ref(false);
@@ -245,6 +265,11 @@ const hasilAsesmen = computed(() => {
     };
   });
 });
+
+const handleUpdatedSiswa = async () => {
+  openEditSiswa.value = false;
+  await fetchDetail();
+};
 
 onMounted(async () => {
   await fetchDetail();
