@@ -1,0 +1,7 @@
+<template>
+  <div>Halaman Detail Siswa</div>
+</template>
+
+<script setup></script>
+
+<style lang="scss" scoped></style>

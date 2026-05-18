@@ -90,6 +90,16 @@ const router = createRouter({
           name: "AdminObservasiDetail",
           component: () => import("../views/admin/observasi/Detail.vue"),
         },
+        {
+          path: "siswa",
+          name: "AdminSiswa",
+          component: () => import("../views/shared/siswa/Index.vue"),
+        },
+        {
+          path: "siswa/:id",
+          name: "AdminSiswaDetail",
+          component: () => import("../views/shared/siswa/Detail.vue"),
+        },
         // {
         //   path: "siswa",
         //   name: "Siswa",
@@ -117,6 +127,27 @@ const router = createRouter({
         // },
       ],
     },
+    // {
+    //   path: "/dashboard/guru",
+    //   component: () => import("../views/guru/Guru.vue"),
+    //   meta: {
+    //     requiresAuth: true,
+    //     layout: "GuruLayout",
+    //     role: ["guru"],
+    //   },
+    //   children: [
+    //     {
+    //       path: "siswa",
+    //       name: "GuruSiswa",
+    //       component: () => import("../views/shared/siswa/Index.vue"),
+    //     },
+    //     {
+    //       path: "siswa/:id",
+    //       name: "GuruSiswaDetail",
+    //       component: () => import("../views/shared/siswa/Detail.vue"),
+    //     },
+    //   ],
+    // },
     {
       path: "/403",
       name: "Forbidden",
