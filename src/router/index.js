@@ -100,6 +100,11 @@ const router = createRouter({
           name: "AdminSiswaDetail",
           component: () => import("../views/shared/siswa/Detail.vue"),
         },
+        {
+          path: "pembagian-kelas",
+          name: "AdminPembagianKelas",
+          component: () => import("../views/admin/PembagianKelas.vue"),
+        },
         // {
         //   path: "siswa",
         //   name: "Siswa",

@@ -219,6 +219,7 @@ import {
   Users,
   UserSearch,
   UsersRound,
+  School,
 } from "lucide-vue-next";
 
 const route = useRoute();
@@ -249,6 +250,11 @@ const menuGroups = [
         icon: UsersRound,
         name: "Siswa",
         to: { name: "AdminSiswa" },
+      },
+      {
+        icon: School,
+        name: "Pembagian Kelas",
+        to: { name: "AdminPembagianKelas" },
       },
 
       // {
