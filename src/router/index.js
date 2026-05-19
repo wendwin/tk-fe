@@ -105,11 +105,11 @@ const router = createRouter({
           name: "AdminPembagianKelas",
           component: () => import("../views/admin/PembagianKelas.vue"),
         },
-        // {
-        //   path: "siswa",
-        //   name: "Siswa",
-        //   component: () => import("../views/admin/Siswa.vue"),
-        // },
+        {
+          path: "kelas",
+          name: "AdminKelas",
+          component: () => import("../views/admin/Kelas.vue"),
+        },
         // {
         //   path: "monitoring",
         //   name: "Monitoring",
