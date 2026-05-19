@@ -225,6 +225,7 @@ import {
   Shuffle,
   UserRoundCheck,
   UserCog,
+  Layers3,
 } from "lucide-vue-next";
 import path from "node:path";
 
@@ -236,12 +237,35 @@ const menuGroups = [
   {
     title: "Menu",
     items: [
-      { icon: LayoutGrid, name: "Dashboard", to: { name: "AdminDashboard" } },
-      { icon: Users, name: "Pendaftaran", to: { name: "AdminPendaftaran" } },
-      { icon: UserSearch, name: "Observasi", to: { name: "AdminObservasi" } },
-      { icon: UsersRound, name: "Siswa", to: { name: "AdminSiswa" } },
+      {
+        icon: LayoutGrid,
+        name: "Dashboard",
+        to: { name: "AdminDashboard" },
+      },
     ],
   },
+
+  {
+    title: "Pendaftaran",
+    items: [
+      {
+        icon: Users,
+        name: "Data Pendaftaran",
+        to: { name: "AdminPendaftaran" },
+      },
+      {
+        icon: UserSearch,
+        name: "Observasi",
+        to: { name: "AdminObservasi" },
+      },
+      // {
+      //   icon: Layers3,
+      //   name: "Gelombang",
+      //   to: { name: "AdminGelombang" },
+      // },
+    ],
+  },
+
   {
     title: "Akademik",
     items: [
@@ -250,22 +274,38 @@ const menuGroups = [
         name: "Tahun Ajaran",
         to: { name: "AdminTahunAjaran" },
       },
-      { icon: School, name: "Kelas", to: { name: "AdminKelas" } },
       {
-        icon: Shuffle,
-        name: "Pembagian Kelas",
-        to: { name: "AdminPembagianKelas" },
+        icon: School,
+        name: "Kelas",
+        to: { name: "AdminKelas" },
       },
       {
         icon: UserRoundCheck,
         name: "Guru Kelas",
         to: { name: "AdminGuruKelas" },
       },
+      {
+        icon: Shuffle,
+        name: "Pembagian Kelas",
+        to: { name: "AdminPembagianKelas" },
+      },
+      {
+        icon: UsersRound,
+        name: "Siswa",
+        to: { name: "AdminSiswa" },
+      },
     ],
   },
+
   {
     title: "Pengaturan",
-    items: [{ icon: UserCog, name: "Kelola User", to: { name: "AdminUser" } }],
+    items: [
+      {
+        icon: UserCog,
+        name: "Kelola User",
+        to: { name: "AdminUser" },
+      },
+    ],
   },
 ];
 const isActive = (path) => route.path === path;
