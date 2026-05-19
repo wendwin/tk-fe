@@ -125,6 +125,11 @@ const router = createRouter({
           name: "AdminGuruKelas",
           component: () => import("../views/admin/guruKelas/GuruKelas.vue"),
         },
+        {
+          path: "user",
+          name: "AdminUser",
+          component: () => import("../views/admin/user/User.vue"),
+        },
         // {
         //   path: "monitoring",
         //   name: "Monitoring",

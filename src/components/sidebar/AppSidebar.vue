@@ -221,6 +221,10 @@ import {
   UsersRound,
   School,
   PieChartIcon,
+  CalendarDays,
+  Shuffle,
+  UserRoundCheck,
+  UserCog,
 } from "lucide-vue-next";
 import path from "node:path";
 
@@ -232,73 +236,38 @@ const menuGroups = [
   {
     title: "Menu",
     items: [
+      { icon: LayoutGrid, name: "Dashboard", to: { name: "AdminDashboard" } },
+      { icon: Users, name: "Pendaftaran", to: { name: "AdminPendaftaran" } },
+      { icon: UserSearch, name: "Observasi", to: { name: "AdminObservasi" } },
+      { icon: UsersRound, name: "Siswa", to: { name: "AdminSiswa" } },
+    ],
+  },
+  {
+    title: "Akademik",
+    items: [
       {
-        icon: LayoutGrid,
-        name: "Dashboard",
-        to: { name: "AdminDashboard" },
-        // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+        icon: CalendarDays,
+        name: "Tahun Ajaran",
+        to: { name: "AdminTahunAjaran" },
+      },
+      { icon: School, name: "Kelas", to: { name: "AdminKelas" } },
+      {
+        icon: Shuffle,
+        name: "Pembagian Kelas",
+        to: { name: "AdminPembagianKelas" },
       },
       {
-        icon: Users,
-        name: "Pendaftaran",
-        to: { name: "AdminPendaftaran" },
-      },
-      {
-        icon: UserSearch,
-        name: "Observasi",
-        to: { name: "AdminObservasi" },
-      },
-      {
-        icon: UsersRound,
-        name: "Siswa",
-        to: { name: "AdminSiswa" },
-      },
-      {
-        icon: School,
-        name: "Akademik",
-        subItems: [
-          { name: "Pembagian kelas", to: { name: "AdminPembagianKelas" } },
-          { name: "Kelas", to: { name: "AdminKelas" } },
-          { name: "Tahun Ajaran", to: { name: "AdminTahunAjaran" } },
-          { name: "Guru Kelas", to: { name: "AdminGuruKelas" } },
-        ],
+        icon: UserRoundCheck,
+        name: "Guru Kelas",
+        to: { name: "AdminGuruKelas" },
       },
     ],
   },
-  // {
-  //   title: "Master Data",
-  //   items: [
-  //     {
-  //       icon: PieChartIcon,
-  //       name: "Charts",
-  //       subItems: [
-  //         { name: "Line Chart", path: "/line-chart" },
-  //         { name: "Bar Chart", path: "/bar-chart" },
-  //       ],
-  //     },
-  // {
-  //   icon: LayoutGridIcon,
-  //   name: "Master Data",
-  //   subItems: [
-  //     { name: "Tahun Ajaran", path: "/alerts" },
-  //     { name: "Guru", path: "/avatars" },
-  //     { name: "Guru Kelas", path: "/badge" },
-  //     { name: "User", path: "/buttons" },
-  //   ],
-  // },
-  // {
-  //   icon: PlugInIcon,
-  //   name: "Authentication",
-  //   subItems: [
-  //     { name: "Signin", path: "/signin", pro: false },
-  //     { name: "Signup", path: "/signup", pro: false },
-  //   ],
-  // },
-  // ... Add other menu items here
-  // ],
-  // },
+  {
+    title: "Pengaturan",
+    items: [{ icon: UserCog, name: "Kelola User", to: { name: "AdminUser" } }],
+  },
 ];
-
 const isActive = (path) => route.path === path;
 
 const toggleSubmenu = (groupIndex, itemIndex) => {
