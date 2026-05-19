@@ -115,6 +115,11 @@ const router = createRouter({
           name: "AdminTahunAjaran",
           component: () => import("../views/admin/tahunAjaran/TahunAjaran.vue"),
         },
+        {
+          path: "guru-kelas",
+          name: "AdminGuruKelas",
+          component: () => import("../views/admin/guruKelas/GuruKelas.vue"),
+        },
         // {
         //   path: "monitoring",
         //   name: "Monitoring",

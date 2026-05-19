@@ -260,6 +260,7 @@ const menuGroups = [
           { name: "Pembagian kelas", to: { name: "AdminPembagianKelas" } },
           { name: "Kelas", to: { name: "AdminKelas" } },
           { name: "Tahun Ajaran", to: { name: "AdminTahunAjaran" } },
+          { name: "Guru Kelas", to: { name: "AdminGuruKelas" } },
         ],
       },
     ],
