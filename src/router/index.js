@@ -108,7 +108,12 @@ const router = createRouter({
         {
           path: "kelas",
           name: "AdminKelas",
-          component: () => import("../views/admin/Kelas.vue"),
+          component: () => import("../views/admin/kelas/Kelas.vue"),
+        },
+        {
+          path: "kelas/:id",
+          name: "AdminKelasDetail",
+          component: () => import("../views/admin/kelas/Detail.vue"),
         },
         {
           path: "tahun-ajaran",

@@ -102,10 +102,17 @@
             <div class="flex items-center gap-2">
               <button
                 @click="openEdit(item)"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-blue-600 text-xs"
+                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-amber-600 text-xs"
               >
                 <SquarePen class="w-4 h-4" />
               </button>
+
+              <router-link
+                :to="{ name: 'AdminKelasDetail', params: { id: item.id } }"
+                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-blue-600 text-xs"
+              >
+                <Eye class="w-4 h-4" />
+              </router-link>
 
               <button
                 @click="handleDelete(item.id)"
@@ -219,7 +226,14 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from "vue";
-import { Search, Filter, Download, SquarePen, Trash } from "lucide-vue-next";
+import {
+  Search,
+  Filter,
+  Download,
+  SquarePen,
+  Trash,
+  Eye,
+} from "lucide-vue-next";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 
 import BaseTable from "@/components/admin/common/BaseTable.vue";
