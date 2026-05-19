@@ -110,6 +110,11 @@ const router = createRouter({
           name: "AdminKelas",
           component: () => import("../views/admin/Kelas.vue"),
         },
+        {
+          path: "tahun-ajaran",
+          name: "AdminTahunAjaran",
+          component: () => import("../views/admin/tahunAjaran/TahunAjaran.vue"),
+        },
         // {
         //   path: "monitoring",
         //   name: "Monitoring",
