@@ -40,7 +40,7 @@
               :key="kelas.id"
               :value="kelas.id"
             >
-              {{ kelas.nama }}
+              {{ formatKelas(kelas) }}
             </option>
           </select>
         </div>
@@ -305,6 +305,30 @@ const buildQuery = () => {
   }
 
   return `?${params.toString()}`;
+};
+
+const formatKelas = (kelas) => {
+  if (!kelas) return "-";
+
+  const jenjang = kelas.jenjang ? kelas.jenjang.toUpperCase() : "";
+
+  const kelompok = kelas.kelompok ? kelas.kelompok.toUpperCase() : "";
+
+  const nama = kelas.nama || "";
+
+  if (kelompok && nama) {
+    return `${jenjang}-${kelompok} ${nama}`;
+  }
+
+  if (kelompok) {
+    return `${jenjang}-${kelompok}`;
+  }
+
+  if (nama) {
+    return `${jenjang} ${nama}`;
+  }
+
+  return jenjang || "-";
 };
 
 const loadKelas = async () => {
