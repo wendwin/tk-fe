@@ -3,7 +3,8 @@
     <div class="flex items-start justify-between">
       <div class="">
         <h3 class="font-medium text-gray-700 flex items-center gap-2">
-          <Banknote class="w-5 h-5" />Pembayaran:
+          <!-- <Banknote class="w-5 h-5" /> -->
+          Pembayaran:
           <h3 class="text-sm">
             <span :class="['capitalize', paymentConfig(status).class]">{{
               paymentConfig(status).label

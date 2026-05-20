@@ -26,10 +26,7 @@
       </div>
 
       <div class="mb-5">
-        <div
-          class="py-3 px-5 border flex items-center justify-between"
-          :class="statusBadgeClass"
-        >
+        <div class="py-3 px-5 border flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div :class="statusIconClass">
               <component
@@ -95,22 +92,23 @@
 
               <label
                 for="file-bukti"
-                class="w-full h-[220px] cursor-pointer border-2 rounded-xl p-5 flex flex-col justify-center items-center text-center transition hover:border-[#1181B2] hover:shadow-sm"
-                :class="
+                class="w-full h-[220px] border-2 rounded-xl p-5 flex flex-col justify-center items-center text-center transition"
+                :class="[
+                  canUpload
+                    ? 'cursor-pointer hover:border-[#1181B2] hover:shadow-sm'
+                    : 'cursor-not-allowed opacity-60',
+
                   uploadedDocs.bukti_tf
                     ? 'border-[#1181B2] bg-[#1181B2]/5'
-                    : 'border-gray-200 border-dashed'
-                "
+                    : 'border-gray-200 border-dashed',
+                ]"
               >
                 <input
                   type="file"
                   id="file-bukti"
                   class="hidden"
                   accept=".jpg,.jpeg,.png,.pdf"
-                  :disabled="
-                    props.statusPembayaran !== 'unpaid' &&
-                    props.statusPembayaran !== 'failed'
-                  "
+                  :disabled="!canUpload"
                   @change="handleUpload('bukti_tf', $event)"
                 />
 
@@ -148,12 +146,10 @@
         <div class="mt-4 flex justify-end">
           <button
             @click="submitPembayaran"
-            :disabled="
-              !uploadedDocs.bukti_tf && props.statusPembayaran === 'unpaid'
-            "
+            :disabled="!uploadedDocs.bukti_tf || !canUpload"
             class="px-5 py-2.5 rounded-lg text-sm font-medium text-white transition"
             :class="
-              uploadedDocs.bukti_tf
+              uploadedDocs.bukti_tf && canUpload
                 ? 'bg-[#1181B2] hover:bg-[#0f6f98]'
                 : 'bg-gray-300 cursor-not-allowed'
             "
@@ -205,6 +201,12 @@ const handleUpload = async (key, event) => {
 
   uploadedDocs[key] = file;
 };
+
+const canUpload = computed(() => {
+  return (
+    props.statusPembayaran === "unpaid" || props.statusPembayaran === "failed"
+  );
+});
 
 const submitPembayaran = async () => {
   if (!props.pendaftaranId) {

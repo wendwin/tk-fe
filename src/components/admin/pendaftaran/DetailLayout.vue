@@ -97,7 +97,13 @@
             </button>
           </div>
 
-          <div v-if="canEdit" class="flex gap-2">
+          <div
+            v-if="
+              canEdit &&
+              ['Peserta', 'Peserta Didik', 'Orang Tua'].includes(activeTab)
+            "
+            class="flex gap-2"
+          >
             <button
               v-if="!isEditPeserta"
               @click="$emit('start-edit')"

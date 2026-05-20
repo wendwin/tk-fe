@@ -59,7 +59,7 @@
           v-if="activeTab === 'Berkas'"
           :detail="detail"
           :dokumen="detail.dokumen"
-          :status="detail.meta.status"
+          :status-berkas="detail.meta.status_berkas"
           @verify="handleVerifyBerkas"
           @reject="handleRejectBerkas"
         />
@@ -103,6 +103,7 @@ import {
 
 import {
   updatePendaftaran,
+  updateStatusBerkas,
   updateStatusPendaftaran,
   updateStatusPembayaran,
 } from "@/lib/services/pendaftaranService";
@@ -304,9 +305,14 @@ const hasilAsesmen = computed(() => {
 
 const handleVerifyBerkas = async () => {
   try {
-    await updateStatusPendaftaran(detail.meta.id, "verified");
-    detail.meta.status = "verified";
-    showSuccess("Berhasil diverifikasi");
+    const res = await updateStatusBerkas(detail.meta.id, {
+      status_berkas: "verified",
+    });
+
+    detail.meta.status_berkas = res.data.status_berkas;
+    detail.meta.status = res.data.status;
+
+    showSuccess("Berkas berhasil diverifikasi");
   } catch (err) {
     showError(err.message);
   }
@@ -314,9 +320,14 @@ const handleVerifyBerkas = async () => {
 
 const handleRejectBerkas = async () => {
   try {
-    await updateStatusPendaftaran(detail.meta.id, "rejected");
-    detail.meta.status = "rejected";
-    showSuccess("Berhasil ditolak");
+    const res = await updateStatusBerkas(detail.meta.id, {
+      status_berkas: "rejected",
+    });
+
+    detail.meta.status_berkas = res.data.status_berkas;
+    detail.meta.status = res.data.status;
+
+    showSuccess("Berkas berhasil ditolak");
   } catch (err) {
     showError(err.message);
   }
@@ -324,8 +335,11 @@ const handleRejectBerkas = async () => {
 
 const handleVerifyPembayaran = async () => {
   try {
-    await updateStatusPembayaran(detail.meta.id, "paid");
-    detail.meta.status_pembayaran = "paid";
+    const res = await updateStatusPembayaran(detail.meta.id, "paid");
+
+    detail.meta.status_pembayaran = res.data.status_pembayaran;
+    detail.meta.status = res.data.status;
+
     showSuccess("Pembayaran diverifikasi");
   } catch (err) {
     showError(err.message);
@@ -334,8 +348,11 @@ const handleVerifyPembayaran = async () => {
 
 const handleRejectPembayaran = async () => {
   try {
-    await updateStatusPembayaran(detail.meta.id, "failed");
-    detail.meta.status_pembayaran = "failed";
+    const res = await updateStatusPembayaran(detail.meta.id, "failed");
+
+    detail.meta.status_pembayaran = res.data.status_pembayaran;
+    detail.meta.status = res.data.status;
+
     showSuccess("Pembayaran ditolak");
   } catch (err) {
     showError(err.message);
@@ -344,8 +361,10 @@ const handleRejectPembayaran = async () => {
 
 const handleAccept = async () => {
   try {
-    await updateStatusPendaftaran(detail.meta.id, "accepted");
-    detail.meta.status = "accepted";
+    const res = await updateStatusPendaftaran(detail.meta.id, "accepted");
+
+    detail.meta.status = res.data.status;
+
     showSuccess("Pendaftaran diterima");
   } catch (err) {
     showError(err.message);
@@ -354,8 +373,10 @@ const handleAccept = async () => {
 
 const handleRejectPendaftaran = async () => {
   try {
-    await updateStatusPendaftaran(detail.meta.id, "rejected");
-    detail.meta.status = "rejected";
+    const res = await updateStatusPendaftaran(detail.meta.id, "rejected");
+
+    detail.meta.status = res.data.status;
+
     showSuccess("Pendaftaran ditolak");
   } catch (err) {
     showError(err.message);

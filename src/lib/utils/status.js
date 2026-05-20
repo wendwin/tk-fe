@@ -28,6 +28,32 @@ export const statusConfig = (status) => {
   }
 };
 
+export const berkasConfig = (status) => {
+  const config = {
+    belum_upload: {
+      label: "Belum Upload",
+      class: "text-gray-600",
+    },
+
+    pending: {
+      label: "Menunggu Verifikasi",
+      class: "text-yellow-600",
+    },
+
+    verified: {
+      label: "Terverifikasi",
+      class: "text-green-600 ",
+    },
+
+    rejected: {
+      label: "Ditolak",
+      class: "text-red-600 ",
+    },
+  };
+
+  return config[status] || config.pending;
+};
+
 export const paymentConfig = (status) => {
   switch (status) {
     case "unpaid":

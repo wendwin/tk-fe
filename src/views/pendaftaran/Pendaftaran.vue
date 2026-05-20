@@ -73,6 +73,7 @@
       <div v-else-if="activeTab === 'berkas'" key="berkas">
         <UploadBerkas
           :pendaftaran-id="pendaftaranId"
+          :status-berkas="pendaftaranData.status_berkas"
           @saved="handleBerkasSaved"
         />
       </div>
