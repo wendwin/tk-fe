@@ -1,6 +1,10 @@
 <template>
   <div>
-    <BaseTable :loading="loading" :is-empty="list.length === 0" :colspan="10">
+    <BaseTable
+      :loading="loading && isFirstLoad"
+      :is-empty="!loading && list.length === 0"
+      :colspan="10"
+    >
       <template #toolbar>
         <TableToolbar>
           <template #right>
@@ -13,11 +17,67 @@
                 v-model="search"
                 type="text"
                 placeholder="Search"
-                class="h-9 w-[280px] rounded-lg border border-gray-200 bg-white py-2 pl-10 pr-3 text-sm"
+                class="h-9 w-[280px] rounded-lg border border-gray-200 bg-white py-2 pl-10 pr-9 text-sm"
               />
+
+              <button
+                v-if="search"
+                @click="clearSearch"
+                type="button"
+                class="absolute -translate-y-1/2 right-3 top-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X class="w-4 h-4" />
+              </button>
             </div>
 
-            <div class="relative">
+            <div class="">
+              <select
+                v-model="jenis"
+                class="w-full mt-1 border border-gray-200 text-gray-600 rounded-lg text-sm p-2"
+              >
+                <option value="">Jenis</option>
+                <option value="kb">KB</option>
+                <option value="tk">TK</option>
+              </select>
+            </div>
+
+            <div class="">
+              <select
+                v-model="program"
+                class="w-full mt-1 border border-gray-200 text-gray-600 rounded-lg text-sm p-2"
+              >
+                <option value="">Program</option>
+                <option value="reguler">Reguler</option>
+                <option value="halfday">Halfday</option>
+                <option value="fullday">Fullday</option>
+              </select>
+            </div>
+
+            <div class="">
+              <select
+                v-model="tahunAjaranId"
+                class="w-full mt-1 border border-gray-200 text-gray-600 rounded-lg text-sm p-2"
+              >
+                <option value="">Tahun Ajaran</option>
+
+                <option
+                  v-for="item in tahunAjaranList"
+                  :key="item.id"
+                  :value="item.id"
+                >
+                  {{ item.label }}
+                </option>
+              </select>
+            </div>
+
+            <button
+              @click="resetAllFilter"
+              class="h-9 px-3 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-100"
+            >
+              Reset
+            </button>
+
+            <!-- <div class="relative">
               <button
                 @click="openFilter = !openFilter"
                 class="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-100 dark:bg-gray-900 dark:border-gray-700"
@@ -73,7 +133,7 @@
                   </button>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <button
               class="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-100 dark:bg-gray-900 dark:border-gray-700"
@@ -170,8 +230,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onActivated } from "vue";
-import { Eye, Search, Filter, Download } from "lucide-vue-next";
+import { ref, onMounted, onActivated, watch } from "vue";
+import { Eye, Search, Filter, ChevronDown, X, Download } from "lucide-vue-next";
 
 import BaseTable from "@/components/admin/common/BaseTable.vue";
 import TableToolbar from "@/components/admin/common/TableToolbar.vue";
@@ -179,22 +239,50 @@ import TablePagination from "@/components/admin/common/TablePagination.vue";
 import StatusBadge from "@/components/admin/common/StatusBadge.vue";
 
 import { getAllPendaftaran } from "@/lib/services/pendaftaranService";
+import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
 import formatDateTimeID from "@/lib/utils/formatDateTimeID";
 
 const list = ref([]);
 const meta = ref({});
 const loading = ref(false);
+const isFirstLoad = ref(true);
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const search = ref("");
+const jenis = ref("");
+const program = ref("");
+const tahunAjaranId = ref("");
+
+const tahunAjaranList = ref([]);
 const lastFetch = ref(null);
+
+const loadTahunAjaran = async () => {
+  const res = await getAllTahunAjaran();
+  tahunAjaranList.value = res.data;
+};
 
 const loadPendaftaran = async (page = 1) => {
   try {
     loading.value = true;
 
-    const res = await getAllPendaftaran(`?page=${page}`);
+    const params = new URLSearchParams();
 
-    console.log("table pendaftaran", res);
+    params.append("page", page);
+
+    if (search.value) params.append("search", search.value);
+    if (jenis.value) params.append("jenis", jenis.value);
+    if (program.value) params.append("program", program.value);
+
+    if (tahunAjaranId.value) {
+      params.append("tahun_ajaran_id", tahunAjaranId.value);
+    }
+
+    const [res] = await Promise.all([
+      getAllPendaftaran(`?${params.toString()}`),
+      isFirstLoad.value ? sleep(500) : Promise.resolve(),
+    ]);
+
     list.value = res.data;
     meta.value = res.meta;
 
@@ -203,10 +291,38 @@ const loadPendaftaran = async (page = 1) => {
     console.error(err);
   } finally {
     loading.value = false;
+    isFirstLoad.value = false;
   }
 };
 
+let searchTimeout = null;
+const clearSearch = () => {
+  search.value = "";
+};
+
+const resetAllFilter = () => {
+  search.value = "";
+  jenis.value = "";
+  program.value = "";
+  tahunAjaranId.value = "";
+
+  loadPendaftaran(1);
+};
+
+watch(search, () => {
+  clearTimeout(searchTimeout);
+
+  searchTimeout = setTimeout(() => {
+    loadPendaftaran(1);
+  }, 500);
+});
+
+watch([jenis, program, tahunAjaranId], () => {
+  loadPendaftaran(1);
+});
+
 onMounted(() => {
+  loadTahunAjaran();
   loadPendaftaran();
 });
 
