@@ -63,7 +63,11 @@ const router = createRouter({
     {
       path: "/dashboard/admin",
       component: () => import("../views/admin/Admin.vue"),
-      meta: { requiresAuth: true, layout: "AdminLayout", role: ["admin"] },
+      meta: {
+        requiresAuth: true,
+        layout: "AdminLayout",
+        role: ["admin", "guru", "kepsek"],
+      },
       children: [
         {
           path: "",
@@ -194,7 +198,10 @@ router.beforeEach(async (to, from, next) => {
     await auth.fetchUser();
   }
 
-  // not auth
+  if (to.meta.guestOnly && auth.isAuthenticated) {
+    return next(redirectByRole(auth.role));
+  }
+
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return next({
       path: "/login",
@@ -202,14 +209,8 @@ router.beforeEach(async (to, from, next) => {
     });
   }
 
-  // RBAC
-  if (to.meta.role && !canAccess(auth.user?.role, to.meta.role)) {
+  if (to.meta.role && !canAccess(auth.role, to.meta.role)) {
     return next("/403");
-  }
-
-  // guest only
-  if (to.meta.guestOnly && auth.isAuthenticated) {
-    return next(redirectByRole(auth.user?.role));
   }
 
   next();

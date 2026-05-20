@@ -1,4 +1,3 @@
-// stores/auth.js
 import { defineStore } from "pinia";
 import request from "@/lib/api";
 
@@ -10,6 +9,11 @@ export const useAuthStore = defineStore("auth", {
     isLoading: false,
   }),
 
+  getters: {
+    role: (state) => state.user?.role || null,
+    fullName: (state) => state.user?.full_name || "User",
+  },
+
   actions: {
     async fetchUser() {
       if (this.isLoaded || this.isLoading) return;
@@ -18,6 +22,7 @@ export const useAuthStore = defineStore("auth", {
 
       try {
         const res = await request("/auth/me");
+
         this.user = res.data;
         this.isAuthenticated = true;
       } catch {
@@ -29,8 +34,8 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    setAuth(user) {
-      this.user = user;
+    setAuth(payload) {
+      this.user = payload?.user || payload;
       this.isAuthenticated = true;
       this.isLoaded = true;
     },
@@ -39,6 +44,7 @@ export const useAuthStore = defineStore("auth", {
       this.user = null;
       this.isAuthenticated = false;
       this.isLoaded = true;
+      this.isLoading = false;
     },
   },
 });
