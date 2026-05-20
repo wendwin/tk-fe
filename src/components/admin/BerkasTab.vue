@@ -1,6 +1,9 @@
 <template>
   <div class="space-y-6">
-    <div class="flex justify-end">
+    <div class="flex justify-between items-start">
+      <h3 class="font-medium text-gray-700 flex items-center gap-2">
+        <FolderClosed class="w-5 h-5" /> Berkas Pendaftaran
+      </h3>
       <div
         class="flex gap-2"
         v-if="status !== 'verified' && status !== 'accepted'"
@@ -104,7 +107,7 @@
 </template>
 
 <script setup>
-import { Download, Eye } from "lucide-vue-next";
+import { Download, Eye, FolderClosed } from "lucide-vue-next";
 import { ref } from "vue";
 
 const props = defineProps({

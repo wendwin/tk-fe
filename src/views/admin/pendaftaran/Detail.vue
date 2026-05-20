@@ -132,7 +132,7 @@ const tabs = [
   "Berkas",
   "Pembayaran",
   "Asesmen",
-  "Catatan",
+  // "Catatan",
 ];
 
 const downloadUrl = computed(() => {
