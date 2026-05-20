@@ -12,9 +12,9 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-4">
+      <div class="flex items-center">
         <span
-          class="text-slate-700 text-[12px] font-semibold px-3 py-[3px] rounded-full"
+          class="text-slate-700 text-[12px] font-semibold px-3 py-[3px] rounded-full capitalize"
         >
           Halo, {{ fullName }}
         </span>

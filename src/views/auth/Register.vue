@@ -52,7 +52,7 @@
               </p>
               <form @submit.prevent="handleRegister">
                 <div class="space-y-5">
-                  <!-- <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <div class="sm:col-span-1">
                       <label
                         for="fname"
@@ -86,7 +86,7 @@
                         class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                       />
                     </div>
-                  </div> -->
+                  </div>
                   <!-- Email -->
                   <div>
                     <label
@@ -302,8 +302,8 @@ import { register } from "@/lib/services/authService";
 import CommonGridShape from "@/components/common/CommonGridShape.vue";
 import hero from "@/assets/images/logo/hero.svg";
 
-// const firstName = ref("");
-// const lastName = ref("");
+const firstName = ref("");
+const lastName = ref("");
 const email = ref("");
 const password = ref("");
 const success = ref("");
@@ -328,6 +328,10 @@ const showSuccess = (message) => {
 const validateForm = () => {
   const errors = {};
 
+  if (!firstName.value.trim()) {
+    errors.first_name = ["Nama depan wajib diisi"];
+  }
+
   if (!email.value) {
     errors.email = ["Email wajib diisi"];
   } else if (!/^\S+@\S+\.\S+$/.test(email.value)) {
@@ -336,8 +340,8 @@ const validateForm = () => {
 
   if (!password.value) {
     errors.password = ["Password wajib diisi"];
-  } else if (password.value.length < 6) {
-    errors.password = ["Password minimal 6 karakter"];
+  } else if (password.value.length < 8) {
+    errors.password = ["Password minimal 8 karakter"];
   }
 
   fieldErrors.value = errors;
@@ -357,12 +361,16 @@ const handleRegister = async () => {
 
   try {
     const res = await register({
+      first_name: firstName.value,
+      last_name: lastName.value || null,
       email: email.value,
       password: password.value,
     });
 
     showSuccess(res.message);
 
+    firstName.value = "";
+    lastName.value = "";
     email.value = "";
     password.value = "";
     agreeToTerms.value = false;
