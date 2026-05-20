@@ -77,7 +77,7 @@ const router = createRouter({
         {
           path: "pendaftar",
           name: "AdminPendaftaran",
-          component: () => import("../views/admin/pendaftaran/Index.vue"),
+          component: () => import("../views/admin/pendaftaran/Pendaftaran.vue"),
         },
         {
           path: "pendaftar/:id",
@@ -87,7 +87,7 @@ const router = createRouter({
         {
           path: "observasi",
           name: "AdminObservasi",
-          component: () => import("../views/admin/observasi/index.vue"),
+          component: () => import("../views/admin/observasi/Observasi.vue"),
         },
         {
           path: "observasi/:id",
@@ -97,7 +97,7 @@ const router = createRouter({
         {
           path: "siswa",
           name: "AdminSiswa",
-          component: () => import("../views/shared/siswa/Index.vue"),
+          component: () => import("../views/shared/siswa/Siswa.vue"),
         },
         {
           path: "siswa/:id",
