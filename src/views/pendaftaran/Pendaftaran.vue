@@ -268,7 +268,9 @@ const handleFormSaved = async () => {
   activeTab.value = "berkas";
 };
 
-const handleBerkasSaved = () => {
+const handleBerkasSaved = async () => {
+  await loadPendaftaran();
+
   berkasSaved.value = true;
   activeTab.value = "pembayaran";
 };
