@@ -4,11 +4,15 @@
       class="flex items-center text-gray-700 dark:text-gray-400"
       @click.prevent="toggleDropdown"
     >
-      <span class="mr-3 overflow-hidden rounded-full h-8 w-8">
-        <img src="@/assets/images/owner.jpg" alt="User" />
+      <span
+        class="mr-3 overflow-hidden rounded-full bg-gray-300 flex items-center justify-center h-8 w-8"
+      >
+        {{ initial }}
       </span>
 
-      <span class="block mr-1 font-medium text-theme-sm">Musharof </span>
+      <span class="block mr-1 font-medium text-theme-sm">
+        {{ fullName }}
+      </span>
 
       <ChevronDown :class="{ 'rotate-180': dropdownOpen }" class="h-4 w-4" />
     </button>
@@ -22,12 +26,12 @@
         <span
           class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400"
         >
-          Musharof Chowdhury
+          {{ fullName }}
         </span>
         <span
           class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400"
         >
-          randomuser@pimjo.com
+          {{ email }}
         </span>
       </div>
 
@@ -75,7 +79,7 @@
 
 <script setup>
 import { useRouter, RouterLink } from "vue-router";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { ChevronDown, LogOut, CircleUser } from "lucide-vue-next";
 
 import { logout } from "@/lib/services/authService";
@@ -83,6 +87,19 @@ import { useAuthStore } from "@/lib/stores/auth";
 
 const router = useRouter();
 const auth = useAuthStore();
+
+const fullName = computed(() => auth.user?.full_name || "User");
+const email = computed(() => auth.user?.email || "-");
+const initial = computed(() => {
+  return auth.user?.full_name
+    ? auth.user.full_name
+        .split(" ")
+        .map((word) => word[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "U";
+});
 
 const dropdownOpen = ref(false);
 const dropdownRef = ref(null);
