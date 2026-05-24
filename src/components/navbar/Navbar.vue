@@ -30,7 +30,7 @@
             <!-- DESKTOP MENU -->
             <div class="hidden sm:ml-6 sm:block">
               <div class="flex space-x-4">
-                <router-link
+                <!-- <router-link
                   v-for="item in navigation"
                   :key="item.name"
                   :to="item.route"
@@ -43,7 +43,7 @@
                   ]"
                 >
                   {{ item.name }}
-                </router-link>
+                </router-link> -->
               </div>
             </div>
           </div>
@@ -79,7 +79,7 @@
 
               <router-link
                 to="/register"
-                class="inline-flex items-center rounded-md border-2 border-white bg-[#F7EF52] px-4 py-2 text-sm font-medium leading-4 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="inline-flex items-center rounded-md border-2 border-white bg-transparent px-4 py-2 text-sm font-medium leading-4 text-white transition duration-150 ease-in-out hover:bg-gray-200 hover:text-slate-800 focus:outline-none focus:ring-2"
               >
                 Register
               </router-link>

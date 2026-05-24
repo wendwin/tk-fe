@@ -34,7 +34,7 @@
               </span>
             </div>
 
-            <p class="text-gray-400 text-sm">
+            <p v-if="showCreatedAt" class="text-gray-600 text-sm">
               Daftar: {{ formatDateTimeID(detail.meta.created_at) }}
             </p>
           </div>
@@ -48,24 +48,26 @@
               class="flex flex-col md:flex-row md:items-end md:justify-between gap-4"
             >
               <div class="text-sm space-y-1">
-                <p class="text-gray-700">
-                  Tahun Ajaran: {{ detail.meta.tahun_ajaran }}
-                </p>
-                <p class="text-gray-700">
-                  No. Pendaftaran: {{ detail.meta.no_pendaftaran }}
-                </p>
-                <p class="text-gray-700">{{ detail.meta.gelombang }}</p>
-                <p class="text-gray-700">
-                  Status:
-                  <span
-                    :class="[
-                      'capitalize',
-                      statusConfig(detail.meta.status).class,
-                    ]"
-                  >
-                    {{ statusConfig(detail.meta.status).label }}
-                  </span>
-                </p>
+                <slot name="meta-info">
+                  <p class="text-gray-700">
+                    Tahun Ajaran: {{ detail.meta.tahun_ajaran }}
+                  </p>
+                  <p class="text-gray-700">
+                    No. Pendaftaran: {{ detail.meta.no_pendaftaran }}
+                  </p>
+                  <p class="text-gray-700">{{ detail.meta.gelombang }}</p>
+                  <p class="text-gray-700">
+                    Status:
+                    <span
+                      :class="[
+                        'capitalize',
+                        statusConfig(detail.meta.status).class,
+                      ]"
+                    >
+                      {{ statusConfig(detail.meta.status).label }}
+                    </span>
+                  </p>
+                </slot>
               </div>
 
               <slot name="header-action" />
@@ -95,7 +97,13 @@
             </button>
           </div>
 
-          <div v-if="canEdit" class="flex gap-2">
+          <div
+            v-if="
+              canEdit &&
+              ['Peserta', 'Peserta Didik', 'Orang Tua'].includes(activeTab)
+            "
+            class="flex gap-2"
+          >
             <button
               v-if="!isEditPeserta"
               @click="$emit('start-edit')"
@@ -222,6 +230,10 @@ const props = defineProps({
   orangTuaIbuFields: {
     type: Array,
     default: () => [],
+  },
+  showCreatedAt: {
+    type: Boolean,
+    default: true,
   },
 });
 

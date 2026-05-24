@@ -40,6 +40,25 @@
 
       <div class="p-6">
         <!-- <div
+          v-if="statusBerkas === 'rejected'"
+          class="mb-5 rounded-lg bg-red-50 text-red-700 text-sm px-4 py-3"
+        >
+          Berkas ditolak admin. Silakan upload ulang dokumen.
+        </div>
+        <div
+          v-if="statusBerkas === 'pending'"
+          class="mb-5 rounded-lg bg-yellow-50 text-yellow-700 text-sm px-4 py-3"
+        >
+          Berkas sedang menunggu verifikasi admin.
+        </div> -->
+
+        <!-- <div
+          v-else-if="statusBerkas === 'verified'"
+          class="mb-5 rounded-lg bg-green-50 text-green-700 text-sm px-4 py-3"
+        >
+          Berkas sudah diverifikasi admin.
+        </div> -->
+        <!-- <div
           class="mb-5 rounded-lg bg-blue-50 text-blue-700 text-sm px-4 py-3 flex items-center gap-2"
         >
           <CircleAlert /> Pastikan dokumen terbaca jelas. Berkas yang tidak
@@ -52,9 +71,13 @@
           <label
             v-for="(doc, index) in dokumen"
             :key="doc.key"
-            :for="'file-' + doc.key"
-            class="cursor-pointer border-2 rounded-xl p-4 flex flex-col items-center text-center transition hover:border-[#1181B2] hover:shadow-sm"
+            :for="canUpload ? 'file-' + doc.key : null"
+            class="border-2 rounded-xl p-4 flex flex-col items-center text-center transition hover:shadow-sm"
             :class="[
+              canUpload
+                ? 'cursor-pointer hover:border-[#1181B2]'
+                : 'cursor-not-allowed opacity-60',
+
               uploadedDocs[doc.key]
                 ? 'border-[#1181B2] bg-[#1181B2]/5'
                 : 'border-gray-200 border-dashed',
@@ -67,6 +90,7 @@
             <input
               type="file"
               class="hidden"
+              :disabled="!canUpload"
               :id="'file-' + doc.key"
               accept=".jpg,.jpeg,.png,.pdf"
               @change="handleUpload(doc.key, $event)"
@@ -109,7 +133,7 @@
 
           <button
             @click="simpanBerkas"
-            :disabled="!berkasLengkap"
+            :disabled="!berkasLengkap || !canUpload"
             class="px-5 py-2.5 rounded-lg text-sm font-medium text-white transition"
             :class="
               berkasLengkap
@@ -139,6 +163,10 @@ const props = defineProps({
   pendaftaranId: {
     type: Number,
     required: true,
+  },
+  statusBerkas: {
+    type: String,
+    default: "belum_upload",
   },
 });
 const uploadedDocs = reactive({});
@@ -179,6 +207,12 @@ const dokumen = [
 
 const berkasLengkap = computed(() => {
   return dokumen.every((doc) => uploadedDocs[doc.key]);
+});
+
+const canUpload = computed(() => {
+  return (
+    props.statusBerkas === "belum_upload" || props.statusBerkas === "rejected"
+  );
 });
 
 const handleUpload = (key, event) => {

@@ -316,11 +316,13 @@ const handleLogin = async () => {
       password: password.value,
     });
 
-    authStore.setAuth(res.data);
+    const user = res.data.user;
+
+    authStore.setAuth(user);
 
     const redirect = route.query.redirect;
 
-    router.push(redirect || redirectByRole(res.data.role));
+    router.push(redirect || redirectByRole(user.role));
   } catch (err) {
     fieldErrors.value = err.errors || {};
     error.value = err.message || "Terjadi kesalahan";

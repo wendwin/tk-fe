@@ -1,14 +1,17 @@
 <template>
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
-      <div class="">
-        <h3 class="text-sm">
-          Status:
-          <span :class="['capitalize', paymentConfig(status).class]">{{
+    <div class="flex items-start justify-between">
+      <h3 class="font-medium text-gray-700 flex items-center gap-2">
+        <!-- <Banknote class="w-5 h-5" /> -->
+        Pembayaran:
+        <h3 class="text-base capitalize">
+          {{ status }}
+          <!-- <span :class="['capitalize', paymentConfig(status).class]">{{
             paymentConfig(status).label
-          }}</span>
+          }}</span> -->
         </h3>
-      </div>
+      </h3>
+      <div class=""></div>
       <div class="flex gap-2" v-if="status !== 'paid'">
         <button
           @click="$emit('verify')"
@@ -93,6 +96,7 @@
 <script setup>
 import { ref } from "vue";
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
+import { Banknote } from "lucide-vue-next";
 
 const props = defineProps({
   pembayaran: Object,

@@ -14,14 +14,14 @@
       <div class="flex justify-end gap-2">
         <button
           @click="cancel"
-          class="px-4 py-2 rounded-lg text-sm bg-gray-100 hover:bg-gray-200"
+          class="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 text-sm"
         >
           Batal
         </button>
 
         <button
           @click="confirm"
-          class="px-4 py-2 rounded-lg text-sm text-white bg-[#1181B2] hover:bg-[#0f6f98]"
+          class="px-4 py-2 rounded-lg text-sm text-white bg-blue-500 hover:bg-blue-600"
         >
           Konfirmasi
         </button>

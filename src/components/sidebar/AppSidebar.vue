@@ -213,7 +213,21 @@ import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 
 import { useSidebar } from "@/composables/useSidebar";
-import { ChevronDown, LayoutGrid, Users, UserSearch } from "lucide-vue-next";
+import {
+  ChevronDown,
+  LayoutGrid,
+  Users,
+  UserSearch,
+  UsersRound,
+  School,
+  PieChartIcon,
+  CalendarDays,
+  Shuffle,
+  UserRoundCheck,
+  UserCog,
+  Layers3,
+} from "lucide-vue-next";
+import path from "node:path";
 
 const route = useRoute();
 
@@ -227,11 +241,16 @@ const menuGroups = [
         icon: LayoutGrid,
         name: "Dashboard",
         to: { name: "AdminDashboard" },
-        // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
       },
+    ],
+  },
+
+  {
+    title: "Pendaftaran",
+    items: [
       {
         icon: Users,
-        name: "Pendaftaran",
+        name: "Data Pendaftaran",
         to: { name: "AdminPendaftaran" },
       },
       {
@@ -240,69 +259,55 @@ const menuGroups = [
         to: { name: "AdminObservasi" },
       },
       // {
-      //   icon: UserCircleIcon,
-      //   name: "User Profile",
-      //   path: "/profile",
-      // },
-
-      // {
-      //   name: "Forms",
-      //   icon: ListIcon,
-      //   subItems: [
-      //     { name: "Form Elements", path: "/form-elements", pro: false },
-      //   ],
-      // },
-      // {
-      //   name: "Tables",
-      //   icon: TableIcon,
-      //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-      // },
-      // {
-      //   name: "Pages",
-      //   icon: PageIcon,
-      //   subItems: [
-      //     { name: "Black Page", path: "/blank", pro: false },
-      //     { name: "404 Page", path: "/error-404", pro: false },
-      //   ],
+      //   icon: Layers3,
+      //   name: "Gelombang",
+      //   to: { name: "AdminGelombang" },
       // },
     ],
   },
-  // {
-  //   title: "Others",
-  //   items: [
-  //     {
-  //       icon: PieChartIcon,
-  //       name: "Charts",
-  //       subItems: [
-  //         { name: "Line Chart", path: "/line-chart", pro: false },
-  //         { name: "Bar Chart", path: "/bar-chart", pro: false },
-  //       ],
-  //     },
-  // {
-  //   icon: BoxCubeIcon,
-  //   name: "Ui Elements",
-  //   subItems: [
-  //     { name: "Alerts", path: "/alerts", pro: false },
-  //     { name: "Avatars", path: "/avatars", pro: false },
-  //     { name: "Badge", path: "/badge", pro: false },
-  //     { name: "Buttons", path: "/buttons", pro: false },
-  //     { name: "Images", path: "/images", pro: false },
-  //     { name: "Videos", path: "/videos", pro: false },
-  //   ],
-  // },
-  // {
-  //   icon: PlugInIcon,
-  //   name: "Authentication",
-  //   subItems: [
-  //     { name: "Signin", path: "/signin", pro: false },
-  //     { name: "Signup", path: "/signup", pro: false },
-  //   ],
-  // },
-  // ... Add other menu items here
-  //   ],
-  // },
-];
 
+  {
+    title: "Akademik",
+    items: [
+      {
+        icon: CalendarDays,
+        name: "Tahun Ajaran",
+        to: { name: "AdminTahunAjaran" },
+      },
+      {
+        icon: School,
+        name: "Kelas",
+        to: { name: "AdminKelas" },
+      },
+      {
+        icon: UserRoundCheck,
+        name: "Guru Kelas",
+        to: { name: "AdminGuruKelas" },
+      },
+      {
+        icon: Shuffle,
+        name: "Pembagian Kelas",
+        to: { name: "AdminPembagianKelas" },
+      },
+      {
+        icon: UsersRound,
+        name: "Siswa",
+        to: { name: "AdminSiswa" },
+      },
+    ],
+  },
+
+  {
+    title: "Pengaturan",
+    items: [
+      {
+        icon: UserCog,
+        name: "Kelola User",
+        to: { name: "AdminUser" },
+      },
+    ],
+  },
+];
 const isActive = (path) => route.path === path;
 
 const toggleSubmenu = (groupIndex, itemIndex) => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-blue-50 py-5">
+  <div class="bg-blue-50 py-5 mt-16">
     <div
       class="max-w-6xl mx-auto bg-white p-6 border border-white rounded-lg shadow-md"
     >
@@ -267,7 +267,9 @@ const handleFormSaved = async () => {
   activeTab.value = "berkas";
 };
 
-const handleBerkasSaved = () => {
+const handleBerkasSaved = async () => {
+  await loadPendaftaran();
+
   berkasSaved.value = true;
   activeTab.value = "pembayaran";
 };

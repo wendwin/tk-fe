@@ -30,7 +30,7 @@
               {{ item.aspek_perkembangan }}
             </p>
 
-            <p class="font-medium text-sm text-gray-700">
+            <p class="text-sm text-gray-700">
               {{ item.urutan }}.
               {{ item.kemampuan_anak }}
             </p>
@@ -44,7 +44,7 @@
               type="radio"
               :name="`kpsp-${item.id}`"
               value="ya"
-              :disabled="isSubmitted"
+              :disabled="isSubmitted || readonly"
             />
             Ya
           </label>
@@ -55,7 +55,7 @@
               type="radio"
               :name="`kpsp-${item.id}`"
               value="tidak"
-              :disabled="isSubmitted"
+              :disabled="isSubmitted || readonly"
             />
             Tidak
           </label>
@@ -63,7 +63,7 @@
 
         <textarea
           v-model="keterangan[item.id]"
-          :disabled="isSubmitted"
+          :disabled="isSubmitted || readonly"
           rows="2"
           placeholder="Keterangan"
           class="w-full border rounded-lg px-3 py-2 text-sm"
@@ -78,13 +78,13 @@
             v-model="catatan"
             :disabled="isSubmitted"
             rows="3"
-            class="w-full border rounded-lg px-3 py-2 text-sm"
+            class="w-full border rounded-lg px-3 py-2 text-sm text-gray-700"
           />
         </div>
 
         <div class="flex justify-end">
           <button
-            v-if="!isSubmitted"
+            v-if="!isSubmitted && !readonly"
             @click="handleSubmit"
             :disabled="submitting"
             class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm"
@@ -144,6 +144,10 @@ const props = defineProps({
   umur: {
     type: String,
     required: true,
+  },
+  readonly: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -209,9 +213,20 @@ const fetchHasil = async () => {
 
     catatan.value = data.catatan || "";
 
+    if (props.readonly) {
+      pertanyaan.value = data.jawaban.map((item, index) => ({
+        id: item.pertanyaan_id,
+        urutan: index + 1,
+        usia_bulan: item.usia_bulan,
+        aspek_perkembangan: item.aspek_perkembangan,
+        kemampuan_anak: item.kemampuan_anak,
+      }));
+
+      usiaBulan.value = data.jawaban[0]?.usia_bulan || null;
+    }
+
     data.jawaban.forEach((item) => {
       jawaban.value[item.pertanyaan_id] = item.jawaban;
-
       keterangan.value[item.pertanyaan_id] = item.keterangan || "";
     });
   } catch (err) {
@@ -263,6 +278,11 @@ const handleSubmit = async () => {
 };
 
 onMounted(async () => {
+  if (props.readonly) {
+    await fetchHasil();
+    return;
+  }
+
   await fetchPertanyaan();
   await fetchHasil();
 });

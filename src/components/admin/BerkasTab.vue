@@ -1,10 +1,20 @@
 <template>
   <div class="space-y-6">
-    <div class="flex justify-end">
-      <div
-        class="flex gap-2"
-        v-if="status !== 'verified' && status !== 'accepted'"
-      >
+    <div class="flex justify-between items-start">
+      <h3 class="font-medium text-gray-700 flex items-center gap-2">
+        <!-- <FolderClosed class="w-5 h-5" />  -->
+        Berkas Pendaftaran:
+        <h3 class="text-base">
+          <span :class="['capitalize', berkasConfig(statusBerkas).class]">{{
+            berkasConfig(statusBerkas).label
+          }}</span>
+        </h3>
+        <!-- <StatusBadge
+          :label="berkasConfig(statusBerkas).label"
+          :custom-class="berkasConfig(statusBerkas).class"
+        /> -->
+      </h3>
+      <div class="flex gap-2" v-if="statusBerkas !== 'verified'">
         <button
           @click="$emit('verify')"
           class="text-sm border text-slate-600 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition px-2.5 py-2 rounded-md"
@@ -104,12 +114,15 @@
 </template>
 
 <script setup>
-import { Download, Eye } from "lucide-vue-next";
+import { Download, Eye, FolderClosed } from "lucide-vue-next";
 import { ref } from "vue";
+
+import StatusBadge from "@/components/admin/common/StatusBadge.vue";
+import { berkasConfig } from "@/lib/utils/status";
 
 const props = defineProps({
   dokumen: Array,
-  status: String,
+  statusBerkas: String,
 });
 
 const emit = defineEmits(["verify", "reject"]);

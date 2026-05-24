@@ -63,7 +63,11 @@ const router = createRouter({
     {
       path: "/dashboard/admin",
       component: () => import("../views/admin/Admin.vue"),
-      meta: { requiresAuth: true, layout: "AdminLayout", role: ["admin"] },
+      meta: {
+        requiresAuth: true,
+        layout: "AdminLayout",
+        role: ["admin", "guru", "kepsek"],
+      },
       children: [
         {
           path: "",
@@ -73,7 +77,7 @@ const router = createRouter({
         {
           path: "pendaftar",
           name: "AdminPendaftaran",
-          component: () => import("../views/admin/pendaftaran/Index.vue"),
+          component: () => import("../views/admin/pendaftaran/Pendaftaran.vue"),
         },
         {
           path: "pendaftar/:id",
@@ -83,18 +87,53 @@ const router = createRouter({
         {
           path: "observasi",
           name: "AdminObservasi",
-          component: () => import("../views/admin/observasi/index.vue"),
+          component: () => import("../views/admin/observasi/Observasi.vue"),
         },
         {
           path: "observasi/:id",
           name: "AdminObservasiDetail",
           component: () => import("../views/admin/observasi/Detail.vue"),
         },
-        // {
-        //   path: "siswa",
-        //   name: "Siswa",
-        //   component: () => import("../views/admin/Siswa.vue"),
-        // },
+        {
+          path: "siswa",
+          name: "AdminSiswa",
+          component: () => import("../views/shared/siswa/Siswa.vue"),
+        },
+        {
+          path: "siswa/:id",
+          name: "AdminSiswaDetail",
+          component: () => import("../views/shared/siswa/Detail.vue"),
+        },
+        {
+          path: "pembagian-kelas",
+          name: "AdminPembagianKelas",
+          component: () => import("../views/admin/PembagianKelas.vue"),
+        },
+        {
+          path: "kelas",
+          name: "AdminKelas",
+          component: () => import("../views/admin/kelas/Kelas.vue"),
+        },
+        {
+          path: "kelas/:id",
+          name: "AdminKelasDetail",
+          component: () => import("../views/admin/kelas/Detail.vue"),
+        },
+        {
+          path: "tahun-ajaran",
+          name: "AdminTahunAjaran",
+          component: () => import("../views/admin/tahunAjaran/TahunAjaran.vue"),
+        },
+        {
+          path: "guru-kelas",
+          name: "AdminGuruKelas",
+          component: () => import("../views/admin/guruKelas/GuruKelas.vue"),
+        },
+        {
+          path: "user",
+          name: "AdminUser",
+          component: () => import("../views/admin/user/User.vue"),
+        },
         // {
         //   path: "monitoring",
         //   name: "Monitoring",
@@ -117,6 +156,27 @@ const router = createRouter({
         // },
       ],
     },
+    // {
+    //   path: "/dashboard/guru",
+    //   component: () => import("../views/guru/Guru.vue"),
+    //   meta: {
+    //     requiresAuth: true,
+    //     layout: "GuruLayout",
+    //     role: ["guru"],
+    //   },
+    //   children: [
+    //     {
+    //       path: "siswa",
+    //       name: "GuruSiswa",
+    //       component: () => import("../views/shared/siswa/Index.vue"),
+    //     },
+    //     {
+    //       path: "siswa/:id",
+    //       name: "GuruSiswaDetail",
+    //       component: () => import("../views/shared/siswa/Detail.vue"),
+    //     },
+    //   ],
+    // },
     {
       path: "/403",
       name: "Forbidden",
@@ -138,7 +198,10 @@ router.beforeEach(async (to, from, next) => {
     await auth.fetchUser();
   }
 
-  // not auth
+  if (to.meta.guestOnly && auth.isAuthenticated) {
+    return next(redirectByRole(auth.role));
+  }
+
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return next({
       path: "/login",
@@ -146,14 +209,8 @@ router.beforeEach(async (to, from, next) => {
     });
   }
 
-  // RBAC
-  if (to.meta.role && !canAccess(auth.user?.role, to.meta.role)) {
+  if (to.meta.role && !canAccess(auth.role, to.meta.role)) {
     return next("/403");
-  }
-
-  // guest only
-  if (to.meta.guestOnly && auth.isAuthenticated) {
-    return next(redirectByRole(auth.user?.role));
   }
 
   next();

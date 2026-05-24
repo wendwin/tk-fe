@@ -58,8 +58,8 @@ const request = async (endpoint, options = {}) => {
     sessionStorage.setItem("csrf_token", csrfFromHeader);
   }
 
-  console.log("CSRF Header:", csrfFromHeader);
-  console.log("CSRF Token:", sessionStorage.getItem("csrf_token"));
+  // console.log("CSRF Header:", csrfFromHeader);
+  // console.log("CSRF Token:", sessionStorage.getItem("csrf_token"));
 
   let result;
   try {

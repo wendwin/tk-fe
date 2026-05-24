@@ -20,12 +20,46 @@
       @save-edit="saveEdit"
       @cancel-edit="cancelEdit"
     >
+      <template #header-action>
+        <div class="flex flex-wrap items-center gap-2">
+          <template
+            v-if="
+              detail.meta.status_observasi === 'hadir' &&
+              detail.meta.status !== 'accepted'
+            "
+          >
+            <button
+              @click="handleAccept"
+              class="text-sm px-3 py-1 border rounded-lg text-slate-600 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition"
+            >
+              Terima
+            </button>
+
+            <button
+              @click="handleRejectPendaftaran"
+              class="text-sm px-3 py-1 border rounded-lg text-slate-600 hover:bg-red-600 hover:text-white hover:border-red-600 transition"
+            >
+              Tolak
+            </button>
+          </template>
+
+          <a
+            :href="downloadUrl"
+            target="_blank"
+            class="cursor-pointer flex items-center gap-2 text-sm px-3 py-1.5 border rounded-lg text-slate-600 hover:bg-gray-100 transition"
+          >
+            <Download class="w-4 h-4" />
+            Formulir
+          </a>
+        </div>
+      </template>
+
       <template #tab-content="{ activeTab }">
         <BerkasTab
           v-if="activeTab === 'Berkas'"
           :detail="detail"
           :dokumen="detail.dokumen"
-          :status="detail.meta.status"
+          :status-berkas="detail.meta.status_berkas"
           @verify="handleVerifyBerkas"
           @reject="handleRejectBerkas"
         />
@@ -69,6 +103,7 @@ import {
 
 import {
   updatePendaftaran,
+  updateStatusBerkas,
   updateStatusPendaftaran,
   updateStatusPembayaran,
 } from "@/lib/services/pendaftaranService";
@@ -79,6 +114,7 @@ import {
 } from "@/lib/services/asesmenService";
 
 import { showSuccess, showError } from "@/lib/utils/toast";
+import { Download } from "lucide-vue-next";
 
 const route = useRoute();
 const id = route.params.id;
@@ -97,7 +133,7 @@ const tabs = [
   "Berkas",
   "Pembayaran",
   "Asesmen",
-  "Catatan",
+  // "Catatan",
 ];
 
 const downloadUrl = computed(() => {
@@ -269,9 +305,14 @@ const hasilAsesmen = computed(() => {
 
 const handleVerifyBerkas = async () => {
   try {
-    await updateStatusPendaftaran(detail.meta.id, "verified");
-    detail.meta.status = "verified";
-    showSuccess("Berhasil diverifikasi");
+    const res = await updateStatusBerkas(detail.meta.id, {
+      status_berkas: "verified",
+    });
+
+    detail.meta.status_berkas = res.data.status_berkas;
+    detail.meta.status = res.data.status;
+
+    showSuccess("Berkas berhasil diverifikasi");
   } catch (err) {
     showError(err.message);
   }
@@ -279,9 +320,14 @@ const handleVerifyBerkas = async () => {
 
 const handleRejectBerkas = async () => {
   try {
-    await updateStatusPendaftaran(detail.meta.id, "rejected");
-    detail.meta.status = "rejected";
-    showSuccess("Berhasil ditolak");
+    const res = await updateStatusBerkas(detail.meta.id, {
+      status_berkas: "rejected",
+    });
+
+    detail.meta.status_berkas = res.data.status_berkas;
+    detail.meta.status = res.data.status;
+
+    showSuccess("Berkas berhasil ditolak");
   } catch (err) {
     showError(err.message);
   }
@@ -289,8 +335,11 @@ const handleRejectBerkas = async () => {
 
 const handleVerifyPembayaran = async () => {
   try {
-    await updateStatusPembayaran(detail.meta.id, "paid");
-    detail.meta.status_pembayaran = "paid";
+    const res = await updateStatusPembayaran(detail.meta.id, "paid");
+
+    detail.meta.status_pembayaran = res.data.status_pembayaran;
+    detail.meta.status = res.data.status;
+
     showSuccess("Pembayaran diverifikasi");
   } catch (err) {
     showError(err.message);
@@ -299,8 +348,11 @@ const handleVerifyPembayaran = async () => {
 
 const handleRejectPembayaran = async () => {
   try {
-    await updateStatusPembayaran(detail.meta.id, "failed");
-    detail.meta.status_pembayaran = "failed";
+    const res = await updateStatusPembayaran(detail.meta.id, "failed");
+
+    detail.meta.status_pembayaran = res.data.status_pembayaran;
+    detail.meta.status = res.data.status;
+
     showSuccess("Pembayaran ditolak");
   } catch (err) {
     showError(err.message);
@@ -309,8 +361,10 @@ const handleRejectPembayaran = async () => {
 
 const handleAccept = async () => {
   try {
-    await updateStatusPendaftaran(detail.meta.id, "accepted");
-    detail.meta.status = "accepted";
+    const res = await updateStatusPendaftaran(detail.meta.id, "accepted");
+
+    detail.meta.status = res.data.status;
+
     showSuccess("Pendaftaran diterima");
   } catch (err) {
     showError(err.message);
@@ -319,8 +373,10 @@ const handleAccept = async () => {
 
 const handleRejectPendaftaran = async () => {
   try {
-    await updateStatusPendaftaran(detail.meta.id, "rejected");
-    detail.meta.status = "rejected";
+    const res = await updateStatusPendaftaran(detail.meta.id, "rejected");
+
+    detail.meta.status = res.data.status;
+
     showSuccess("Pendaftaran ditolak");
   } catch (err) {
     showError(err.message);
@@ -649,9 +705,9 @@ onMounted(async () => {
       </div>
     </div>
   </div>
-</template> -->
+</template>
 
-<!-- <script setup>
+<script setup>
 import { ref, reactive, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import PendaftaranDetailLayout from "@/components/admin/pendaftaran/DetailLayout.vue";
@@ -1156,6 +1212,6 @@ onMounted(async () => {
   await fetchDetail();
   await fetchAsesmen();
 });
-</script> -->
+</script>
 
-<!-- <style lang="scss" scoped></style> -->
+<style lang="scss" scoped></style> -->

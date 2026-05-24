@@ -30,6 +30,13 @@ export const uploadBerkas = async (id, files) => {
   });
 };
 
+export const updateStatusBerkas = async (id, payload) => {
+  return await request(`/pendaftaran/${id}/status-berkas`, {
+    method: "PATCH",
+    body: payload,
+  });
+};
+
 export const uploadPembayaran = (id, formData) => {
   return request(`/pendaftaran/${id}/upload-pembayaran`, {
     method: "POST",

@@ -3,15 +3,15 @@
     <span class="text-sm text-gray-600">
       Showing
       <span class="font-semibold text-gray-900 dark:text-gray-400">
-        {{ meta.from || 0 }}
+        {{ from }}
       </span>
       to
       <span class="font-semibold text-gray-900 dark:text-gray-400">
-        {{ meta.to || 0 }}
+        {{ to }}
       </span>
       of
       <span class="font-semibold text-gray-900 dark:text-gray-400">
-        {{ meta.total || 0 }}
+        {{ total }}
       </span>
     </span>
 
@@ -19,8 +19,8 @@
       <!-- Previous -->
       <li>
         <button
-          @click="changePage(meta.current_page - 1)"
-          :disabled="meta.current_page <= 1"
+          @click="changePage(currentPage - 1)"
+          :disabled="currentPage <= 1"
           class="flex items-center justify-center px-3 h-9 border rounded-s-lg bg-white hover:bg-gray-100 disabled:opacity-50"
         >
           Previous
@@ -33,7 +33,7 @@
           @click="changePage(page)"
           :class="[
             'flex items-center justify-center w-9 h-9 border',
-            page === meta.current_page
+            page === currentPage
               ? 'bg-blue-100 text-blue-700'
               : 'bg-white hover:bg-gray-100',
           ]"
@@ -45,8 +45,8 @@
       <!-- Next -->
       <li>
         <button
-          @click="changePage(meta.current_page + 1)"
-          :disabled="meta.current_page >= meta.last_page"
+          @click="changePage(currentPage + 1)"
+          :disabled="currentPage >= lastPage"
           class="flex items-center justify-center px-3 h-9 border rounded-e-lg bg-white hover:bg-gray-100 disabled:opacity-50"
         >
           Next
@@ -68,15 +68,26 @@ const props = defineProps({
 
 const emit = defineEmits(["change"]);
 
-const pages = computed(() => {
-  const total = props.meta.last_page || 1;
+const currentPage = computed(() => props.meta.page || 1);
+const lastPage = computed(() => props.meta.pages || 1);
+const perPage = computed(() => props.meta.per_page || 10);
+const total = computed(() => props.meta.total || 0);
 
-  return Array.from({ length: total }, (_, i) => i + 1);
+const from = computed(() => {
+  if (total.value === 0) return 0;
+  return (currentPage.value - 1) * perPage.value + 1;
+});
+
+const to = computed(() => {
+  return Math.min(currentPage.value * perPage.value, total.value);
+});
+
+const pages = computed(() => {
+  return Array.from({ length: lastPage.value }, (_, i) => i + 1);
 });
 
 const changePage = (page) => {
-  if (page < 1 || page > props.meta.last_page) return;
-
+  if (page < 1 || page > lastPage.value) return;
   emit("change", page);
 };
 </script>
