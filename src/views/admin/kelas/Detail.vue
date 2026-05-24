@@ -21,7 +21,7 @@
         <div class="flex items-start justify-between gap-4">
           <div>
             <p class="text-sm text-gray-500">Kelas</p>
-            <h2 class="text-2xl font-semibold text-gray-800 mt-1">
+            <h2 class="text-2xl font-medium text-gray-800 mt-1">
               {{ formatKelas(kelas) }}
             </h2>
             <p class="text-sm text-gray-500 mt-2">
@@ -31,7 +31,7 @@
 
           <div class="text-right">
             <p class="text-sm text-gray-500">Kapasitas</p>
-            <p class="text-2xl font-semibold text-gray-800">
+            <p class="text-2xl text-gray-700">
               {{ jumlahSiswa }}/{{ kelas?.kapasitas || 0 }}
             </p>
           </div>
@@ -52,21 +52,21 @@
             </div> -->
 
         <div class="grid grid-cols-3 gap-3 mt-6">
-          <div class="rounded-lg bg-gray-50 border border-gray-100 p-3">
+          <div class="rounded-lg border border-gray-200 p-3">
             <p class="text-xs text-gray-500">Jenjang</p>
             <p class="font-semibold text-gray-700 uppercase">
               {{ kelas?.jenjang || "-" }}
             </p>
           </div>
 
-          <div class="rounded-lg bg-gray-50 border border-gray-100 p-3">
+          <div class="rounded-lg border border-gray-200 p-3">
             <p class="text-xs text-gray-500">Kelompok</p>
             <p class="font-semibold text-gray-700 uppercase">
               {{ kelas?.kelompok || "-" }}
             </p>
           </div>
 
-          <div class="rounded-lg bg-gray-50 border border-gray-100 p-3">
+          <div class="rounded-lg border border-gray-200 p-3">
             <p class="text-xs text-gray-500">Jumlah Guru</p>
             <p class="font-semibold text-gray-700">
               {{ guruKelas.length }}
@@ -82,16 +82,16 @@
           </div>
         </div>
 
-        <div v-if="guruKelas.length > 0" class="space-y-3">
+        <div v-if="guruKelas.length > 0" class="space-y-2">
           <div
             v-for="item in guruKelas"
             :key="item.id"
-            class="rounded-lg border border-gray-200 p-3"
+            class="border-b border-gray-200"
           >
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0">
                 <p class="text-sm text-gray-700 truncate">
-                  {{ item.guru?.email || "-" }}
+                  {{ item.guru?.full_name || "-" }}
                 </p>
                 <!-- <p class="text-xs text-gray-500 mt-1">
                       {{
@@ -100,24 +100,14 @@
                     </p> -->
               </div>
 
-              <span
-                class="shrink-0 px-2 py-1 rounded-full text-xs font-medium"
-                :class="
-                  item.peran === 'wali_kelas'
-                    ? 'bg-blue-50 text-blue-600'
-                    : 'bg-gray-100 text-gray-600'
-                "
-              >
+              <span class="shrink-0 text-sm text-gray-500">
                 {{ formatPeran(item.peran) }}
               </span>
             </div>
           </div>
         </div>
 
-        <div
-          v-else
-          class="text-sm text-gray-500 text-center py-8 border border-dashed rounded-lg"
-        >
+        <div v-else class="text-sm text-gray-500 text-center">
           Belum ada guru kelas
         </div>
       </div>

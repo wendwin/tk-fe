@@ -26,9 +26,9 @@
 
             <select
               v-model="tahunFilter"
-              class="border rounded-lg px-3 py-2 text-sm"
+              class="border rounded-lg px-3 py-2 text-sm text-gray-600"
             >
-              <option value="">Semua tahun ajaran</option>
+              <option value="">Tahun ajaran</option>
               <option
                 v-for="tahun in tahunAjaranList"
                 :key="tahun.id"
@@ -206,7 +206,7 @@
         <div class="flex justify-end gap-2 mt-6">
           <button
             @click="closeModal"
-            class="px-4 py-2 rounded-lg border text-sm"
+            class="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 text-sm"
           >
             Batal
           </button>
@@ -214,7 +214,7 @@
           <button
             @click="handleSubmit"
             :disabled="saving"
-            class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm disabled:opacity-50"
+            class="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 text-sm disabled:opacity-50"
           >
             {{ saving ? "Menyimpan..." : "Simpan" }}
           </button>

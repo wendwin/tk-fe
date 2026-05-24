@@ -13,7 +13,7 @@ export const statusConfig = (status) => {
     case "accepted":
       return {
         label: "diterima",
-        class: "text-green-600",
+        class: "text-emerald-600",
       };
     case "rejected":
       return {
@@ -32,22 +32,22 @@ export const berkasConfig = (status) => {
   const config = {
     belum_upload: {
       label: "Belum Upload",
-      class: "text-gray-600",
+      class: "text-gray-700",
     },
 
     pending: {
       label: "Menunggu Verifikasi",
-      class: "text-yellow-600",
+      class: "text-gray-700",
     },
 
     verified: {
       label: "Terverifikasi",
-      class: "text-green-600 ",
+      class: "text-gray-700 ",
     },
 
     rejected: {
       label: "Ditolak",
-      class: "text-red-600 ",
+      class: "text-gray-700 ",
     },
   };
 

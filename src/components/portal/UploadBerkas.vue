@@ -39,7 +39,7 @@
       </div>
 
       <div class="p-6">
-        <div
+        <!-- <div
           v-if="statusBerkas === 'rejected'"
           class="mb-5 rounded-lg bg-red-50 text-red-700 text-sm px-4 py-3"
         >
@@ -50,7 +50,7 @@
           class="mb-5 rounded-lg bg-yellow-50 text-yellow-700 text-sm px-4 py-3"
         >
           Berkas sedang menunggu verifikasi admin.
-        </div>
+        </div> -->
 
         <!-- <div
           v-else-if="statusBerkas === 'verified'"

@@ -29,7 +29,7 @@
             <select
               v-model="roleFilter"
               @change="loadUsers"
-              class="border rounded-lg px-3 py-2 text-sm"
+              class="border rounded-lg px-3 py-2 text-sm text-gray-600"
             >
               <option value="">Semua role</option>
               <option value="admin">Admin</option>
@@ -54,6 +54,7 @@
             <input type="checkbox" class="w-4 h-4" />
           </th>
           <th class="px-6 py-3">No</th>
+          <th class="px-6 py-3">Nama</th>
           <th class="px-6 py-3">Email</th>
           <th class="px-6 py-3">Role</th>
           <th class="px-6 py-3">Verifikasi</th>
@@ -76,27 +77,22 @@
             {{ index + 1 }}
           </td>
 
-          <td class="px-6 py-4 font-medium text-gray-700">
+          <td class="px-6 py-4">
+            {{ item.first_name + " " + item.last_name }}
+          </td>
+
+          <td class="px-6 py-4">
             {{ item.email }}
           </td>
 
           <td class="px-6 py-4">
-            <span
-              class="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700"
-            >
+            <span class="">
               {{ formatRole(item.role?.name) }}
             </span>
           </td>
 
           <td class="px-6 py-4">
-            <span
-              class="px-2 py-1 rounded-full text-xs font-medium"
-              :class="
-                item.is_verified
-                  ? 'bg-emerald-100 text-emerald-700'
-                  : 'bg-red-100 text-red-600'
-              "
-            >
+            <span class="">
               {{ item.is_verified ? "Terverifikasi" : "Belum" }}
             </span>
           </td>
@@ -136,6 +132,22 @@
         </h2>
 
         <div class="space-y-4">
+          <div>
+            <label class="text-sm text-gray-600">Nama Depan</label>
+            <input
+              v-model="form.first_name"
+              type="text"
+              class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label class="text-sm text-gray-600">Nama Belakang</label>
+            <input
+              v-model="form.last_name"
+              type="text"
+              class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+            />
+          </div>
           <div>
             <label class="text-sm text-gray-600">Email</label>
             <input
@@ -179,7 +191,7 @@
         <div class="flex justify-end gap-2 mt-6">
           <button
             @click="closeModal"
-            class="px-4 py-2 rounded-lg border text-sm"
+            class="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 text-sm"
           >
             Batal
           </button>
@@ -187,7 +199,7 @@
           <button
             @click="handleSubmit"
             :disabled="saving"
-            class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm disabled:opacity-50"
+            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 text-sm"
           >
             {{ saving ? "Menyimpan..." : "Simpan" }}
           </button>
@@ -224,6 +236,8 @@ const isEdit = ref(false);
 const selectedId = ref(null);
 
 const form = reactive({
+  first_name: "",
+  last_name: "",
   email: "",
   password: "",
   role_id: null,
@@ -233,7 +247,7 @@ const form = reactive({
 const roleMap = {
   admin: "Admin",
   guru: "Guru",
-  orang_tua: "Orang Tua",
+  orang_tua: "User",
   kepala_sekolah: "Kepala Sekolah",
 };
 
@@ -242,6 +256,8 @@ const formatRole = (role) => {
 };
 
 const resetForm = () => {
+  form.first_name = "";
+  form.last_name = "";
   form.email = "";
   form.password = "";
   form.role_id = null;
@@ -279,6 +295,8 @@ const openEdit = (item) => {
   selectedId.value = item.id;
   isEdit.value = true;
 
+  form.first_name = item.first_name;
+  form.last_name = item.last_name;
   form.email = item.email;
   form.password = "";
   form.role_id = item.role_id;
@@ -293,6 +311,11 @@ const closeModal = () => {
 };
 
 const validateForm = () => {
+  if (!form.first_name) {
+    showWarning("Nama depan wajib diisi");
+    return false;
+  }
+
   if (!form.email) {
     showWarning("Email wajib diisi");
     return false;
@@ -323,6 +346,8 @@ const handleSubmit = async () => {
     saving.value = true;
 
     const payload = {
+      first_name: form.first_name,
+      last_name: form.last_name,
       email: form.email,
       role_id: form.role_id,
       is_verified: form.is_verified,

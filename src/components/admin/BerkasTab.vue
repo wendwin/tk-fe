@@ -4,7 +4,7 @@
       <h3 class="font-medium text-gray-700 flex items-center gap-2">
         <!-- <FolderClosed class="w-5 h-5" />  -->
         Berkas Pendaftaran:
-        <h3 class="text-sm">
+        <h3 class="text-base">
           <span :class="['capitalize', berkasConfig(statusBerkas).class]">{{
             berkasConfig(statusBerkas).label
           }}</span>

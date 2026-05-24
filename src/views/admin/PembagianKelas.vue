@@ -61,7 +61,7 @@
         <div class="flex items-end gap-2">
           <button
             @click="loadData"
-            class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm"
+            class="px-4 py-2 rounded-lg bg-blue-500 text-white text-sm"
           >
             Tampilkan
           </button>
@@ -83,7 +83,7 @@
       <div class="bg-white border border-gray-200 rounded-xl">
         <div class="p-4 border-b flex items-center justify-between">
           <div>
-            <h2 class="font-medium text-gray-700">Siswa Belum Masuk Kelas</h2>
+            <h2 class="font-medium text-gray-700">Daftar Siswa</h2>
             <p class="text-sm text-gray-500">{{ unassigned.length }} siswa</p>
           </div>
         </div>
@@ -117,14 +117,14 @@
                   {{ siswa.program }}
                 </p>
 
-                <p class="text-xs text-gray-500 mt-1">
+                <p class="text-sm text-gray-500 mt-1">
                   GPPH: {{ siswa.observasi?.gpph_total ?? "-" }} | KPSP:
                   {{ siswa.observasi?.kpsp_total_ya ?? "-" }}/10
                 </p>
 
                 <p
                   v-if="siswa.observasi?.catatan"
-                  class="text-xs text-gray-500 mt-1"
+                  class="text-sm text-gray-500 mt-1"
                 >
                   Catatan: {{ siswa.observasi.catatan }}
                 </p>
@@ -160,7 +160,7 @@
           <button
             @click="handleSave"
             :disabled="selectedDraft.length === 0 || saving"
-            class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm disabled:opacity-50"
+            class="px-4 py-2 rounded-lg bg-blue-500 text-white text-sm hover:bg-blue-600"
           >
             {{ saving ? "Menyimpan..." : "Simpan" }}
           </button>
@@ -178,7 +178,7 @@
             v-for="item in targetStudents"
             :key="item.key"
             class="border rounded-xl p-4"
-            :class="item.isDraft ? 'bg-blue-50 border-blue-200' : 'bg-white'"
+            :class="item.isDraft ? 'bg-white border' : 'bg-white'"
           >
             <div class="flex items-start justify-between gap-3">
               <div>
@@ -187,8 +187,7 @@
                 </h3>
 
                 <p class="text-sm text-gray-500">
-                  {{ item.umur || "-" }} bulan |
-                  {{ item.jenis_kelamin || "-" }}
+                  {{ item.umur || "-" }} | {{ item.jenis_kelamin || "-" }}
                 </p>
 
                 <!-- <p v-if="item.isDraft" class="text-xs text-blue-600 mt-1">
@@ -276,7 +275,7 @@ const targetStudents = computed(() => {
     id: item.siswa?.id,
     nama_lengkap: item.siswa?.nama_lengkap,
     jenis_kelamin: item.siswa?.jenis_kelamin,
-    umur_bulan: null,
+    umur: item.siswa?.umur,
     isDraft: false,
   }));
 

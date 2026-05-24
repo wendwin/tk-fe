@@ -70,12 +70,8 @@
 
           <td class="px-6 py-4">
             <span
-              class="px-2 py-1 rounded-full text-xs font-medium"
-              :class="
-                item.is_active
-                  ? 'bg-emerald-100 text-emerald-700'
-                  : 'bg-gray-100 text-gray-600'
-              "
+              class="px-2 py-1 rounded-full text-sm font-medium"
+              :class="item.is_active ? 'text-emerald-600' : ' text-gray-600'"
             >
               {{ item.is_active ? "Aktif" : "Nonaktif" }}
             </span>

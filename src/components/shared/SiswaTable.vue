@@ -30,6 +30,9 @@
 
       <template #head>
         <tr>
+          <th class="p-4">
+            <input type="checkbox" class="w-4 h-4" />
+          </th>
           <th class="px-6 py-3">No</th>
           <th class="px-6 py-3">Nama</th>
           <th class="px-6 py-3">NISN</th>
@@ -48,6 +51,9 @@
           :key="item.id"
           class="bg-white border-b border-gray-200 hover:bg-gray-50"
         >
+          <td class="p-4">
+            <input type="checkbox" class="w-4 h-4" />
+          </td>
           <td class="px-6 py-4">
             {{ meta.from ? meta.from + index : index + 1 }}
           </td>

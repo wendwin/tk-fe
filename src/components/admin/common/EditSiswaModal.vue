@@ -43,7 +43,7 @@
       <div class="flex justify-end gap-2 mt-6">
         <button
           @click="$emit('close')"
-          class="px-4 py-2 border rounded-lg text-sm"
+          class="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 text-sm"
         >
           Batal
         </button>

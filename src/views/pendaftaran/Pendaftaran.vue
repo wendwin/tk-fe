@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-blue-50 py-5">
+  <div class="bg-blue-50 py-5 mt-16">
     <div
       class="max-w-6xl mx-auto bg-white p-6 border border-white rounded-lg shadow-md"
     >
@@ -73,7 +73,6 @@
       <div v-else-if="activeTab === 'berkas'" key="berkas">
         <UploadBerkas
           :pendaftaran-id="pendaftaranId"
-          :status-berkas="pendaftaranData.status_berkas"
           @saved="handleBerkasSaved"
         />
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-6xl mx-auto p-6">
+  <div class="max-w-6xl mx-auto p-6 mt-16">
     <div class="">
       <h1 class="text-2xl">
         Selamat Datang di Portal KB & TK Masjid Syuhada Yogyakarta
@@ -44,7 +44,7 @@
     </div>
 
     <button
-      class="absolute bottom-4 right-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+      class="absolute bottom-4 right-4 bg-white text-slate-900 py-2 px-4 rounded hover:bg-slate-100"
       @click="handleLogout"
     >
       Logout

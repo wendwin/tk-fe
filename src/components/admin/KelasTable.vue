@@ -53,6 +53,7 @@
           <th class="px-6 py-3">Jenjang</th>
           <th class="px-6 py-3">Kelompok</th>
           <th class="px-6 py-3">Kapasitas</th>
+          <th class="px-6 py-3">Guru</th>
           <th class="px-6 py-3">Tahun Ajaran</th>
           <th class="px-6 py-3">Aksi</th>
         </tr>
@@ -92,6 +93,10 @@
 
           <td class="px-6 py-4">
             {{ item.kapasitas || "-" }}
+          </td>
+
+          <td class="px-6 py-4">
+            {{ item.total_guru || "-" }}
           </td>
 
           <td class="px-6 py-4">
@@ -206,7 +211,7 @@
         <div class="flex justify-end gap-2 mt-6">
           <button
             @click="closeModal"
-            class="px-4 py-2 rounded-lg border text-sm"
+            class="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 text-sm"
           >
             Batal
           </button>
@@ -214,7 +219,7 @@
           <button
             @click="handleSubmit"
             :disabled="saving"
-            class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm disabled:opacity-50"
+            class="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 text-sm disabled:opacity-50 text-sm"
           >
             {{ saving ? "Menyimpan..." : "Simpan" }}
           </button>

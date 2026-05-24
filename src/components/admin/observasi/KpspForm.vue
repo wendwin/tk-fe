@@ -30,7 +30,7 @@
               {{ item.aspek_perkembangan }}
             </p>
 
-            <p class="font-medium text-sm text-gray-700">
+            <p class="text-sm text-gray-700">
               {{ item.urutan }}.
               {{ item.kemampuan_anak }}
             </p>
@@ -78,7 +78,7 @@
             v-model="catatan"
             :disabled="isSubmitted"
             rows="3"
-            class="w-full border rounded-lg px-3 py-2 text-sm"
+            class="w-full border rounded-lg px-3 py-2 text-sm text-gray-700"
           />
         </div>
 

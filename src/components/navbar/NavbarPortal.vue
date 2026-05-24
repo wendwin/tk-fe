@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav
-      class="bg-white border-b border-gray-200 px-8 h-[60px] flex items-center justify-between sticky top-0 z-[100] shadow-sm"
+      class="fixed z-50 bg-white border-b border-gray-200 px-8 h-[60px] w-full flex items-center justify-between top-0 shadow-sm"
     >
       <div class="flex items-center gap-2.5">
         <div class="flex items-center">

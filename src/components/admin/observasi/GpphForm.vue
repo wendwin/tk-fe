@@ -39,7 +39,7 @@
           </div> -->
 
           <div class="flex-1">
-            <p class="text-sm text-gray-700 font-medium mb-3">
+            <p class="text-sm text-gray-700 mb-3">
               {{ item.nomor }}. {{ item.pertanyaan }}
             </p>
 
@@ -79,46 +79,43 @@
         </button>
       </div>
 
-      <div
-        v-if="hasil"
-        class="border border-gray-200 rounded-xl p-4 bg-gray-50 w-full max-w-md"
-      >
+      <div v-if="hasil" class="border rounded-xl p-4 bg-white w-full max-w-md">
         <h4 class="font-medium text-gray-700 mb-3">Hasil Observasi GPPH</h4>
 
         <div class="grid grid-cols-5 gap-2 text-sm">
           <div class="bg-white border rounded-lg p-2 text-center min-w-0">
             <p class="text-gray-500 text-[11px]">Nilai 0</p>
-            <p class="font-semibold text-base">
+            <p class="text-base text-gray-700">
               {{ hasil.jumlah["0"] }}
             </p>
           </div>
 
           <div class="bg-white border rounded-lg p-2 text-center min-w-0">
             <p class="text-gray-500 text-[11px]">Nilai 1</p>
-            <p class="font-semibold text-base">
+            <p class="text-base text-gray-700">
               {{ hasil.jumlah["1"] }}
             </p>
           </div>
 
           <div class="bg-white border rounded-lg p-2 text-center min-w-0">
             <p class="text-gray-500 text-[11px]">Nilai 2</p>
-            <p class="font-semibold text-base">
+            <p class="text-base text-gray-700">
               {{ hasil.jumlah["2"] }}
             </p>
           </div>
 
           <div class="bg-white border rounded-lg p-2 text-center min-w-0">
-            <p class="text-gray-500 text-[11px]">3</p>
-            <p class="font-semibold text-base">
+            <p class="text-gray-500 text-[11px]">Nilai 3</p>
+            <p class="text-base text-gray-700">
               {{ hasil.jumlah["3"] }}
             </p>
           </div>
 
           <div
-            class="bg-blue-50 border border-blue-200 rounded-lg p-2 text-center min-w-0"
+            class="border border-gray-200 rounded-lg p-2 text-center min-w-0"
           >
-            <p class="text-blue-500 text-[11px]">Total</p>
-            <p class="font-bold text-base text-blue-700">
+            <p class="text-gray-700 text-[11px]">Total</p>
+            <p class="font-bold text-base text-gray-700">
               {{ hasil.total_nilai }}
             </p>
           </div>

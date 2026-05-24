@@ -6,7 +6,7 @@
           <template #right>
             <button
               @click="showModal = true"
-              class="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
+              class="px-3 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600"
             >
               Tambah Jadwal
             </button>
@@ -188,11 +188,12 @@
       class="fixed top-0 left-0 w-screen h-screen z-[9999] bg-black/40 flex items-center justify-center"
     >
       <div class="bg-white rounded-xl p-8 max-w-md">
-        <h2 class="text-lg font-semibold mb-4">Jadwal Observasi</h2>
+        <h2 class="text-lg font-medium">Jadwal Observasi</h2>
+        <label class="block text-sm mb-6 text-gray-700">
+          Tanggal & Jam Observasi
+        </label>
 
-        <div class="mb-5">
-          <label class="block text-sm mb-2"> Tanggal & Jam Observasi </label>
-
+        <div class="mb-4">
           <div class="space-y-4">
             <VueDatePicker
               v-model="observasiAt"
@@ -203,24 +204,27 @@
           </div>
         </div>
 
-        <div class="mb-4 space-y-1">
-          <div class="text-sm text-gray-500">
+        <div class="mb-6 space-y-1">
+          <div class="text-sm text-gray-700">
             Dipilih: {{ selectedIds.length }} peserta
           </div>
-          <div class="text-sm text-gray-500">
+          <div class="text-sm text-gray-700">
             Jadwal:
             {{ observasiAt ? observasiAt.toLocaleString("id-ID") : "-" }}
           </div>
         </div>
 
-        <div class="flex justify-end gap-2">
-          <button @click="closeModal" class="px-4 py-2 border rounded-lg">
+        <div class="flex justify-end gap-3">
+          <button
+            @click="closeModal"
+            class="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-100"
+          >
             Batal
           </button>
 
           <button
             @click="handleSetJadwal"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg"
+            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
             Simpan
           </button>
