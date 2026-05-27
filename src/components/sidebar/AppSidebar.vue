@@ -50,7 +50,10 @@
     >
       <nav class="mb-6">
         <div class="flex flex-col gap-4">
-          <div v-for="(menuGroup, groupIndex) in menuGroups" :key="groupIndex">
+          <div
+            v-for="(menuGroup, groupIndex) in filteredMenuGroups"
+            :key="groupIndex"
+          >
             <h2
               :class="[
                 'mb-4 text-xs uppercase flex leading-[20px] text-gray-400',
@@ -212,6 +215,10 @@
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 
+import { useAuthStore } from "@/lib/stores/auth";
+import { canAccess } from "@/lib/utils/rbac";
+import { ROLES } from "@/lib/constants/roles";
+
 import { useSidebar } from "@/composables/useSidebar";
 import {
   ChevronDown,
@@ -230,6 +237,7 @@ import {
 import path from "node:path";
 
 const route = useRoute();
+const auth = useAuthStore();
 
 const { isExpanded, isMobileOpen, isHovered, openSubmenu } = useSidebar();
 
@@ -241,30 +249,45 @@ const menuGroups = [
         icon: LayoutGrid,
         name: "Dashboard",
         to: { name: "AdminDashboard" },
+        meta: { role: [ROLES.ADMIN, ROLES.GURU] },
       },
-    ],
-  },
-
-  {
-    title: "Pendaftaran",
-    items: [
       {
         icon: Users,
         name: "Data Pendaftaran",
         to: { name: "AdminPendaftaran" },
+        meta: { role: [ROLES.ADMIN] },
       },
       {
         icon: UserSearch,
         name: "Observasi",
         to: { name: "AdminObservasi" },
+        meta: { role: [ROLES.ADMIN, ROLES.GURU] },
       },
-      // {
-      //   icon: Layers3,
-      //   name: "Gelombang",
-      //   to: { name: "AdminGelombang" },
-      // },
     ],
   },
+
+  // {
+  //   title: "Pendaftaran",
+  //   items: [
+  //     {
+  //       icon: Users,
+  //       name: "Data Pendaftaran",
+  //       to: { name: "AdminPendaftaran" },
+  //       meta: { role: [ROLES.ADMIN] },
+  //     },
+  //     {
+  //       icon: UserSearch,
+  //       name: "Observasi",
+  //       to: { name: "AdminObservasi" },
+  //       meta: { role: [ROLES.ADMIN, ROLES.GURU] },
+  //     },
+  //     // {
+  //     //   icon: Layers3,
+  //     //   name: "Gelombang",
+  //     //   to: { name: "AdminGelombang" },
+  //     // },
+  //   ],
+  // },
 
   {
     title: "Akademik",
@@ -273,26 +296,31 @@ const menuGroups = [
         icon: CalendarDays,
         name: "Tahun Ajaran",
         to: { name: "AdminTahunAjaran" },
+        meta: { role: [ROLES.ADMIN] },
       },
       {
         icon: School,
         name: "Kelas",
         to: { name: "AdminKelas" },
+        meta: { role: [ROLES.ADMIN] },
       },
       {
         icon: UserRoundCheck,
         name: "Guru Kelas",
         to: { name: "AdminGuruKelas" },
+        meta: { role: [ROLES.ADMIN] },
       },
       {
         icon: Shuffle,
         name: "Pembagian Kelas",
         to: { name: "AdminPembagianKelas" },
+        meta: { role: [ROLES.ADMIN] },
       },
       {
         icon: UsersRound,
         name: "Siswa",
         to: { name: "AdminSiswa" },
+        meta: { role: [ROLES.ADMIN] },
       },
     ],
   },
@@ -302,12 +330,25 @@ const menuGroups = [
     items: [
       {
         icon: UserCog,
-        name: "Kelola User",
+        name: "User",
         to: { name: "AdminUser" },
+        meta: { role: [ROLES.ADMIN] },
       },
     ],
   },
 ];
+
+const filteredMenuGroups = computed(() => {
+  return menuGroups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) =>
+        canAccess(auth.role, item.meta?.role),
+      ),
+    }))
+    .filter((group) => group.items.length > 0);
+});
+
 const isActive = (path) => route.path === path;
 
 const toggleSubmenu = (groupIndex, itemIndex) => {

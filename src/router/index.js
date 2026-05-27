@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/lib/stores/auth";
 import { canAccess } from "@/lib/utils/rbac";
 import { redirectByRole } from "@/lib/utils/redirectByRole";
+import { ROLES } from "@/lib/constants/roles";
 
 const router = createRouter({
   routes: [
@@ -27,7 +28,7 @@ const router = createRouter({
     //   path: "/pendaftaran",
     //   name: "Pendaftaran",
     //   component: () => import("../views/portal/Portal.vue"),
-    //   meta: { layout: "PortalLayout", requiresAuth: true, role: ["orang_tua"] },
+    //   meta: { layout: "PortalLayout", requiresAuth: true, role: [ROLES.ORTU] },
     // },
     {
       path: "/portal",
@@ -35,18 +36,20 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         layout: "PortalLayout",
-        role: ["orang_tua"],
+        role: [ROLES.ORTU],
       },
       children: [
         {
           path: "",
           name: "HomePortal",
           component: () => import("../views/portal/Home.vue"),
+          roles: [ROLES.ORTU],
         },
         {
           path: "pendaftaran",
           name: "Pendaftaran",
           component: () => import("../views/pendaftaran/Pendaftaran.vue"),
+          roles: [ROLES.ORTU],
         },
         // {
         //   path: "pendaftaran/:id",
@@ -66,73 +69,86 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         layout: "AdminLayout",
-        role: ["admin", "guru", "kepsek"],
+        role: [ROLES.ADMIN, ROLES.GURU, ROLES.KEPSEK],
       },
       children: [
         {
           path: "",
           name: "AdminDashboard",
           component: () => import("../views/admin/Dashboard.vue"),
+          meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
         {
           path: "pendaftar",
           name: "AdminPendaftaran",
           component: () => import("../views/admin/pendaftaran/Pendaftaran.vue"),
+          meta: { role: [ROLES.ADMIN] },
         },
         {
           path: "pendaftar/:id",
           name: "AdminPendaftarDetail",
           component: () => import("../views/admin/pendaftaran/Detail.vue"),
+          meta: { role: [ROLES.ADMIN] },
         },
         {
           path: "observasi",
           name: "AdminObservasi",
           component: () => import("../views/admin/observasi/Observasi.vue"),
+          meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
         {
           path: "observasi/:id",
           name: "AdminObservasiDetail",
           component: () => import("../views/admin/observasi/Detail.vue"),
+          meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
         {
           path: "siswa",
           name: "AdminSiswa",
           component: () => import("../views/shared/siswa/Siswa.vue"),
+          meta: { role: [ROLES.ADMIN] },
         },
         {
           path: "siswa/:id",
           name: "AdminSiswaDetail",
           component: () => import("../views/shared/siswa/Detail.vue"),
+          meta: { role: [ROLES.ADMIN] },
         },
         {
           path: "pembagian-kelas",
           name: "AdminPembagianKelas",
           component: () => import("../views/admin/PembagianKelas.vue"),
+          meta: { role: [ROLES.ADMIN] },
         },
         {
           path: "kelas",
           name: "AdminKelas",
           component: () => import("../views/admin/kelas/Kelas.vue"),
+          meta: { role: [ROLES.ADMIN] },
         },
         {
           path: "kelas/:id",
           name: "AdminKelasDetail",
           component: () => import("../views/admin/kelas/Detail.vue"),
+          meta: { role: [ROLES.ADMIN] },
         },
         {
           path: "tahun-ajaran",
           name: "AdminTahunAjaran",
           component: () => import("../views/admin/tahunAjaran/TahunAjaran.vue"),
+          meta: { role: [ROLES.ADMIN] },
         },
         {
           path: "guru-kelas",
           name: "AdminGuruKelas",
           component: () => import("../views/admin/guruKelas/GuruKelas.vue"),
+          meta: { role: [ROLES.ADMIN] },
         },
         {
           path: "user",
           name: "AdminUser",
           component: () => import("../views/admin/user/User.vue"),
+          meta: { role: [ROLES.ADMIN] },
         },
         // {
         //   path: "monitoring",
@@ -209,7 +225,12 @@ router.beforeEach(async (to, from, next) => {
     });
   }
 
-  if (to.meta.role && !canAccess(auth.role, to.meta.role)) {
+  const requiredRoles = to.matched
+    .map((record) => record.meta.role)
+    .filter(Boolean)
+    .flat();
+
+  if (requiredRoles.length && !canAccess(auth.role, requiredRoles)) {
     return next("/403");
   }
 
