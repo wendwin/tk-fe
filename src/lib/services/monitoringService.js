@@ -28,3 +28,34 @@ export const publishMonitoringMingguan = async (id) => {
     method: "PUT",
   });
 };
+
+// monitoring siswa
+export const getMonitoringSiswa = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+
+  return request(`/monitoring/siswa${query ? `?${query}` : ""}`);
+};
+
+export const getMonitoringSiswaById = async (id) => {
+  return request(`/monitoring/siswa/${id}`);
+};
+
+export const createMonitoringSiswa = async (payload) => {
+  return request("/monitoring/siswa", {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const updateMonitoringSiswa = async (id, payload) => {
+  return request(`/monitoring/siswa/${id}`, {
+    method: "PUT",
+    body: payload,
+  });
+};
+
+export const publishMonitoringSiswa = async (id) => {
+  return request(`/monitoring/siswa/${id}/publish`, {
+    method: "PUT",
+  });
+};

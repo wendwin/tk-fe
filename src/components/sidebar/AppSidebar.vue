@@ -301,7 +301,10 @@ const menuGroups = [
       {
         icon: School,
         name: "Kelas",
-        to: { name: "AdminKelas" },
+        to:
+          auth.role === ROLES.GURU
+            ? { name: "GuruKelasSaya" }
+            : { name: "AdminKelas" },
         meta: { role: [ROLES.ADMIN, ROLES.GURU] },
       },
       {

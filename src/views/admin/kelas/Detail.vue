@@ -2,10 +2,10 @@
   <div class="">
     <div class="flex items-center justify-between mb-4">
       <h1 class="text-lg text-gray-700 font-medium dark:text-gray-400">
-        Detail Kelas
+        {{ isGuru ? "Kelas" : "Detail Kelas" }}
       </h1>
 
-      <nav class="flex items-center text-sm text-slate-500 mr-5">
+      <nav v-if="!isGuru" class="flex items-center text-sm text-slate-500 mr-5">
         <RouterLink :to="{ name: 'AdminKelas' }" class="hover:text-slate-700">
           Kelas
         </RouterLink>
@@ -129,6 +129,10 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+
+import { useAuthStore } from "@/lib/stores/auth";
+import { ROLES } from "@/lib/constants/roles";
+
 import { showError } from "@/lib/utils/toast";
 
 import { getKelasById } from "@/lib/services/kelasService";
@@ -136,6 +140,9 @@ import KelasSiswaTable from "@/components/admin/KelasSiswaTable.vue";
 import { ChevronRight } from "lucide-vue-next";
 
 const route = useRoute();
+
+const auth = useAuthStore();
+const isGuru = computed(() => auth.role === ROLES.GURU);
 
 const kelas = ref(null);
 const loading = ref(false);

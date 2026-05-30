@@ -3,6 +3,7 @@ import { useAuthStore } from "@/lib/stores/auth";
 import { canAccess } from "@/lib/utils/rbac";
 import { redirectByRole } from "@/lib/utils/redirectByRole";
 import { ROLES } from "@/lib/constants/roles";
+import { getMyGuruKelas } from "@/lib/services/guruKelasService.js";
 
 const router = createRouter({
   routes: [
@@ -51,18 +52,18 @@ const router = createRouter({
           component: () => import("../views/pendaftaran/Pendaftaran.vue"),
           meta: { role: [ROLES.ORTU] },
         },
-        // {
-        //   path: "monitoring",
-        //   name: "Monitoring",
-        //   component: () => import("../views/monitoring/Monitoring.vue"),
-        //   meta: { role: [ROLES.ORTU] },
-        // },
-        // {
-        //   path: "monitoring/:id",
-        //   name: "MonitoringDetail",
-        //   component: () => import("../views/monitoring/Detail.vue"),
-        //   meta: { role: [ROLES.ORTU] },
-        // },
+        {
+          path: "monitoring",
+          name: "Monitoring",
+          component: () => import("../views/monitoring/Monitoring.vue"),
+          meta: { role: [ROLES.ORTU] },
+        },
+        {
+          path: "monitoring/:id",
+          name: "MonitoringDetail",
+          component: () => import("../views/monitoring/Detail.vue"),
+          meta: { role: [ROLES.ORTU] },
+        },
         // {
         //   path: "pendaftaran/:id",
         //   name: "DetailPendaftaran",
@@ -139,6 +140,25 @@ const router = createRouter({
           meta: { role: [ROLES.ADMIN] },
         },
         {
+          path: "kelas-saya",
+          name: "GuruKelasSaya",
+          beforeEnter: async () => {
+            const res = await getMyGuruKelas();
+
+            if (!res.data?.length) {
+              return { name: "Dashboard" };
+            }
+
+            return {
+              name: "AdminKelasDetail",
+              params: {
+                id: res.data[0].kelas.id,
+              },
+            };
+          },
+          meta: { role: [ROLES.GURU] },
+        },
+        {
           path: "kelas/:id",
           name: "AdminKelasDetail",
           component: () => import("../views/admin/kelas/Detail.vue"),
@@ -166,6 +186,13 @@ const router = createRouter({
           path: "monitoring",
           name: "AdminMonitoring",
           component: () => import("../views/admin/monitoring/Monitoring.vue"),
+          meta: { role: [ROLES.ADMIN, ROLES.GURU] },
+        },
+        {
+          path: "monitoring/siswa/create",
+          name: "AdminMonitoringSiswaCreate",
+          component: () =>
+            import("../views/admin/monitoring/siswa/AddMonitoring.vue"),
           meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
         // {

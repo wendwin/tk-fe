@@ -35,6 +35,7 @@
         </p>
 
         <RouterLink
+          :to="{ name: 'Monitoring' }"
           class="inline-block bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 mt-6 text-sm"
         >
           Lihat Monitoring
