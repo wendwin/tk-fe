@@ -302,7 +302,7 @@ const menuGroups = [
         icon: School,
         name: "Kelas",
         to: { name: "AdminKelas" },
-        meta: { role: [ROLES.ADMIN] },
+        meta: { role: [ROLES.ADMIN, ROLES.GURU] },
       },
       {
         icon: UserRoundCheck,
@@ -321,6 +321,12 @@ const menuGroups = [
         name: "Siswa",
         to: { name: "AdminSiswa" },
         meta: { role: [ROLES.ADMIN] },
+      },
+      {
+        icon: PieChartIcon,
+        name: "Monitoring",
+        to: { name: "AdminMonitoring" },
+        meta: { role: [ROLES.ADMIN, ROLES.GURU] },
       },
     ],
   },

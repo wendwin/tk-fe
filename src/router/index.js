@@ -43,14 +43,26 @@ const router = createRouter({
           path: "",
           name: "HomePortal",
           component: () => import("../views/portal/Home.vue"),
-          roles: [ROLES.ORTU],
+          meta: { role: [ROLES.ORTU] },
         },
         {
           path: "pendaftaran",
           name: "Pendaftaran",
           component: () => import("../views/pendaftaran/Pendaftaran.vue"),
-          roles: [ROLES.ORTU],
+          meta: { role: [ROLES.ORTU] },
         },
+        // {
+        //   path: "monitoring",
+        //   name: "Monitoring",
+        //   component: () => import("../views/monitoring/Monitoring.vue"),
+        //   meta: { role: [ROLES.ORTU] },
+        // },
+        // {
+        //   path: "monitoring/:id",
+        //   name: "MonitoringDetail",
+        //   component: () => import("../views/monitoring/Detail.vue"),
+        //   meta: { role: [ROLES.ORTU] },
+        // },
         // {
         //   path: "pendaftaran/:id",
         //   name: "DetailPendaftaran",
@@ -149,6 +161,12 @@ const router = createRouter({
           name: "AdminUser",
           component: () => import("../views/admin/user/User.vue"),
           meta: { role: [ROLES.ADMIN] },
+        },
+        {
+          path: "monitoring",
+          name: "AdminMonitoring",
+          component: () => import("../views/admin/monitoring/Monitoring.vue"),
+          meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
         // {
         //   path: "monitoring",
