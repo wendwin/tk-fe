@@ -30,7 +30,7 @@
           </div>
 
           <div class="text-right">
-            <p class="text-sm text-gray-500">Kapasitas</p>
+            <p class="text-sm text-gray-500">Siswa</p>
             <p class="text-2xl text-gray-700">
               {{ jumlahSiswa }}/{{ kelas?.kapasitas || 0 }}
             </p>
@@ -100,8 +100,8 @@
                     </p> -->
               </div>
 
-              <span class="shrink-0 text-sm text-gray-500">
-                {{ formatPeran(item.peran) }}
+              <span class="shrink-0 text-sm text-gray-500 capitalize">
+                {{ item.peran }}
               </span>
             </div>
           </div>
@@ -160,21 +160,21 @@ const formatKelas = (kelas) => {
   const kelompok = kelas.kelompok ? kelas.kelompok.toUpperCase() : "";
   const nama = kelas.nama || "";
 
-  if (kelas.jenjang === "kb") return nama ? `${jenjang} ${nama}` : jenjang;
+  if (kelas.jenjang === "kb") return nama;
   if (kelompok && nama) return `${jenjang}-${kelompok} ${nama}`;
   if (kelompok) return `${jenjang}-${kelompok}`;
 
   return nama || jenjang || "-";
 };
 
-const formatPeran = (peran) => {
-  const map = {
-    wali_kelas: "Wali Kelas",
-    pendamping: "Pendamping",
-  };
+// const formatPeran = (peran) => {
+//   const map = {
+//     wali_kelas: "Wali Kelas",
+//     pendamping: "Pendamping",
+//   };
 
-  return map[peran] || "-";
-};
+//   return map[peran] || "-";
+// };
 
 const loadDetail = async () => {
   try {
@@ -186,6 +186,7 @@ const loadDetail = async () => {
 
     const res = await getKelasById(id);
     kelas.value = res.data;
+    console.log(JSON.parse(JSON.stringify(kelas.value)));
   } catch (err) {
     showError(err.message || "Gagal memuat detail kelas");
   } finally {

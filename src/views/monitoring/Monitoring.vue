@@ -26,6 +26,13 @@
       </p>
     </header>
 
+    <div
+      v-if="!loading && historiMonitoring.length === 0"
+      class="bg-white border border-gray-200 rounded-2xl p-8 text-center text-sm text-gray-500"
+    >
+      Belum ada monitoring yang dipublikasikan.
+    </div>
+
     <div v-for="grup in historiMonitoring" :key="grup.bulan" class="mb-8">
       <div class="flex items-center gap-3 mb-4">
         <h2 class="text-lg font-bold text-gray-700 whitespace-nowrap">
@@ -73,7 +80,7 @@
                 {{ pekan.topik }}
               </h3>
               <p class="text-sm text-gray-500 mt-0.5 truncate">
-                Sub:{{ pekan.subTopik }}
+                Sub: {{ pekan.subTopik }}
               </p>
 
               <div
@@ -127,102 +134,106 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { House } from "lucide-vue-next";
+import { getPortalMonitoring } from "@/lib/services/portalMonitoringService";
+import { showError } from "@/lib/utils/toast";
 
 const router = useRouter();
 
-// Emit fungsi untuk navigasi ke halaman detail saat card diklik
-const emit = defineEmits(["pilih-minggu"]);
+const loading = ref(false);
+const monitoringList = ref([]);
 
-// Simulasi data historis pemantauan anak berdasarkan bulan dan minggu
-const historiMonitoring = ref([
-  {
-    bulan: "Januari 2026",
-    mingguList: [
-      {
-        id: "s2-m4",
-        minggu: 1,
-        semester: 2,
-        topik: "Makanan Sehat dan Halal",
-        subTopik: "Sayur dan Lauk Pauk",
-        rentangTanggal: "26 - 30 Januari 2026",
-        waliKelas: "Suciati, S.Pd",
-        totalIndikator: 9,
-        indikatorMuncul: 6, // Untuk progress singkat di card
-        sampul:
-          "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500",
-      },
-      {
-        id: "s2-m3",
-        minggu: 2,
-        semester: 2,
-        topik: "Rumahku Syurgaku",
-        subTopik: "Bagian-Bagian Rumah",
-        rentangTanggal: "19 - 23 Januari 2026",
-        waliKelas: "Suciati, S.Pd",
-        totalIndikator: 8,
-        indikatorMuncul: 8,
-        sampul:
-          "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=500",
-      },
-      {
-        id: "s2-m3",
-        minggu: 3,
-        semester: 2,
-        topik: "Rumahku Syurgaku",
-        subTopik: "Bagian-Bagian Rumah",
-        rentangTanggal: "19 - 23 Januari 2026",
-        waliKelas: "Suciati, S.Pd",
-        totalIndikator: 8,
-        indikatorMuncul: 8,
-        sampul:
-          "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=500",
-      },
-      {
-        id: "s2-m3",
-        minggu: 4,
-        semester: 2,
-        topik: "Rumahku Syurgaku",
-        subTopik: "Bagian-Bagian Rumah",
-        rentangTanggal: "19 - 23 Januari 2026",
-        waliKelas: "Suciati, S.Pd",
-        totalIndikator: 8,
-        indikatorMuncul: 8,
-        sampul:
-          "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=500",
-      },
-    ],
-  },
-  {
-    bulan: "Februari 2026",
-    mingguList: [
-      {
-        id: "s2-m5",
-        minggu: 1,
-        semester: 2,
-        topik: "Profesi Sekitarku",
-        subTopik: "Petani yang Berjasa",
-        rentangTanggal: "02 - 06 Februari 2026",
-        waliKelas: "Suciati, S.Pd",
-        totalIndikator: 10,
-        indikatorMuncul: 4,
-        sampul:
-          "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=500",
-      },
-    ],
-  },
-]);
+const formatTanggal = (tanggalMulai, tanggalSelesai) => {
+  const mulai = new Date(tanggalMulai);
+  const selesai = new Date(tanggalSelesai);
 
-const lihatDetail = (mingguId) => {
-  // Logic untuk pindah halaman atau emit event ke parent component
-  console.log("Membuka detail untuk minggu ID:", mingguId);
-  emit("pilih-minggu", mingguId);
+  const mulaiText = mulai.toLocaleDateString("id-ID", {
+    day: "2-digit",
+  });
 
-  router.push({
-    name: "MonitoringDetail",
-    params: { id: mingguId },
+  const selesaiText = selesai.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
+  return `${mulaiText} - ${selesaiText}`;
+};
+
+const formatBulan = (tanggal) => {
+  return new Date(tanggal).toLocaleDateString("id-ID", {
+    month: "long",
+    year: "numeric",
   });
 };
+
+const fileUrl = (path) => {
+  if (!path)
+    return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
+  if (path.startsWith("http")) return path;
+
+  const filename = path.split("/").pop();
+
+  return `${import.meta.env.VITE_API_URL}/monitoring/siswa/file/karya/${filename}`;
+};
+
+const historiMonitoring = computed(() => {
+  const groups = {};
+
+  monitoringList.value.forEach((item) => {
+    const mingguan = item.monitoring_mingguan;
+    const bulan = formatBulan(mingguan.tanggal_mulai);
+
+    if (!groups[bulan]) {
+      groups[bulan] = {
+        bulan,
+        mingguList: [],
+      };
+    }
+
+    groups[bulan].mingguList.push({
+      id: item.id,
+      minggu: mingguan.minggu,
+      semester: mingguan.semester,
+      topik: mingguan.topik,
+      subTopik: mingguan.sub_topik,
+      rentangTanggal: formatTanggal(
+        mingguan.tanggal_mulai,
+        mingguan.tanggal_selesai,
+      ),
+      sampul: fileUrl(item.karya?.[0]?.foto),
+    });
+  });
+
+  return Object.values(groups);
+});
+
+const loadMonitoring = async () => {
+  try {
+    loading.value = true;
+
+    const res = await getPortalMonitoring({
+      status: "published",
+      page: 1,
+      per_page: 50,
+    });
+
+    monitoringList.value = res.data || [];
+  } catch (error) {
+    showError(error.message || "Gagal mengambil monitoring");
+  } finally {
+    loading.value = false;
+  }
+};
+
+const lihatDetail = (monitoringSiswaId) => {
+  router.push({
+    name: "MonitoringDetail",
+    params: { id: monitoringSiswaId },
+  });
+};
+
+onMounted(loadMonitoring);
 </script>

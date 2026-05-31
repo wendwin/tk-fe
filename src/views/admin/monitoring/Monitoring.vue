@@ -9,26 +9,25 @@
 
       <div class="mt-4 grid md:grid-cols-3 gap-4">
         <div>
-          <p class="text-xs text-gray-500">Tahun Ajaran</p>
-
+          <p class="text-sm text-gray-500">Tahun Ajaran</p>
           <p class="font-medium">
-            {{ tahunAjaranAktif?.label }}
+            {{ tahunAjaranAktif?.label || "-" }}
           </p>
         </div>
 
-        <div v-if="selectedKelas">
-          <p class="text-xs text-gray-500">Kelas</p>
-
-          <p class="font-medium">
-            {{ selectedKelas.kelas.nama }}
-          </p>
+        <div>
+          <div>
+            <p class="text-sm text-gray-500">Kelas</p>
+            <p class="font-medium">
+              {{ formatKelas(selectedKelas?.kelas) }}
+            </p>
+          </div>
         </div>
 
-        <div v-if="selectedKelas">
-          <p class="text-xs text-gray-500">Peran</p>
-
-          <p class="font-medium">
-            {{ selectedKelas.peran }}
+        <div>
+          <p class="text-sm text-gray-500">Peran</p>
+          <p class="font-medium capitalize">
+            {{ selectedKelas?.peran || "-" }}
           </p>
         </div>
       </div>
@@ -383,7 +382,7 @@
           :disabled="loading"
           class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-50"
         >
-          {{ loading ? "Menyimpan..." : "Simpan Monitoring" }}
+          {{ loading ? "Menyimpan..." : "Simpan" }}
         </button>
       </div>
     </form>
@@ -415,6 +414,20 @@ const isMultiKelas = computed(() => {
 });
 
 const monitoringList = ref([]);
+
+const formatKelas = (kelas) => {
+  if (!kelas) return "-";
+
+  const jenjang = kelas.jenjang ? kelas.jenjang.toUpperCase() : "";
+  const kelompok = kelas.kelompok ? kelas.kelompok.toUpperCase() : "";
+  const nama = kelas.nama || "";
+
+  if (kelas.jenjang === "kb") return nama;
+  if (kelompok && nama) return `${jenjang}-${kelompok} ${nama}`;
+  if (kelompok) return `${jenjang}-${kelompok}`;
+
+  return nama || jenjang || "-";
+};
 
 const loadData = async () => {
   try {
@@ -526,7 +539,7 @@ const handleSubmit = async () => {
   }
 
   if (!selectedKelas.value) {
-    showWarning("Kelas wajib dipilih");
+    showWarning("Belum ada kelas");
     return;
   }
 
