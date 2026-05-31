@@ -192,7 +192,7 @@
               class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
             >
               <option value="">Pilih role</option>
-              <option value="wali_kelas">Wali Kelas</option>
+              <option value="wali kelas">Wali Kelas</option>
               <option value="pendamping">Pendamping</option>
             </select>
           </div>

@@ -114,11 +114,15 @@
           </div>
 
           <div class="mt-4 flex gap-2">
-            <button
-              class="flex-1 px-3 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50"
+            <router-link
+              :to="{
+                name: 'AdminMonitoringMingguanDetail',
+                params: { id: item.id },
+              }"
+              class="flex-1 px-3 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 text-center"
             >
               Detail
-            </button>
+            </router-link>
 
             <button
               v-if="item.status === 'draft'"
@@ -138,25 +142,8 @@
       <h2 class="text-lg font-semibold text-gray-900 mb-4">
         Tambah Monitoring
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- <div>
-          <label class="text-sm font-medium">Kelas ID</label>
-          <input
-            v-model.number="form.kelas_id"
-            type="number"
-            class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-          />
-        </div> -->
 
-        <!-- <div>
-          <label class="text-sm font-medium">Tahun Ajaran ID</label>
-          <input
-            v-model.number="form.tahun_ajaran_id"
-            type="number"
-            class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-          />
-        </div> -->
-
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
         <div>
           <label class="text-sm font-medium">Semester</label>
           <input
@@ -212,7 +199,7 @@
         </div>
       </div>
 
-      <section class="space-y-4">
+      <section class="space-y-4 mb-10">
         <div class="flex justify-between items-center">
           <h2 class="font-semibold text-gray-900">
             Tujuan Pembelajaran & KKTP
@@ -288,7 +275,7 @@
                 @click="removeKKTP(tpIndex, kktpIndex)"
                 class="px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100"
               >
-                Hapus
+                <Minus class="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -303,7 +290,7 @@
         </div>
       </section>
 
-      <section class="space-y-4">
+      <section class="space-y-4 mb-10">
         <div class="flex justify-between items-center">
           <h2 class="font-semibold text-gray-900">Kegiatan</h2>
 
@@ -319,33 +306,43 @@
         <div
           v-for="(item, index) in form.kegiatan"
           :key="index"
-          class="grid grid-cols-1 md:grid-cols-5 gap-3"
+          class="flex gap-3 items-end"
         >
-          <input
-            v-model="item.nama"
-            type="text"
-            placeholder="Nama kegiatan"
-            class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm md:col-span-2"
-          />
+          <div class="grid flex-1 grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium mb-1"
+                >Nama Kegiatan</label
+              >
+              <input
+                v-model="item.nama"
+                type="text"
+                placeholder="Nama kegiatan"
+                class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+              />
+            </div>
 
-          <input
-            v-model="item.media"
-            type="text"
-            placeholder="Media / bahan"
-            class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm md:col-span-2"
-          />
+            <div>
+              <label class="block text-sm font-medium mb-1">Media/Bahan</label>
+              <input
+                v-model="item.media"
+                type="text"
+                placeholder="Media / bahan"
+                class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+              />
+            </div>
+          </div>
 
           <button
             type="button"
             @click="removeKegiatan(index)"
-            class="px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100"
+            class="shrink-0 h-10 w-10 flex items-center justify-center rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
           >
-            Hapus
+            <Minus class="w-4 h-4" />
           </button>
         </div>
       </section>
 
-      <section class="space-y-3">
+      <section class="space-y-3 mb-10">
         <h2 class="font-semibold text-gray-900">Asesmen Awal</h2>
 
         <input
@@ -400,6 +397,8 @@ import { getMyGuruKelas } from "@/lib/services/guruKelasService";
 import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
+
+import { Minus } from "lucide-vue-next";
 
 const loading = ref(false);
 
@@ -467,7 +466,7 @@ const loadMonitoring = async () => {
 };
 
 const defaultForm = () => ({
-  semester: 2,
+  semester: 1,
   minggu: null,
   topik: "",
   sub_topik: "",

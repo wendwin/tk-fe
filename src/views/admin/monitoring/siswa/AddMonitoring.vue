@@ -805,6 +805,13 @@ const handleSubmit = async () => {
 onMounted(async () => {
   try {
     await loadMonitoringMingguan();
+
+    const monitoringIdFromQuery = Number(route.query.monitoring_mingguan_id);
+
+    if (monitoringIdFromQuery) {
+      selectedMonitoringId.value = monitoringIdFromQuery;
+      await handleSelectMonitoring();
+    }
   } catch (error) {
     showError(error.message || "Gagal mengambil monitoring mingguan");
   }

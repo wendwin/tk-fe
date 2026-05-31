@@ -195,6 +195,12 @@ const router = createRouter({
             import("../views/admin/monitoring/siswa/AddMonitoring.vue"),
           meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
+        {
+          path: "monitoring/mingguan/:id",
+          name: "AdminMonitoringMingguanDetail",
+          component: () => import("../views/admin/monitoring/Detail.vue"),
+          meta: { role: [ROLES.ADMIN, ROLES.GURU] },
+        },
         // {
         //   path: "monitoring",
         //   name: "Monitoring",
