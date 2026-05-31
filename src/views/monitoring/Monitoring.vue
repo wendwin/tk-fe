@@ -215,7 +215,6 @@ const loadMonitoring = async () => {
     loading.value = true;
 
     const res = await getPortalMonitoring({
-      status: "published",
       page: 1,
       per_page: 50,
     });
