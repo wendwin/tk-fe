@@ -135,12 +135,14 @@
       </div>
     </section>
 
+    <div ref="formAnchor"></div>
+
     <form
       @submit.prevent="handleSubmit"
       class="bg-white rounded-2xl border border-gray-200 p-6 space-y-6"
     >
       <h2 class="text-lg font-semibold text-gray-900 mb-4">
-        Tambah Monitoring
+        {{ isEditMode ? "Edit Monitoring" : "Tambah Monitoring" }}
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
@@ -221,7 +223,9 @@
         >
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label class="text-sm font-medium">Elemen</label>
+              <label class="block text-sm font-medium mb-1"
+                >Elemen {{ tpIndex + 1 }}</label
+              >
 
               <select
                 v-model="tp.elemen"
@@ -235,7 +239,9 @@
             </div>
 
             <div class="md:col-span-2">
-              <label class="text-sm font-medium">Tujuan Pembelajaran</label>
+              <label class="block text-sm font-medium mb-1"
+                >Tujuan Pembelajaran</label
+              >
 
               <input
                 v-model="tp.tujuan"
@@ -245,16 +251,16 @@
             </div>
           </div>
 
-          <div class="space-y-2">
+          <div class="space-y-2 mt-8">
             <div class="flex justify-between items-center">
               <p class="text-sm font-medium">KKTP</p>
 
               <button
                 type="button"
                 @click="addKKTP(tpIndex)"
-                class="text-sm text-blue-600 hover:text-blue-700"
+                class="flex items-center gap-1 justify-center text-sm text-blue-600 hover:text-blue-700"
               >
-                + Tambah KKTP
+                <Plus class="w-4 h-4" /> Tambah KKTP
               </button>
             </div>
 
@@ -273,20 +279,22 @@
               <button
                 type="button"
                 @click="removeKKTP(tpIndex, kktpIndex)"
-                class="px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100"
+                class="px-2 rounded-lg bg-white border border-red-200 text-red-600 text-sm hover:bg-red-100"
               >
                 <Minus class="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          <button
-            type="button"
-            @click="removeTP(tpIndex)"
-            class="px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100"
-          >
-            Hapus TP
-          </button>
+          <div class="flex justify-end mt-8">
+            <button
+              type="button"
+              @click="removeTP(tpIndex)"
+              class="flex items-center gap-2 text-sm px-3 py-1.5 text-slate-600 border rounded-lg hover:bg-gray-100"
+            >
+              Hapus TP
+            </button>
+          </div>
         </div>
       </section>
 
@@ -311,7 +319,7 @@
           <div class="grid flex-1 grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label class="block text-sm font-medium mb-1"
-                >Nama Kegiatan</label
+                >Kegiatan {{ index + 1 }}</label
               >
               <input
                 v-model="item.nama"
@@ -335,7 +343,7 @@
           <button
             type="button"
             @click="removeKegiatan(index)"
-            class="shrink-0 h-10 w-10 flex items-center justify-center rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
+            class="shrink-0 h-10 w-10 rounded-lg bg-white border border-red-200 text-red-600 hover:bg-red-100 flex items-center justify-center"
           >
             <Minus class="w-4 h-4" />
           </button>
@@ -367,6 +375,16 @@
 
       <div class="flex justify-end gap-3">
         <button
+          v-if="isEditMode"
+          type="button"
+          @click="cancelEdit"
+          class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm hover:bg-gray-200"
+        >
+          Batal Edit
+        </button>
+
+        <button
+          v-else
           type="button"
           @click="resetForm"
           class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm hover:bg-gray-200"
@@ -379,7 +397,7 @@
           :disabled="loading"
           class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-50"
         >
-          {{ loading ? "Menyimpan..." : "Simpan" }}
+          {{ loading ? "Menyimpan..." : isEditMode ? "Update" : "Simpan" }}
         </button>
       </div>
     </form>
@@ -387,20 +405,29 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, onMounted } from "vue";
+import { reactive, ref, computed, onMounted, onActivated, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 import {
   createMonitoringMingguan,
   getMonitoringMingguan,
+  getMonitoringMingguanById,
+  updateMonitoringMingguan,
 } from "@/lib/services/monitoringService";
 import { getMyGuruKelas } from "@/lib/services/guruKelasService";
 import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
+import { Minus, Plus } from "lucide-vue-next";
 
-import { Minus } from "lucide-vue-next";
+const formAnchor = ref(null);
 
 const loading = ref(false);
+const route = useRoute();
+const router = useRouter();
+
+const editId = ref(null);
+const isEditMode = computed(() => !!editId.value);
 
 const tahunAjaranAktif = ref(null);
 
@@ -498,6 +525,61 @@ const resetForm = () => {
   Object.assign(form, defaultForm());
 };
 
+const fillFormEdit = async (id) => {
+  const res = await getMonitoringMingguanById(id);
+  const data = res.data;
+
+  editId.value = data.id;
+
+  form.semester = data.semester;
+  form.minggu = data.minggu;
+  form.topik = data.topik;
+  form.sub_topik = data.sub_topik;
+  form.tanggal_mulai = data.tanggal_mulai;
+  form.tanggal_selesai = data.tanggal_selesai;
+
+  form.tp = (data.tp || []).map((tp) => ({
+    elemen: tp.elemen,
+    tujuan: tp.tujuan,
+    kktp: (tp.kktp || []).map((kktp) => ({
+      deskripsi: kktp.deskripsi,
+    })),
+  }));
+
+  form.kegiatan = (data.kegiatan || []).map((item) => ({
+    nama: item.nama,
+    media: item.media,
+  }));
+
+  form.asesmen_awal = {
+    teknik: data.asesmen_awal?.teknik || "Observasi",
+    rancangan_kegiatan: data.asesmen_awal?.rancangan_kegiatan || "",
+    hasil: data.asesmen_awal?.hasil || "",
+  };
+
+  setTimeout(() => {
+    const y =
+      formAnchor.value.getBoundingClientRect().top + window.scrollY - 80;
+
+    window.scrollTo({
+      top: y,
+      behavior: "smooth",
+    });
+  }, 100);
+};
+
+const handleEditQuery = async () => {
+  const editIdFromQuery = Number(route.query.edit_id);
+
+  if (editIdFromQuery) {
+    await fillFormEdit(editIdFromQuery);
+    return;
+  }
+
+  editId.value = null;
+  resetForm();
+};
+
 const addTP = () => {
   form.tp.push({
     elemen: "nabp",
@@ -529,6 +611,15 @@ const addKegiatan = () => {
 
 const removeKegiatan = (index) => {
   form.kegiatan.splice(index, 1);
+};
+
+const cancelEdit = () => {
+  editId.value = null;
+  resetForm();
+
+  router.replace({
+    name: "AdminMonitoring",
+  });
 };
 
 const handleSubmit = async () => {
@@ -564,7 +655,12 @@ const handleSubmit = async () => {
       asesmen_awal: form.asesmen_awal,
     };
 
-    const res = await createMonitoringMingguan(payload);
+    const res = isEditMode.value
+      ? await updateMonitoringMingguan(editId.value, {
+          ...payload,
+          replace_detail: true,
+        })
+      : await createMonitoringMingguan(payload);
 
     showSuccess(res.message || "Monitoring berhasil dibuat");
 
@@ -578,7 +674,28 @@ const handleSubmit = async () => {
   }
 };
 
-onMounted(loadData);
+onMounted(async () => {
+  await loadData();
+  await handleEditQuery();
+
+  const editIdFromQuery = Number(route.query.edit_id);
+
+  if (editIdFromQuery) {
+    await fillFormEdit(editIdFromQuery);
+  }
+});
+
+onActivated(async () => {
+  await loadData();
+  await handleEditQuery();
+});
+
+watch(
+  () => route.query.edit_id,
+  async () => {
+    await handleEditQuery();
+  },
+);
 </script>
 
 <style scoped></style>

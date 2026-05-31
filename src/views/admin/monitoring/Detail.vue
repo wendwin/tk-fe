@@ -59,6 +59,19 @@
         </div>
 
         <div class="text-right">
+          <router-link
+            :to="{
+              name: 'AdminMonitoring',
+              query: {
+                edit_id: detail?.id,
+              },
+            }"
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500 text-white text-sm hover:bg-amber-600 mb-4"
+          >
+            <SquarePen class="w-4 h-4" />
+            Edit
+          </router-link>
+
           <p class="text-2xl font-bold text-blue-600">
             {{ totalSelesai }}/{{ totalSiswa }}
           </p>
@@ -276,7 +289,7 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { ChevronRight } from "lucide-vue-next";
+import { ChevronRight, SquarePen } from "lucide-vue-next";
 
 import {
   getMonitoringMingguanById,
