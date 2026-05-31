@@ -105,34 +105,87 @@
       <section class="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
         <h2 class="font-medium text-gray-700">Checklist Indikator</h2>
 
-        <div v-for="kktp in kktpOptions" :key="kktp.id" class="space-y-3">
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <p class="text-sm font-medium text-gray-700">
-                {{ kktp.deskripsi }}
-              </p>
-              <p class="text-xs text-gray-500 mt-1">
-                {{ kktp.elemen }} - {{ kktp.tujuan }}
-              </p>
-            </div>
+        <div class="overflow-x-auto">
+          <table
+            class="min-w-[1100px] w-full text-sm border border-gray-300 border-collapse"
+          >
+            <thead>
+              <tr class="bg-gray-50">
+                <th class="border border-gray-300 px-4 py-3 text-center w-16">
+                  No
+                </th>
+                <th
+                  class="border border-gray-300 px-4 py-3 text-left w-[260px]"
+                >
+                  Tujuan Pembelajaran
+                </th>
+                <th
+                  class="border border-gray-300 px-4 py-3 text-left w-[350px]"
+                >
+                  KKTP
+                </th>
+                <th
+                  class="border border-gray-300 px-4 py-3 text-center w-[80px]"
+                >
+                  Muncul/Tidak
+                </th>
+                <th class="border border-gray-300 px-4 py-3 text-left">
+                  Kejadian yang Teramati
+                </th>
+              </tr>
+            </thead>
 
-            <label class="flex items-center gap-2 text-sm">
-              <input
-                v-model="indikatorMap[kktp.id].muncul"
-                type="checkbox"
-                :disabled="isReadonly"
-                class="w-4 h-4"
-              />
-              Muncul
-            </label>
-          </div>
+            <tbody>
+              <tr
+                v-for="(tp, index) in tpOptions"
+                :key="tp.id"
+                class="align-top"
+              >
+                <td class="border border-gray-300 px-4 py-4 text-center">
+                  {{ index + 1 }}.
+                </td>
 
-          <textarea
-            :disabled="isReadonly"
-            v-model="indikatorMap[kktp.id].kejadian_teramati"
-            class="w-full min-h-20 rounded-lg border border-gray-200 px-3 py-2 text-sm"
-            placeholder="Kejadian yang teramati..."
-          />
+                <td class="border border-gray-300 px-4 py-4">
+                  <p class="font-medium text-gray-700">
+                    {{ tp.tujuan }}
+                  </p>
+                  <p class="text-xs text-gray-500 mt-1">
+                    {{ formatElemen(tp.elemen) }}
+                  </p>
+                </td>
+
+                <td class="border border-gray-300 px-4 py-4">
+                  <ul class="list-disc pl-5 space-y-1">
+                    <li
+                      v-for="kktp in tp.kktp"
+                      :key="kktp.id"
+                      class="text-gray-600"
+                    >
+                      {{ kktp.deskripsi }}
+                    </li>
+                  </ul>
+                </td>
+
+                <td class="border border-gray-300 px-4 py-4 text-center">
+                  <input
+                    v-model="indikatorMap[tp.id].muncul"
+                    type="checkbox"
+                    :disabled="isReadonly"
+                    class="w-4 h-4"
+                  />
+                </td>
+
+                <td class="border border-gray-300 px-4 py-4">
+                  <textarea
+                    v-model="indikatorMap[tp.id].kejadian_teramati"
+                    :disabled="isReadonly"
+                    class="w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                    placeholder="Tuliskan kejadian yang teramati..."
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -151,81 +204,19 @@
         </div>
 
         <div v-for="(item, index) in form.karya" :key="index" class="space-y-4">
-          <div>
-            <label
-              :for="`kktp-${index}`"
-              class="block text-sm font-medium text-gray-700 mb-1"
-            >
-              KKTP
-            </label>
-            <select
-              :id="`kktp-${index}`"
-              v-model.number="item.kktp_id"
-              class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-            >
-              <option :value="null">Pilih KKTP</option>
-              <option
-                v-for="kktp in kktpOptions"
-                :key="kktp.id"
-                :value="kktp.id"
-              >
-                {{ kktp.deskripsi }}
-              </option>
-            </select>
-          </div>
-
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="space-y-3 flex flex-col">
-              <div>
-                <label
-                  :for="`foto-${index}`"
-                  class="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Foto
-                </label>
-                <input
-                  :id="`foto-${index}`"
-                  type="file"
-                  accept="image/*"
-                  @change="handleKaryaImage($event, index)"
-                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-                />
-              </div>
-
-              <!-- <div
-                class="flex-1 border rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center min-h-[200px]"
-              >
-                <img
-                  v-if="item.preview"
-                  :src="item.preview"
-                  class="w-full h-full object-cover"
-                />
-
-                <span v-else class="text-xs text-gray-400"> Preview Foto </span>
-              </div> -->
-              <div
-                class="flex-1 border rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center"
-              >
-                <img
-                  v-if="item.preview"
-                  :src="item.preview"
-                  class="w-full h-full object-contain"
-                />
-                <span v-else class="text-xs text-gray-400"> Preview Foto </span>
-              </div>
-            </div>
-
             <div class="md:col-span-2 space-y-3">
               <div>
                 <label
                   :for="`kegiatan-${index}`"
                   class="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Kegiatan
+                  Kegiatan {{ index + 1 }}
                 </label>
                 <input
                   :id="`kegiatan-${index}`"
                   v-model="item.kegiatan"
+                  :disabled="isReadonly"
                   type="text"
                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                   placeholder="Nama kegiatan"
@@ -250,6 +241,30 @@
 
               <div>
                 <label
+                  :for="`kktp-${index}`"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  KKTP
+                </label>
+                <select
+                  :id="`kktp-${index}`"
+                  :disabled="isReadonly"
+                  v-model.number="item.kktp_id"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                >
+                  <option :value="null">Pilih KKTP</option>
+                  <option
+                    v-for="kktp in kktpOptions"
+                    :key="kktp.id"
+                    :value="kktp.id"
+                  >
+                    {{ kktp.deskripsi }}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label
                   :for="`analisa-${index}`"
                   class="block text-sm font-medium text-gray-700 mb-1"
                 >
@@ -262,6 +277,36 @@
                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                   placeholder="Analisa guru"
                 />
+              </div>
+            </div>
+
+            <div class="space-y-3 flex flex-col">
+              <div v-if="!isReadonly">
+                <label
+                  :for="`foto-${index}`"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Foto
+                </label>
+
+                <input
+                  :id="`foto-${index}`"
+                  type="file"
+                  accept="image/*"
+                  @change="handleKaryaImage($event, index)"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                />
+              </div>
+
+              <div
+                class="flex-1 border rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center"
+              >
+                <img
+                  v-if="item.preview"
+                  :src="item.preview"
+                  class="w-full h-full object-contain"
+                />
+                <span v-else class="text-xs text-gray-400"> Preview Foto </span>
               </div>
             </div>
           </div>
@@ -304,6 +349,7 @@
             </label>
             <select
               :id="`anekdot-kktp-${index}`"
+              :disabled="isReadonly"
               v-model.number="item.kktp_id"
               class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
             >
@@ -387,6 +433,7 @@
             </label>
             <select
               :id="`rekomendasi-elemen-${index}`"
+              v-model.number="selectedMonitoringId"
               v-model="item.elemen"
               class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
             >
@@ -538,6 +585,12 @@ const kktpOptions = computed(() => {
   );
 });
 
+const tpOptions = computed(() => {
+  if (!selectedMonitoring.value) return [];
+
+  return selectedMonitoring.value.tp || [];
+});
+
 const formatMonth = (date) => {
   if (!date) return "-";
 
@@ -545,6 +598,17 @@ const formatMonth = (date) => {
     month: "long",
     year: "numeric",
   });
+};
+
+const formatElemen = (elemen) => {
+  const map = {
+    kesyuhadaan: "Kesyuhadaan",
+    nabp: "Nilai Agama & Budi Pekerti",
+    jd: "Jati Diri",
+    ddlmstrs: "Literasi & STEM",
+  };
+
+  return map[elemen] || elemen;
 };
 
 const fileUrl = (path) => {
@@ -592,11 +656,11 @@ const fillExistingMonitoring = async (id) => {
   initIndikator();
 
   (data.indikator || []).forEach((item) => {
-    const kktpId = item.kktp_id || item.kktp?.id;
+    const tpId = item.tp_id || item.tp?.id;
 
-    if (indikatorMap[kktpId]) {
-      indikatorMap[kktpId].muncul = item.muncul;
-      indikatorMap[kktpId].kejadian_teramati = item.kejadian_teramati || "";
+    if (indikatorMap[tpId]) {
+      indikatorMap[tpId].muncul = item.muncul;
+      indikatorMap[tpId].kejadian_teramati = item.kejadian_teramati || "";
     }
   });
 };
@@ -639,9 +703,9 @@ const checkExistingMonitoring = async () => {
 const initIndikator = () => {
   Object.keys(indikatorMap).forEach((key) => delete indikatorMap[key]);
 
-  kktpOptions.value.forEach((kktp) => {
-    indikatorMap[kktp.id] = {
-      kktp_id: kktp.id,
+  tpOptions.value.forEach((tp) => {
+    indikatorMap[tp.id] = {
+      tp_id: tp.id,
       muncul: false,
       kejadian_teramati: "",
     };
@@ -743,7 +807,11 @@ const handleSubmit = async () => {
   try {
     saving.value = true;
 
-    const indikator = Object.values(indikatorMap);
+    const indikator = tpOptions.value.map((tp) => ({
+      tp_id: tp.id,
+      muncul: indikatorMap[tp.id]?.muncul || false,
+      kejadian_teramati: indikatorMap[tp.id]?.kejadian_teramati || "",
+    }));
 
     const formData = new FormData();
 
@@ -757,16 +825,20 @@ const handleSubmit = async () => {
         analisa: item.analisa,
       }));
 
-    const anekdotPayload = form.anekdot.map((item) => ({
-      kktp_id: item.kktp_id,
-      waktu: item.waktu,
-      catatan: item.catatan,
-    }));
+    const anekdotPayload = form.anekdot
+      .filter((item) => item.kktp_id && item.waktu && item.catatan)
+      .map((item) => ({
+        kktp_id: item.kktp_id,
+        waktu: item.waktu,
+        catatan: item.catatan,
+      }));
 
-    const rekomendasiPayload = form.rekomendasi.map((item) => ({
-      elemen: item.elemen,
-      tips: item.tips,
-    }));
+    const rekomendasiPayload = form.rekomendasi
+      .filter((item) => item.elemen && item.tips)
+      .map((item) => ({
+        elemen: item.elemen,
+        tips: item.tips,
+      }));
 
     formData.append(
       "data",
@@ -778,7 +850,6 @@ const handleSubmit = async () => {
         karya: karyaPayload,
         anekdot: anekdotPayload,
         rekomendasi: rekomendasiPayload,
-        karya: karyaPayload,
       }),
     );
 
@@ -786,6 +857,13 @@ const handleSubmit = async () => {
       if (item.foto instanceof File) {
         formData.append(`karya[${index}][foto]`, item.foto);
       }
+    });
+
+    console.log("PAYLOAD", {
+      indikator,
+      karya: karyaPayload,
+      anekdot: anekdotPayload,
+      rekomendasi: rekomendasiPayload,
     });
 
     const res = existingMonitoringSiswa.value
