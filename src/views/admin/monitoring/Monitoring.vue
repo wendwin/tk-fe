@@ -126,7 +126,10 @@
 
             <button
               v-if="item.status === 'draft'"
-              class="px-3 py-2 text-sm rounded-lg bg-green-600 text-white hover:bg-green-700"
+              type="button"
+              @click="handlePublish(item)"
+              :disabled="(item.total_selesai || 0) < (item.total_siswa || 0)"
+              class="px-3 py-2 text-sm rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Publish
             </button>
@@ -413,6 +416,7 @@ import {
   getMonitoringMingguan,
   getMonitoringMingguanById,
   updateMonitoringMingguan,
+  publishMonitoringMingguan,
 } from "@/lib/services/monitoringService";
 import { getMyGuruKelas } from "@/lib/services/guruKelasService";
 import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
@@ -669,6 +673,29 @@ const handleSubmit = async () => {
   } catch (error) {
     showError(error.message || "Gagal membuat monitoring mingguan");
     console.error(error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handlePublish = async (item) => {
+  if ((item.total_selesai || 0) < (item.total_siswa || 0)) {
+    showWarning(
+      "Monitoring belum bisa dipublish karena masih ada siswa yang belum diisi",
+    );
+    return;
+  }
+
+  try {
+    loading.value = true;
+
+    const res = await publishMonitoringMingguan(item.id);
+
+    showSuccess(res.message || "Monitoring berhasil dipublish");
+
+    await loadMonitoring();
+  } catch (error) {
+    showError(error.message || "Gagal publish monitoring");
   } finally {
     loading.value = false;
   }
