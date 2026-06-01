@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-7xl mx-auto p-4 bg-gray-50 min-h-screen font-sans mt-16">
+  <div class="max-w-7xl mx-auto p-4 bg-gray-50 min-h-screen font-sans pt-20">
     <nav
       class="flex items-center justify-end gap-2 text-[13px] font-medium text-gray-400 mb-4 px-2"
     >
@@ -28,9 +28,33 @@
 
     <div
       v-if="!loading && historiMonitoring.length === 0"
-      class="bg-white border border-gray-200 rounded-2xl p-8 text-center text-sm text-gray-500"
+      class="flex items-center justify-center min-h-[50vh]"
     >
-      Belum ada monitoring yang dipublikasikan.
+      <div class="max-w-2xl w-full p-8 text-center">
+        <img
+          src="/images/guru.png"
+          alt="Belum ada jurnal"
+          class="w-48 mx-auto mb-6"
+          draggable="false"
+        />
+
+        <h3 class="text-xl font-bold text-gray-800">
+          Belum Ada Catatan Perkembangan
+        </h3>
+
+        <p class="mt-3 text-sm leading-relaxed text-gray-500">
+          Catatan perkembangan, dokumentasi kegiatan, dan hasil pembelajaran
+          Ananda akan muncul di sini setelah guru menyelesaikan serta
+          mempublikasikan jurnal mingguan
+        </p>
+
+        <!-- <div
+          class="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 text-green-600 text-sm font-medium animate-pulse"
+        >
+          <span class="w-2 h-2 rounded-full bg-green-500"></span>
+          Menunggu publikasi jurnal
+        </div> -->
+      </div>
     </div>
 
     <div v-for="grup in historiMonitoring" :key="grup.bulan" class="mb-8">
