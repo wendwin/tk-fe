@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-6xl mx-auto p-6 mt-16">
+  <div class="max-w-6xl mx-auto p-6 pt-20">
     <div class="">
       <h1 class="text-2xl">
         Selamat Datang di Portal KB & TK Masjid Syuhada Yogyakarta
