@@ -159,6 +159,7 @@
 
           <select
             v-model="form.semester"
+            required
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
             :class="[
               'w-full rounded-lg px-3 py-2 text-sm',
@@ -184,6 +185,7 @@
 
           <select
             v-model="form.minggu"
+            required
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
             :class="[
               'w-full rounded-lg px-3 py-2 text-sm',
@@ -211,6 +213,7 @@
           <input
             v-model="form.topik"
             type="text"
+            required
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
             :class="[
               'w-full rounded-lg px-3 py-2 text-sm',
@@ -231,6 +234,7 @@
           <input
             v-model="form.sub_topik"
             type="text"
+            required
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
             :class="[
               'w-full rounded-lg px-3 py-2 text-sm',
@@ -252,6 +256,7 @@
           <input
             v-model="form.tanggal_mulai"
             type="date"
+            required
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
             :class="[
               'w-full rounded-lg px-3 py-2 text-sm',
@@ -272,6 +277,7 @@
           <input
             v-model="form.tanggal_selesai"
             type="date"
+            required
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
             :class="[
               'w-full rounded-lg px-3 py-2 text-sm',
@@ -315,6 +321,7 @@
 
               <select
                 v-model="tp.elemen"
+                required
                 class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                 :class="[
                   'w-full rounded-lg px-3 py-2 text-sm',
@@ -345,6 +352,7 @@
               <input
                 v-model="tp.tujuan"
                 type="text"
+                required
                 class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                 :class="[
                   'w-full rounded-lg px-3 py-2 text-sm',
@@ -386,6 +394,7 @@
               <div class="flex-1">
                 <input
                   v-model="kktp.deskripsi"
+                  required
                   type="text"
                   placeholder="Deskripsi KKTP"
                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
@@ -457,6 +466,7 @@
               >
               <input
                 v-model="item.nama"
+                required
                 type="text"
                 placeholder="Nama kegiatan"
                 class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
@@ -508,6 +518,7 @@
           >
           <input
             v-model="form.asesmen_awal.teknik"
+            required
             type="text"
             placeholder="Teknik asesmen"
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
@@ -531,6 +542,7 @@
             >Rancangan Kegiatan <span class="text-red-500">*</span></label
           >
           <textarea
+            required
             v-model="form.asesmen_awal.rancangan_kegiatan"
             placeholder="Rancangan kegiatan"
             class="w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm"

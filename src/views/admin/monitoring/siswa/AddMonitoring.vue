@@ -93,13 +93,19 @@
       class="space-y-6"
     >
       <section class="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
-        <h2 class="font-medium text-gray-700">Ringkasan Perkembangan</h2>
+        <h2 class="font-medium text-gray-700">
+          Ringkasan Perkembangan <span class="text-red-500">*</span>
+        </h2>
         <textarea
           v-model="form.ringkasan"
+          required
           :disabled="isReadonly"
-          class="w-full min-h-28 rounded-lg border border-gray-200 px-3 py-2 text-sm"
+          :class="fieldClass(errors.ringkasan)"
           placeholder="Tulis ringkasan perkembangan anak..."
         />
+        <p v-if="errors.ringkasan" class="mt-1 text-xs text-red-500">
+          {{ errors.ringkasan[0] }}
+        </p>
       </section>
 
       <section class="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
@@ -211,16 +217,24 @@
                   :for="`kegiatan-${index}`"
                   class="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Kegiatan {{ index + 1 }}
+                  Kegiatan {{ index + 1 }} <span class="text-red-500">*</span>
                 </label>
                 <input
                   :id="`kegiatan-${index}`"
+                  required
                   v-model="item.kegiatan"
                   :disabled="isReadonly"
                   type="text"
+                  :class="fieldClass(getError(`karya.${index}.kegiatan`))"
                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                   placeholder="Nama kegiatan"
                 />
+                <p
+                  v-if="getError(`karya.${index}.kegiatan`)"
+                  class="mt-1 text-xs text-red-500"
+                >
+                  {{ getError(`karya.${index}.kegiatan`) }}
+                </p>
               </div>
 
               <div>
@@ -228,15 +242,23 @@
                   :for="`deskripsi-${index}`"
                   class="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Deskripsi Aktivitas
+                  Deskripsi Aktivitas <span class="text-red-500">*</span>
                 </label>
                 <textarea
                   :disabled="isReadonly"
+                  required
                   :id="`deskripsi-${index}`"
                   v-model="item.deskripsi"
                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  :class="fieldClass(getError(`karya.${index}.deskripsi`))"
                   placeholder="Deskripsi aktivitas"
                 />
+                <p
+                  v-if="getError(`karya.${index}.deskripsi`)"
+                  class="mt-1 text-xs text-red-500"
+                >
+                  {{ getError(`karya.${index}.deskripsi`) }}
+                </p>
               </div>
 
               <div>
@@ -244,15 +266,17 @@
                   :for="`kktp-${index}`"
                   class="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  KKTP
+                  KKTP <span class="text-red-500">*</span>
                 </label>
                 <select
                   :id="`kktp-${index}`"
                   :disabled="isReadonly"
-                  v-model.number="item.kktp_id"
+                  v-model="item.kktp_id"
+                  required
                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  :class="fieldClass(getError(`karya.${index}.kktp_id`))"
                 >
-                  <option :value="null">Pilih KKTP</option>
+                  <option value="">Pilih KKTP</option>
                   <option
                     v-for="kktp in kktpOptions"
                     :key="kktp.id"
@@ -261,6 +285,12 @@
                     {{ kktp.deskripsi }}
                   </option>
                 </select>
+                <p
+                  v-if="getError(`karya.${index}.kktp_id`)"
+                  class="mt-1 text-xs text-red-500"
+                >
+                  {{ getError(`karya.${index}.kktp_id`) }}
+                </p>
               </div>
 
               <div>
@@ -268,15 +298,23 @@
                   :for="`analisa-${index}`"
                   class="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Analisa Guru
+                  Analisa Guru <span class="text-red-500">*</span>
                 </label>
                 <textarea
                   :disabled="isReadonly"
                   :id="`analisa-${index}`"
+                  required
                   v-model="item.analisa"
                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  :class="fieldClass(getError(`karya.${index}.analisa`))"
                   placeholder="Analisa guru"
                 />
+                <p
+                  v-if="getError(`karya.${index}.analisa`)"
+                  class="mt-1 text-xs text-red-500"
+                >
+                  {{ getError(`karya.${index}.analisa`) }}
+                </p>
               </div>
             </div>
 
@@ -286,7 +324,7 @@
                   :for="`foto-${index}`"
                   class="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Foto
+                  Foto Kegiatan
                 </label>
 
                 <input
@@ -345,15 +383,16 @@
               :for="`anekdot-kktp-${index}`"
               class="block text-sm font-medium text-gray-700 mb-1"
             >
-              KKTP
+              KKTP <span class="text-red-500">*</span>
             </label>
             <select
               :id="`anekdot-kktp-${index}`"
+              required
               :disabled="isReadonly"
-              v-model.number="item.kktp_id"
-              class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+              v-model="item.kktp_id"
+              :class="fieldClass(getError(`anekdot.${index}.kktp_id`))"
             >
-              <option :value="null">Pilih KKTP</option>
+              <option value="">Pilih KKTP</option>
               <option
                 v-for="kktp in kktpOptions"
                 :key="kktp.id"
@@ -362,6 +401,12 @@
                 {{ kktp.deskripsi }}
               </option>
             </select>
+            <p
+              v-if="getError(`anekdot.${index}.kktp_id`)"
+              class="mt-1 text-xs text-red-500"
+            >
+              {{ getError(`anekdot.${index}.kktp_id`) }}
+            </p>
           </div>
 
           <div>
@@ -369,14 +414,22 @@
               :for="`anekdot-waktu-${index}`"
               class="block text-sm font-medium text-gray-700 mb-1"
             >
-              Waktu Observasi
+              Waktu Observasi <span class="text-red-500">*</span>
             </label>
             <input
               :id="`anekdot-waktu-${index}`"
+              required
               v-model="item.waktu"
               type="datetime-local"
               class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+              :class="fieldClass(getError(`anekdot.${index}.waktu`))"
             />
+            <p
+              v-if="getError(`anekdot.${index}.waktu`)"
+              class="mt-1 text-xs text-red-500"
+            >
+              {{ getError(`anekdot.${index}.waktu`) }}
+            </p>
           </div>
 
           <div>
@@ -384,15 +437,23 @@
               :for="`anekdot-catatan-${index}`"
               class="block text-sm font-medium text-gray-700 mb-1"
             >
-              Catatan Observasi
+              Catatan Observasi <span class="text-red-500">*</span>
             </label>
             <textarea
               :disabled="isReadonly"
               :id="`anekdot-catatan-${index}`"
+              required
               v-model="item.catatan"
               class="w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm"
+              :class="fieldClass(getError(`anekdot.${index}.catatan`))"
               placeholder="Catatan observasi..."
             />
+            <p
+              v-if="getError(`anekdot.${index}.catatan`)"
+              class="mt-1 text-xs text-red-500"
+            >
+              {{ getError(`anekdot.${index}.catatan`) }}
+            </p>
           </div>
 
           <button
@@ -433,7 +494,6 @@
             </label>
             <select
               :id="`rekomendasi-elemen-${index}`"
-              v-model.number="selectedMonitoringId"
               v-model="item.elemen"
               class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
             >
@@ -569,6 +629,19 @@ const form = reactive({
   anekdot: [],
   rekomendasi: [],
 });
+
+const errors = ref({});
+
+const getError = (path) => {
+  return path.split(".").reduce((obj, key) => obj?.[key], errors.value)?.[0];
+};
+
+const fieldClass = (error) => [
+  "w-full rounded-lg px-3 py-2 text-sm",
+  error
+    ? "border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500"
+    : "border border-gray-200",
+];
 
 const indikatorMap = reactive({});
 
@@ -747,7 +820,7 @@ const handleKaryaImage = (event, index) => {
 
 const addKarya = () => {
   form.karya.push({
-    kktp_id: null,
+    kktp_id: "",
     kegiatan: "",
     foto: "",
     deskripsi: "",
@@ -761,7 +834,7 @@ const removeKarya = (index) => {
 
 const addAnekdot = () => {
   form.anekdot.push({
-    kktp_id: null,
+    kktp_id: "",
     waktu: "",
     catatan: "",
   });
@@ -782,27 +855,8 @@ const removeRekomendasi = (index) => {
   form.rekomendasi.splice(index, 1);
 };
 
-const validateForm = () => {
-  if (!siswaKelasId.value) {
-    showWarning("Data siswa kelas tidak ditemukan");
-    return false;
-  }
-
-  if (!selectedMonitoringId.value) {
-    showWarning("Monitoring mingguan wajib dipilih");
-    return false;
-  }
-
-  if (!form.ringkasan) {
-    showWarning("Ringkasan perkembangan wajib diisi");
-    return false;
-  }
-
-  return true;
-};
-
 const handleSubmit = async () => {
-  if (!validateForm()) return;
+  errors.value = {};
 
   try {
     saving.value = true;
@@ -815,26 +869,22 @@ const handleSubmit = async () => {
 
     const formData = new FormData();
 
-    const karyaPayload = form.karya
-      .filter((item) => item.kktp_id && item.kegiatan)
-      .map((item) => ({
-        kktp_id: item.kktp_id,
-        kegiatan: item.kegiatan,
-        foto: item.foto instanceof File ? null : item.foto || null,
-        deskripsi: item.deskripsi,
-        analisa: item.analisa,
-      }));
+    const karyaPayload = form.karya.map((item) => ({
+      kktp_id: item.kktp_id ? Number(item.kktp_id) : null,
+      kegiatan: item.kegiatan,
+      foto: item.foto instanceof File ? null : item.foto || null,
+      deskripsi: item.deskripsi,
+      analisa: item.analisa,
+    }));
 
-    const anekdotPayload = form.anekdot
-      .filter((item) => item.kktp_id && item.waktu && item.catatan)
-      .map((item) => ({
-        kktp_id: item.kktp_id,
-        waktu: item.waktu,
-        catatan: item.catatan,
-      }));
+    const anekdotPayload = form.anekdot.map((item) => ({
+      kktp_id: item.kktp_id ? Number(item.kktp_id) : null,
+      waktu: item.waktu,
+      catatan: item.catatan,
+    }));
 
     const rekomendasiPayload = form.rekomendasi
-      .filter((item) => item.elemen && item.tips)
+      .filter((item) => item.elemen || item.tips)
       .map((item) => ({
         elemen: item.elemen,
         tips: item.tips,
@@ -874,7 +924,14 @@ const handleSubmit = async () => {
 
     router.back();
   } catch (error) {
-    showError(error.message);
+    console.error(error);
+
+    if (error.code === 422) {
+      errors.value = error.errors || {};
+      return;
+    }
+
+    showError(error.message || "Gagal menyimpan monitoring siswa");
   } finally {
     saving.value = false;
   }

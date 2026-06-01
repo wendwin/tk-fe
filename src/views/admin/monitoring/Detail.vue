@@ -72,7 +72,7 @@
             Edit
           </router-link>
 
-          <p class="text-2xl font-bold text-blue-600">
+          <p class="text-2xl font-bold text-slate-600">
             {{ totalSelesai }}/{{ totalSiswa }}
           </p>
           <p class="text-xs text-gray-500">Monitoring Siswa</p>
