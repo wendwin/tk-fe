@@ -128,7 +128,10 @@
               v-if="item.status === 'draft'"
               type="button"
               @click="handlePublish(item)"
-              :disabled="(item.total_selesai || 0) < (item.total_siswa || 0)"
+              :disabled="
+                (item.total_siswa || 0) === 0 ||
+                (item.total_selesai || 0) < (item.total_siswa || 0)
+              "
               class="px-3 py-2 text-sm rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Publish
@@ -150,57 +153,136 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
         <div>
-          <label class="text-sm font-medium">Semester</label>
-          <input
-            v-model.number="form.semester"
-            type="number"
+          <label class="text-sm font-medium"
+            >Semester <span class="text-red-500">*</span></label
+          >
+
+          <select
+            v-model="form.semester"
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-          />
+            :class="[
+              'w-full rounded-lg px-3 py-2 text-sm',
+              errors.semester
+                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                : 'border border-gray-200',
+            ]"
+          >
+            <option value="">Pilih Semester</option>
+            <option value="ganjil">Ganjil</option>
+            <option value="genap">Genap</option>
+          </select>
+
+          <p v-if="errors.semester" class="mt-1 text-xs text-red-500">
+            {{ errors.semester[0] }}
+          </p>
         </div>
 
         <div>
-          <label class="text-sm font-medium">Minggu</label>
-          <input
-            v-model.number="form.minggu"
-            type="number"
+          <label class="text-sm font-medium"
+            >Minggu <span class="text-red-500">*</span></label
+          >
+
+          <select
+            v-model="form.minggu"
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-          />
+            :class="[
+              'w-full rounded-lg px-3 py-2 text-sm',
+              errors.minggu
+                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                : 'border border-gray-200',
+            ]"
+          >
+            <option value="">Pilih Minggu</option>
+            <option value="1">Minggu 1</option>
+            <option value="2">Minggu 2</option>
+            <option value="3">Minggu 3</option>
+            <option value="4">Minggu 4</option>
+          </select>
+
+          <p v-if="errors.minggu" class="mt-1 text-xs text-red-500">
+            {{ errors.minggu[0] }}
+          </p>
         </div>
 
         <div>
-          <label class="text-sm font-medium">Topik</label>
+          <label class="text-sm font-medium"
+            >Topik <span class="text-red-500">*</span></label
+          >
           <input
             v-model="form.topik"
             type="text"
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+            :class="[
+              'w-full rounded-lg px-3 py-2 text-sm',
+              errors.topik
+                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                : 'border border-gray-200',
+            ]"
           />
+          <p v-if="errors.topik" class="mt-1 text-xs text-red-500">
+            {{ errors.topik[0] }}
+          </p>
         </div>
 
         <div>
-          <label class="text-sm font-medium">Sub Topik</label>
+          <label class="text-sm font-medium"
+            >Sub Topik <span class="text-red-500">*</span></label
+          >
           <input
             v-model="form.sub_topik"
             type="text"
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+            :class="[
+              'w-full rounded-lg px-3 py-2 text-sm',
+              errors.sub_topik
+                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                : 'border border-gray-200',
+            ]"
           />
+
+          <p v-if="errors.sub_topik" class="mt-1 text-xs text-red-500">
+            {{ errors.sub_topik[0] }}
+          </p>
         </div>
 
         <div>
-          <label class="text-sm font-medium">Tanggal Mulai</label>
+          <label class="text-sm font-medium"
+            >Tanggal Mulai <span class="text-red-500">*</span></label
+          >
           <input
             v-model="form.tanggal_mulai"
             type="date"
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+            :class="[
+              'w-full rounded-lg px-3 py-2 text-sm',
+              errors.tanggal_mulai
+                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                : 'border border-gray-200',
+            ]"
           />
+          <p v-if="errors.tanggal_mulai" class="mt-1 text-xs text-red-500">
+            {{ errors.tanggal_mulai[0] }}
+          </p>
         </div>
 
         <div>
-          <label class="text-sm font-medium">Tanggal Selesai</label>
+          <label class="text-sm font-medium"
+            >Tanggal Selesai <span class="text-red-500">*</span></label
+          >
           <input
             v-model="form.tanggal_selesai"
             type="date"
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+            :class="[
+              'w-full rounded-lg px-3 py-2 text-sm',
+              errors.tanggal_selesai
+                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                : 'border border-gray-200',
+            ]"
           />
+          <p v-if="errors.tanggal_selesai" class="mt-1 text-xs text-red-500">
+            {{ errors.tanggal_selesai[0] }}
+          </p>
         </div>
       </div>
 
@@ -227,36 +309,65 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
               <label class="block text-sm font-medium mb-1"
-                >Elemen {{ tpIndex + 1 }}</label
+                >Elemen {{ tpIndex + 1 }}
+                <span class="text-red-500">*</span></label
               >
 
               <select
                 v-model="tp.elemen"
                 class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                :class="[
+                  'w-full rounded-lg px-3 py-2 text-sm',
+                  errors.tp && errors.tp[tpIndex] && errors.tp[tpIndex].elemen
+                    ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                    : 'border border-gray-200',
+                ]"
               >
+                <option value="">Pilih Elemen</option>
                 <option value="kesyuhadaan">Kesyuhadaan</option>
                 <option value="nabp">NABP</option>
                 <option value="jd">Jati Diri</option>
                 <option value="ddlmstrs">DDLMSTRS</option>
               </select>
+              <p
+                v-if="getError(`tp.${tpIndex}.elemen`)"
+                class="mt-1 text-xs text-red-500"
+              >
+                {{ getError(`tp.${tpIndex}.elemen`) }}
+              </p>
             </div>
 
             <div class="md:col-span-2">
               <label class="block text-sm font-medium mb-1"
-                >Tujuan Pembelajaran</label
+                >Tujuan Pembelajaran <span class="text-red-500">*</span></label
               >
 
               <input
                 v-model="tp.tujuan"
                 type="text"
                 class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                :class="[
+                  'w-full rounded-lg px-3 py-2 text-sm',
+                  errors.tp && errors.tp[tpIndex] && errors.tp[tpIndex].tujuan
+                    ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                    : 'border border-gray-200',
+                ]"
               />
+
+              <p
+                v-if="getError(`tp.${tpIndex}.tujuan`)"
+                class="mt-1 text-xs text-red-500"
+              >
+                {{ getError(`tp.${tpIndex}.tujuan`) }}
+              </p>
             </div>
           </div>
 
           <div class="space-y-2 mt-8">
             <div class="flex justify-between items-center">
-              <p class="text-sm font-medium">KKTP</p>
+              <p class="text-sm font-medium">
+                KKTP <span class="text-red-500">*</span>
+              </p>
 
               <button
                 type="button"
@@ -270,19 +381,38 @@
             <div
               v-for="(kktp, kktpIndex) in tp.kktp"
               :key="kktpIndex"
-              class="flex gap-2"
+              class="flex gap-2 items-start"
             >
-              <input
-                v-model="kktp.deskripsi"
-                type="text"
-                placeholder="Deskripsi KKTP"
-                class="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm"
-              />
+              <div class="flex-1">
+                <input
+                  v-model="kktp.deskripsi"
+                  type="text"
+                  placeholder="Deskripsi KKTP"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  :class="[
+                    'w-full rounded-lg px-3 py-2 text-sm',
+                    errors.tp &&
+                    errors.tp[tpIndex] &&
+                    errors.tp[tpIndex].kktp &&
+                    errors.tp[tpIndex].kktp[kktpIndex] &&
+                    errors.tp[tpIndex].kktp[kktpIndex].deskripsi
+                      ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                      : 'border border-gray-200',
+                  ]"
+                />
+
+                <p
+                  v-if="getError(`tp.${tpIndex}.kktp.${kktpIndex}.deskripsi`)"
+                  class="mt-1 text-xs text-red-500"
+                >
+                  {{ getError(`tp.${tpIndex}.kktp.${kktpIndex}.deskripsi`) }}
+                </p>
+              </div>
 
               <button
                 type="button"
                 @click="removeKKTP(tpIndex, kktpIndex)"
-                class="px-2 rounded-lg bg-white border border-red-200 text-red-600 text-sm hover:bg-red-100"
+                class="px-2 h-10 rounded-lg bg-white border border-red-200 text-red-600 text-sm hover:bg-red-100"
               >
                 <Minus class="w-4 h-4" />
               </button>
@@ -322,14 +452,30 @@
           <div class="grid flex-1 grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label class="block text-sm font-medium mb-1"
-                >Kegiatan {{ index + 1 }}</label
+                >Kegiatan {{ index + 1 }}
+                <span class="text-red-500">*</span></label
               >
               <input
                 v-model="item.nama"
                 type="text"
                 placeholder="Nama kegiatan"
                 class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                :class="[
+                  'w-full rounded-lg px-3 py-2 text-sm',
+                  errors.kegiatan &&
+                  errors.kegiatan[index] &&
+                  errors.kegiatan[index].nama
+                    ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                    : 'border border-gray-200',
+                ]"
               />
+
+              <p
+                v-if="getError(`kegiatan.${index}.nama`)"
+                class="mt-1 text-xs text-red-500"
+              >
+                {{ getError(`kegiatan.${index}.nama`) }}
+              </p>
             </div>
 
             <div>
@@ -356,24 +502,67 @@
       <section class="space-y-3 mb-10">
         <h2 class="font-semibold text-gray-900">Asesmen Awal</h2>
 
-        <input
-          v-model="form.asesmen_awal.teknik"
-          type="text"
-          placeholder="Teknik asesmen"
-          class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-        />
+        <div class="">
+          <label class="block text-sm font-medium mb-1"
+            >Teknik Asesmen <span class="text-red-500">*</span></label
+          >
+          <input
+            v-model="form.asesmen_awal.teknik"
+            type="text"
+            placeholder="Teknik asesmen"
+            class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+            :class="[
+              'w-full rounded-lg px-3 py-2 text-sm',
+              errors.asesmen_awal && errors.asesmen_awal.teknik
+                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                : 'border border-gray-200',
+            ]"
+          />
+          <p
+            v-if="getError('asesmen_awal.teknik')"
+            class="mt-1 text-xs text-red-500"
+          >
+            {{ getError("asesmen_awal.teknik") }}
+          </p>
+        </div>
 
-        <textarea
-          v-model="form.asesmen_awal.rancangan_kegiatan"
-          placeholder="Rancangan kegiatan"
-          class="w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm"
-        />
+        <div class="">
+          <label class="block text-sm font-medium mb-1"
+            >Rancangan Kegiatan <span class="text-red-500">*</span></label
+          >
+          <textarea
+            v-model="form.asesmen_awal.rancangan_kegiatan"
+            placeholder="Rancangan kegiatan"
+            class="w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm"
+            :class="[
+              'w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm',
+              errors.asesmen_awal && errors.asesmen_awal.rancangan_kegiatan
+                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                : 'border border-gray-200',
+            ]"
+          />
+          <p
+            v-if="getError('asesmen_awal.rancangan_kegiatan')"
+            class="text-xs text-red-500"
+          >
+            {{ getError("asesmen_awal.rancangan_kegiatan") }}
+          </p>
+        </div>
 
-        <textarea
-          v-model="form.asesmen_awal.hasil"
-          placeholder="Hasil asesmen awal"
-          class="w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm"
-        />
+        <div class="">
+          <label class="block text-sm font-medium mb-1">Hasil Asesmen</label>
+          <textarea
+            v-model="form.asesmen_awal.hasil"
+            placeholder="Hasil asesmen awal"
+            class="w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm"
+            :class="[
+              'w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm',
+              errors.asesmen_awal && errors.asesmen_awal.hasil
+                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                : 'border border-gray-200',
+            ]"
+          />
+        </div>
       </section>
 
       <div class="flex justify-end gap-3">
@@ -445,6 +634,12 @@ const isMultiKelas = computed(() => {
 
 const monitoringList = ref([]);
 
+const errors = ref({});
+
+const getError = (path) => {
+  return path.split(".").reduce((obj, key) => obj?.[key], errors.value)?.[0];
+};
+
 const formatKelas = (kelas) => {
   if (!kelas) return "-";
 
@@ -497,15 +692,15 @@ const loadMonitoring = async () => {
 };
 
 const defaultForm = () => ({
-  semester: 1,
-  minggu: null,
+  semester: "",
+  minggu: "",
   topik: "",
   sub_topik: "",
   tanggal_mulai: "",
   tanggal_selesai: "",
   tp: [
     {
-      elemen: "nabp",
+      elemen: "",
       tujuan: "",
       kktp: [{ deskripsi: "" }],
     },
@@ -627,13 +822,15 @@ const cancelEdit = () => {
 };
 
 const handleSubmit = async () => {
+  errors.value = {};
+
   if (!tahunAjaranAktif.value) {
     showWarning("Tahun ajaran aktif wajib dipilih");
     return;
   }
 
   if (!selectedKelas.value) {
-    showWarning("Belum ada kelas");
+    showWarning("Belum terdaftar di kelas manapun");
     return;
   }
 
@@ -649,13 +846,11 @@ const handleSubmit = async () => {
       sub_topik: form.sub_topik,
       tanggal_mulai: form.tanggal_mulai,
       tanggal_selesai: form.tanggal_selesai,
-      tp: form.tp
-        .filter((tp) => tp.tujuan && tp.kktp.length)
-        .map((tp) => ({
-          ...tp,
-          kktp: tp.kktp.filter((kktp) => kktp.deskripsi),
-        })),
-      kegiatan: form.kegiatan.filter((item) => item.nama),
+      tp: form.tp.map((tp) => ({
+        ...tp,
+        kktp: tp.kktp,
+      })),
+      kegiatan: form.kegiatan,
       asesmen_awal: form.asesmen_awal,
     };
 
@@ -671,8 +866,14 @@ const handleSubmit = async () => {
     await loadMonitoring();
     resetForm();
   } catch (error) {
-    showError(error.message || "Gagal membuat monitoring mingguan");
     console.error(error);
+
+    if (error.code === 422) {
+      errors.value = error.errors || {};
+      return;
+    }
+
+    showError(error.message || "Gagal membuat monitoring mingguan");
   } finally {
     loading.value = false;
   }
