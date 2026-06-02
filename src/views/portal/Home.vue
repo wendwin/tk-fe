@@ -98,13 +98,6 @@ const handleLogout = async () => {
               tempat.
             </p>
           </div>
-
-          <button
-            @click="handleLogout"
-            class="self-start md:self-center px-4 py-2 rounded-xl bg-gray-100 text-gray-700 text-sm hover:bg-gray-200"
-          >
-            Logout
-          </button>
         </div>
       </section>
 
@@ -242,14 +235,10 @@ const handleLogout = async () => {
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/lib/stores/auth";
-import { logout } from "@/lib/services/authService";
 import { getMyPendaftaran } from "@/lib/services/pendaftaranService";
-import { clearPendaftaranId } from "@/lib/utils/storage";
 import { showError } from "@/lib/utils/toast";
 
 const router = useRouter();
-const auth = useAuthStore();
 
 const loadingPendaftaran = ref(false);
 const pendaftaranList = ref([]);
@@ -323,19 +312,6 @@ const statusClass = (status) => {
   return map[status] || "bg-gray-100 text-gray-600";
 };
 
-const handleLogout = async () => {
-  try {
-    await logout();
-
-    auth.clearAuth();
-    sessionStorage.removeItem("csrf_token");
-    clearPendaftaranId();
-
-    router.push("/login");
-  } catch (err) {
-    console.log(err.message);
-  }
-};
 const statusPillClass = computed(() => {
   switch (props.statusPembayaran) {
     case "unpaid":

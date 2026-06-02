@@ -32,7 +32,7 @@
     >
       <div class="max-w-2xl w-full p-8 text-center">
         <img
-          src="/images/guru.png"
+          src="@/assets/images/guru-asesmen.png"
           alt="Belum ada jurnal"
           class="w-48 mx-auto mb-6"
           draggable="false"
