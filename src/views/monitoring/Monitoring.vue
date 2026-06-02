@@ -26,6 +26,27 @@
       </p>
     </header>
 
+    <div v-if="anakList.length > 1" class="mb-8">
+      <p class="text-sm font-semibold text-gray-700 mb-3">Pilih Anak</p>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          v-for="anak in anakList"
+          :key="anak.id"
+          type="button"
+          @click="selectedSiswaId = anak.id"
+          class="px-4 py-2 rounded-lg text-sm font-medium border transition"
+          :class="
+            selectedSiswaId === anak.id
+              ? 'bg-green-600 text-white border-green-600'
+              : 'bg-white text-gray-600 border-gray-200 hover:bg-green-50'
+          "
+        >
+          {{ anak.nama_lengkap || anak.nama_panggilan || "Ananda" }}
+        </button>
+      </div>
+    </div>
+
     <div
       v-if="!loading && historiMonitoring.length === 0"
       class="flex items-center justify-center min-h-[50vh]"
@@ -70,40 +91,59 @@
           v-for="pekan in grup.mingguList"
           :key="pekan.id"
           @click="lihatDetail(pekan.id)"
-          class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-xs hover:shadow-md hover:border-green-100 transition duration-300 cursor-pointer flex flex-col justify-between group"
+          class="bg-white rounded-lg overflow-hidden border border-gray-100 shadow-xs hover:shadow-md hover:border-green-100 transition duration-300 cursor-pointer flex flex-col justify-between group"
         >
           <div>
-            <div class="relative h-32 w-full bg-gray-100 overflow-hidden">
-              <img
-                :src="pekan.sampul"
-                :alt="pekan.topik"
-                class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-              />
-              <div class="absolute top-3 left-3 flex gap-1.5">
-                <span
-                  class="px-2 py-0.5 bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold rounded-md uppercase tracking-wider"
-                >
-                  Minggu {{ pekan.minggu }}
-                </span>
-                <span
-                  class="px-2 py-0.5 bg-green-500 text-white text-[10px] font-semibold rounded-md uppercase tracking-wider"
-                >
-                  Semester {{ pekan.semester }}
-                </span>
+            <div
+              class="relative h-24 w-full overflow-hidden bg-gradient-to-br"
+              :class="weekCoverStyle(pekan.minggu).gradient"
+            >
+              <div class="absolute inset-0 opacity-15">
+                <div
+                  class="absolute bg-white"
+                  :class="weekCoverStyle(pekan.minggu).shape1"
+                />
+                <div
+                  class="absolute bg-white"
+                  :class="weekCoverStyle(pekan.minggu).shape2"
+                />
+              </div>
+
+              <div
+                class="absolute right-4 bottom-2 text-4xl opacity-25 select-none"
+              >
+                {{ weekCoverStyle(pekan.minggu).icon }}
+              </div>
+
+              <div
+                class="relative h-full p-4 text-white flex flex-col justify-between"
+              >
+                <div class="flex justify-between items-start">
+                  <span
+                    class="px-2 py-1 rounded-md bg-white/20 text-sm font-semibold"
+                  >
+                    Minggu {{ pekan.minggu }}
+                  </span>
+
+                  <span
+                    class="px-2 py-1 rounded-md bg-white/20 text-sm capitalize"
+                  >
+                    Semester {{ pekan.semester }}
+                  </span>
+                </div>
               </div>
             </div>
-
-            <div class="p-4">
+            <div class="p-4 group-hover:bg-slate-50 transition">
               <span
                 class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block"
-                >Tema Utama</span
-              >
+                >Tema
+              </span>
               <h3
-                class="text-base font-semibold text-gray-600 line-clamp-1 group-hover:text-green-600 transition"
+                class="text-base font-semibold text-gray-600 line-clamp-1 transition capitalize"
               >
                 {{ pekan.topik }}
               </h3>
-              <p class="text-sm text-gray-500 mt-0.5 truncate">
+              <p class="text-sm text-gray-500 mt-0.5 truncate capitalize">
                 Sub: {{ pekan.subTopik }}
               </p>
 
@@ -168,6 +208,7 @@ const router = useRouter();
 
 const loading = ref(false);
 const monitoringList = ref([]);
+const selectedSiswaId = ref(null);
 
 const formatTanggal = (tanggalMulai, tanggalSelesai) => {
   const mulai = new Date(tanggalMulai);
@@ -193,20 +234,69 @@ const formatBulan = (tanggal) => {
   });
 };
 
-const fileUrl = (path) => {
-  if (!path)
-    return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
-  if (path.startsWith("http")) return path;
+const weekCoverStyle = (minggu) => {
+  const map = {
+    1: {
+      gradient: "from-blue-500 to-cyan-500",
+      shape1: "w-24 h-24 -right-6 -top-6 rounded-full",
+      shape2: "w-16 h-16 -left-4 -bottom-4 rounded-full",
+    },
+    2: {
+      gradient: "from-green-500 to-emerald-500",
+      shape1: "w-28 h-14 -right-8 top-4 rounded-full rotate-12",
+      shape2: "w-20 h-20 -left-8 -bottom-8 rounded-3xl rotate-12",
+    },
+    3: {
+      gradient: "from-amber-500 to-orange-500",
+      shape1: "w-20 h-20 right-4 -top-8 rounded-2xl rotate-45",
+      shape2: "w-24 h-12 -left-6 bottom-3 rounded-full -rotate-12",
+    },
+    4: {
+      gradient: "from-purple-500 to-fuchsia-500",
+      shape1: "w-24 h-24 -right-8 -bottom-8 rounded-full",
+      shape2: "w-16 h-16 left-4 -top-6 rounded-2xl rotate-45",
+    },
+  };
 
-  const filename = path.split("/").pop();
-
-  return `${import.meta.env.VITE_API_URL}/monitoring/siswa/file/karya/${filename}`;
+  return (
+    map[String(minggu)] || {
+      gradient: "from-slate-500 to-slate-600",
+      shape1: "w-24 h-24 -right-6 -top-6 rounded-full",
+      shape2: "w-16 h-16 -left-4 -bottom-4 rounded-full",
+    }
+  );
 };
+
+const anakList = computed(() => {
+  const map = {};
+
+  monitoringList.value.forEach((item) => {
+    const siswa = item.siswa_kelas?.siswa;
+
+    if (!siswa) return;
+
+    map[siswa.id] = {
+      id: siswa.id,
+      nama_lengkap: siswa.nama_lengkap,
+      nama_panggilan: siswa.nama_panggilan,
+    };
+  });
+
+  return Object.values(map);
+});
+
+const filteredMonitoringList = computed(() => {
+  if (!selectedSiswaId.value) return monitoringList.value;
+
+  return monitoringList.value.filter((item) => {
+    return item.siswa_kelas?.siswa?.id === selectedSiswaId.value;
+  });
+});
 
 const historiMonitoring = computed(() => {
   const groups = {};
 
-  monitoringList.value.forEach((item) => {
+  filteredMonitoringList.value.forEach((item) => {
     const mingguan = item.monitoring_mingguan;
     const bulan = formatBulan(mingguan.tanggal_mulai);
 
@@ -227,7 +317,6 @@ const historiMonitoring = computed(() => {
         mingguan.tanggal_mulai,
         mingguan.tanggal_selesai,
       ),
-      sampul: fileUrl(item.karya?.[0]?.foto),
     });
   });
 
@@ -244,6 +333,10 @@ const loadMonitoring = async () => {
     });
 
     monitoringList.value = res.data || [];
+
+    if (!selectedSiswaId.value && anakList.value.length > 0) {
+      selectedSiswaId.value = anakList.value[0].id;
+    }
   } catch (error) {
     showError(error.message || "Gagal mengambil monitoring");
   } finally {
