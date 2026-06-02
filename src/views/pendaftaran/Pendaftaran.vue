@@ -106,11 +106,14 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/stores/auth";
 import { logout } from "@/lib/services/authService";
-import { getMyPendaftaran } from "@/lib/services/pendaftaranService";
+import {
+  getMyPendaftaran,
+  getPendaftaranById,
+} from "@/lib/services/pendaftaranService";
 import { getPendaftaranId } from "@/lib/utils/storage";
 import { clearPendaftaranId } from "@/lib/utils/storage";
 import {
@@ -125,7 +128,9 @@ import Asesmen from "@/components/portal/Asesmen.vue";
 import pattern from "@/assets/images/hero-pattern.svg";
 import Informasi from "@/components/portal/Informasi.vue";
 
+const route = useRoute();
 const router = useRouter();
+
 const auth = useAuthStore();
 
 const jenis = ref("tk");
@@ -170,35 +175,35 @@ const loadAsesmen = async (id) => {
 
 const loadPendaftaran = async () => {
   try {
-    const res = await getMyPendaftaran();
+    const idFromQuery = route.query.id;
 
-    const data = res.data?.[0];
+    if (!idFromQuery) {
+      pendaftaranId.value = null;
+      pendaftaranData.value = null;
+      await loadAsesmen(null);
+      return;
+    }
 
-    console.log("dataaaaaa", data);
+    const res = await getPendaftaranById(idFromQuery);
+    const data = res.data;
 
     if (!data) return;
 
     pendaftaranId.value = data.id;
+    pendaftaranData.value = data;
 
     statusPendaftaran.value = data.status;
-
     statusPembayaran.value = data.status_pembayaran;
-
     hasilPengumuman.value = data.status;
 
     berkasSaved.value =
       data.dokumen?.filter((d) => d.jenis_dokumen !== "bukti_pembayaran")
         .length >= 4;
 
-    pendaftaranData.value = data;
-
     await loadAsesmen(data.id);
   } catch (err) {
     console.log(err);
-
-    if (err.message) {
-      showError(err.message);
-    }
+    showError(err.message || "Gagal mengambil data pendaftaran");
   }
 };
 
