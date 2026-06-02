@@ -50,12 +50,27 @@
           />
         </td>
 
-        <td class="px-6 py-4">
+        <td class="flex items-center gap-3 px-6 py-4">
           <router-link
             :to="{ name: 'AdminSiswaDetail', params: { id: item.siswa?.id } }"
             class="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 inline-block"
           >
             <Eye class="w-4 h-4" />
+          </router-link>
+
+          <router-link
+            :to="{
+              name: 'AdminMonitoringSiswaCreate',
+              query: {
+                siswa_kelas_id: item.id,
+                kelas_id: item.kelas?.id,
+                nama: item.siswa?.nama_lengkap,
+              },
+            }"
+            class="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600 inline-block"
+            title="Isi Monitoring"
+          >
+            <NotebookPen class="w-4 h-4" />
           </router-link>
         </td>
       </tr>
@@ -64,7 +79,7 @@
 </template>
 
 <script setup>
-import { Eye } from "lucide-vue-next";
+import { Eye, NotebookPen } from "lucide-vue-next";
 
 import BaseTable from "@/components/admin/common/BaseTable.vue";
 import StatusBadge from "@/components/admin/common/StatusBadge.vue";

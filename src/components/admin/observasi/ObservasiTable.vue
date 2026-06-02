@@ -1,10 +1,15 @@
 <template>
   <div>
-    <BaseTable :loading="loading" :is-empty="list.length === 0" :colspan="10">
+    <BaseTable
+      :loading="loading"
+      :is-empty="list.length === 0"
+      :colspan="isAdmin ? 10 : 9"
+    >
       <template #toolbar>
         <TableToolbar>
           <template #right>
             <button
+              v-if="isAdmin"
               @click="showModal = true"
               class="px-3 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600"
             >
@@ -92,7 +97,7 @@
 
       <template #head>
         <tr>
-          <th class="p-4">
+          <th class="p-4" v-if="isAdmin">
             <input
               class="w-4 h-4"
               type="checkbox"
@@ -114,7 +119,7 @@
 
       <template #body>
         <tr v-for="item in list" :key="item.id" class="border-b">
-          <td class="p-4">
+          <td class="p-4" v-if="isAdmin">
             <input
               type="checkbox"
               class="w-4 h-4"
@@ -251,6 +256,12 @@ import { setJadwalObservasi } from "@/lib/services/observasiService";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
 import formatDateTimeID from "@/lib/utils/formatDateTimeID";
+
+import { useAuthStore } from "@/lib/stores/auth";
+import { ROLES } from "@/lib/constants/roles";
+
+const auth = useAuthStore();
+const isAdmin = computed(() => auth.role === ROLES.ADMIN);
 
 const list = ref([]);
 const meta = ref({});

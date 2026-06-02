@@ -8,6 +8,10 @@ export const getGuruKelasById = async (id) => {
   return await request(`/akademik/guru-kelas/${id}`);
 };
 
+export const getMyGuruKelas = async () => {
+  return await request("/akademik/guru-kelas/me");
+};
+
 export const createGuruKelas = async (payload) => {
   return await request("/akademik/guru-kelas", {
     method: "POST",
