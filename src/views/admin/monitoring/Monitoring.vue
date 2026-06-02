@@ -292,6 +292,15 @@
         </div>
       </div>
 
+      <div
+        v-if="detailLocked"
+        class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700"
+      >
+        Detail TP, KKTP, kegiatan, dan asesmen awal dikunci karena monitoring
+        siswa sudah mulai diisi. Anda masih dapat mengubah informasi umum
+        seperti topik, sub topik, minggu, dan tanggal.
+      </div>
+
       <section class="space-y-4 mb-10">
         <div class="flex justify-between items-center">
           <h2 class="font-semibold text-gray-900">
@@ -300,6 +309,7 @@
 
           <button
             type="button"
+            v-if="!detailLocked"
             @click="addTP"
             class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm hover:bg-gray-200"
           >
@@ -322,6 +332,7 @@
               <select
                 v-model="tp.elemen"
                 required
+                :disabled="detailLocked"
                 class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                 :class="[
                   'w-full rounded-lg px-3 py-2 text-sm',
@@ -353,6 +364,7 @@
                 v-model="tp.tujuan"
                 type="text"
                 required
+                :disabled="detailLocked"
                 class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                 :class="[
                   'w-full rounded-lg px-3 py-2 text-sm',
@@ -395,6 +407,7 @@
                 <input
                   v-model="kktp.deskripsi"
                   required
+                  :disabled="detailLocked"
                   type="text"
                   placeholder="Deskripsi KKTP"
                   class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
@@ -420,6 +433,7 @@
 
               <button
                 type="button"
+                v-if="!detailLocked"
                 @click="removeKKTP(tpIndex, kktpIndex)"
                 class="px-2 h-10 rounded-lg bg-white border border-red-200 text-red-600 text-sm hover:bg-red-100"
               >
@@ -431,6 +445,7 @@
           <div class="flex justify-end mt-8">
             <button
               type="button"
+              v-if="!detailLocked"
               @click="removeTP(tpIndex)"
               class="flex items-center gap-2 text-sm px-3 py-1.5 text-slate-600 border rounded-lg hover:bg-gray-100"
             >
@@ -446,6 +461,7 @@
 
           <button
             type="button"
+            v-if="!detailLocked"
             @click="addKegiatan"
             class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm hover:bg-gray-200"
           >
@@ -468,6 +484,7 @@
                 v-model="item.nama"
                 required
                 type="text"
+                :disabled="detailLocked"
                 placeholder="Nama kegiatan"
                 class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                 :class="[
@@ -492,6 +509,7 @@
               <label class="block text-sm font-medium mb-1">Media/Bahan</label>
               <input
                 v-model="item.media"
+                :disabled="detailLocked"
                 type="text"
                 placeholder="Media / bahan"
                 class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
@@ -501,6 +519,7 @@
 
           <button
             type="button"
+            v-if="!detailLocked"
             @click="removeKegiatan(index)"
             class="shrink-0 h-10 w-10 rounded-lg bg-white border border-red-200 text-red-600 hover:bg-red-100 flex items-center justify-center"
           >
@@ -519,6 +538,7 @@
           <input
             v-model="form.asesmen_awal.teknik"
             required
+            :disabled="detailLocked"
             type="text"
             placeholder="Teknik asesmen"
             class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
@@ -544,6 +564,7 @@
           <textarea
             required
             v-model="form.asesmen_awal.rancangan_kegiatan"
+            :disabled="detailLocked"
             placeholder="Rancangan kegiatan"
             class="w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm"
             :class="[
@@ -565,6 +586,7 @@
           <label class="block text-sm font-medium mb-1">Hasil Asesmen</label>
           <textarea
             v-model="form.asesmen_awal.hasil"
+            :disabled="detailLocked"
             placeholder="Hasil asesmen awal"
             class="w-full min-h-24 rounded-lg border border-gray-200 px-3 py-2 text-sm"
             :class="[
@@ -736,11 +758,18 @@ const resetForm = () => {
   Object.assign(form, defaultForm());
 };
 
-const fillFormEdit = async (id) => {
+const currentEditItem = ref(null);
+
+const detailLocked = computed(() => {
+  return isEditMode.value && (currentEditItem.value?.total_selesai || 0) > 0;
+});
+
+const fillFormEdit = async (id, item = null) => {
   const res = await getMonitoringMingguanById(id);
   const data = res.data;
 
   editId.value = data.id;
+  currentEditItem.value = item;
 
   form.semester = data.semester;
   form.minggu = data.minggu;
@@ -771,11 +800,7 @@ const fillFormEdit = async (id) => {
   setTimeout(() => {
     const y =
       formAnchor.value.getBoundingClientRect().top + window.scrollY - 80;
-
-    window.scrollTo({
-      top: y,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: y, behavior: "smooth" });
   }, 100);
 };
 
@@ -783,11 +808,13 @@ const handleEditQuery = async () => {
   const editIdFromQuery = Number(route.query.edit_id);
 
   if (editIdFromQuery) {
-    await fillFormEdit(editIdFromQuery);
+    const item = monitoringList.value.find((m) => m.id === editIdFromQuery);
+    await fillFormEdit(editIdFromQuery, item || null);
     return;
   }
 
   editId.value = null;
+  currentEditItem.value = null;
   resetForm();
 };
 
@@ -826,6 +853,7 @@ const removeKegiatan = (index) => {
 
 const cancelEdit = () => {
   editId.value = null;
+  currentEditItem.value = null;
   resetForm();
 
   router.replace({
@@ -849,7 +877,7 @@ const handleSubmit = async () => {
   loading.value = true;
 
   try {
-    const payload = {
+    const basePayload = {
       kelas_id: selectedKelas.value.kelas.id,
       tahun_ajaran_id: tahunAjaranAktif.value.id,
       semester: form.semester,
@@ -858,6 +886,10 @@ const handleSubmit = async () => {
       sub_topik: form.sub_topik,
       tanggal_mulai: form.tanggal_mulai,
       tanggal_selesai: form.tanggal_selesai,
+    };
+
+    const createPayload = {
+      ...basePayload,
       tp: form.tp.map((tp) => ({
         ...tp,
         kktp: tp.kktp,
@@ -867,16 +899,32 @@ const handleSubmit = async () => {
     };
 
     const res = isEditMode.value
-      ? await updateMonitoringMingguan(editId.value, {
-          ...payload,
-          replace_detail: true,
-        })
-      : await createMonitoringMingguan(payload);
+      ? await updateMonitoringMingguan(editId.value, basePayload)
+      : await createMonitoringMingguan(createPayload);
 
-    showSuccess(res.message || "Monitoring berhasil dibuat");
+    showSuccess(
+      res.message ||
+        (isEditMode.value
+          ? "Monitoring berhasil diperbarui"
+          : "Monitoring berhasil dibuat"),
+    );
 
-    await loadMonitoring();
+    const monitoringId = isEditMode.value ? editId.value : res.data?.id;
+
+    editId.value = null;
+    currentEditItem.value = null;
     resetForm();
+
+    router.push({
+      name: "AdminMonitoringMingguanDetail",
+      params: { id: monitoringId },
+    });
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
   } catch (error) {
     console.error(error);
 
@@ -885,7 +933,12 @@ const handleSubmit = async () => {
       return;
     }
 
-    showError(error.message || "Gagal membuat monitoring mingguan");
+    showError(
+      error.message ||
+        (isEditMode.value
+          ? "Gagal memperbarui monitoring mingguan"
+          : "Gagal membuat monitoring mingguan"),
+    );
   } finally {
     loading.value = false;
   }
@@ -917,12 +970,6 @@ const handlePublish = async (item) => {
 onMounted(async () => {
   await loadData();
   await handleEditQuery();
-
-  const editIdFromQuery = Number(route.query.edit_id);
-
-  if (editIdFromQuery) {
-    await fillFormEdit(editIdFromQuery);
-  }
 });
 
 onActivated(async () => {
