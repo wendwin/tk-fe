@@ -1,8 +1,25 @@
 <template>
-  <div class="bg-blue-50 py-5 mt-16">
+  <div class="bg-blue-50 py-5 mt-14">
     <div
       class="max-w-6xl mx-auto bg-white p-6 border border-white rounded-lg shadow-md"
     >
+      <nav
+        class="flex items-center justify-end gap-2 text-[13px] font-medium text-gray-400 mb-4 px-2"
+      >
+        <router-link
+          :to="{ name: 'HomePortal' }"
+          class="hover:text-[#1181B2] transition flex items-center gap-1"
+        >
+          <span><House class="w-4 h-4" /></span> Portal
+        </router-link>
+        <span>/</span>
+        <router-link
+          :to="{ name: 'Pendaftaran' }"
+          class="text-gray-600 font-semibold"
+        >
+          Pendaftaran
+        </router-link>
+      </nav>
       <!-- banner -->
       <div
         class="mb-8 text-center w-full bg-[#1181B2] p-5 rounded-md"
@@ -99,8 +116,6 @@
         <Informasi :data="pendaftaranData" />
       </div>
     </div>
-
-    <button @click="handleLogout">Logout</button>
   </div>
 </template>
 
@@ -108,8 +123,8 @@
 import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
+import { House } from "lucide-vue-next";
 import { useAuthStore } from "@/lib/stores/auth";
-import { logout } from "@/lib/services/authService";
 import {
   getMyPendaftaran,
   getPendaftaranById,
@@ -246,20 +261,6 @@ const progressPct = computed(() => {
 
   return pts;
 });
-
-const handleLogout = async () => {
-  try {
-    await logout();
-
-    auth.clearAuth();
-    sessionStorage.removeItem("csrf_token");
-    clearPendaftaranId();
-
-    router.push("/login");
-  } catch (err) {
-    console.log(err.message);
-  }
-};
 
 const goTab = (tab) => {
   activeTab.value = tab.id;
