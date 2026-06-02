@@ -86,16 +86,17 @@ const handleLogout = async () => {
           class="flex flex-col md:flex-row md:items-center md:justify-between gap-6"
         >
           <div>
-            <p class="text-sm font-medium text-[#1181B2]">Portal Orang Tua</p>
-
-            <h1 class="mt-2 text-2xl md:text-3xl font-semibold text-gray-800">
+            <h1 class="mb-2 text-2xl md:text-3xl font-semibold text-gray-800">
               Halo, Bunda!
             </h1>
 
-            <p class="mt-2 text-sm text-gray-500 max-w-2xl leading-6">
-              Selamat datang di Portal KB & TK Masjid Syuhada Yogyakarta. Kelola
-              pendaftaran anak dan pantau perkembangan belajar Ananda dalam satu
-              tempat.
+            <p class="text-base font-medium text-[#1181B2]">
+              Selamat Datang di Syuhada School Portal
+            </p>
+
+            <p class="mt-1 text-sm text-gray-500 max-w-xl leading-6">
+              KB & TK Masjid Syuhada Yogyakarta. Kelola pendaftaran dan pantau
+              perkembangan belajar Ananda dalam satu tempat
             </p>
           </div>
         </div>

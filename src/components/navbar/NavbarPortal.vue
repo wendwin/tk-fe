@@ -13,7 +13,7 @@
           alt="Logo TK"
         />
         <div class="hidden sm:block text-sm text-slate-700 font-semibold">
-          KB & TK Masjid Syuhada Yogyakarta
+          KB & TK Masjid Syuhada
         </div>
       </RouterLink>
 
