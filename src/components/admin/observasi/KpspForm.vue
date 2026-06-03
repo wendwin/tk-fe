@@ -19,14 +19,10 @@
     <div v-if="loading" class="text-sm text-gray-600">Memuat pertanyaan...</div>
 
     <div v-else class="space-y-4">
-      <div
-        v-for="item in pertanyaan"
-        :key="item.id"
-        class="border border-gray-200 rounded-xl p-4"
-      >
+      <div v-for="item in pertanyaan" :key="item.id" class="">
         <div class="flex items-start justify-between gap-4 mb-3">
           <div>
-            <p class="text-sm text-gray-600">
+            <p class="text-sm font-medium text-gray-800">
               {{ item.aspek_perkembangan }}
             </p>
 
@@ -213,17 +209,15 @@ const fetchHasil = async () => {
 
     catatan.value = data.catatan || "";
 
-    if (props.readonly) {
-      pertanyaan.value = data.jawaban.map((item, index) => ({
-        id: item.pertanyaan_id,
-        urutan: index + 1,
-        usia_bulan: item.usia_bulan,
-        aspek_perkembangan: item.aspek_perkembangan,
-        kemampuan_anak: item.kemampuan_anak,
-      }));
+    pertanyaan.value = data.jawaban.map((item, index) => ({
+      id: item.pertanyaan_id,
+      urutan: index + 1,
+      usia_bulan: item.usia_bulan,
+      aspek_perkembangan: item.aspek_perkembangan,
+      kemampuan_anak: item.kemampuan_anak,
+    }));
 
-      usiaBulan.value = data.jawaban[0]?.usia_bulan || null;
-    }
+    usiaBulan.value = data.jawaban[0]?.usia_bulan || null;
 
     data.jawaban.forEach((item) => {
       jawaban.value[item.pertanyaan_id] = item.jawaban;
@@ -278,12 +272,10 @@ const handleSubmit = async () => {
 };
 
 onMounted(async () => {
-  if (props.readonly) {
-    await fetchHasil();
-    return;
-  }
-
-  await fetchPertanyaan();
   await fetchHasil();
+
+  if (!isSubmitted.value && !props.readonly) {
+    await fetchPertanyaan();
+  }
 });
 </script>
