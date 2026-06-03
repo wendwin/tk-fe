@@ -36,3 +36,33 @@ export const createObservasiKpsp = async (pendaftaranId, payload) => {
 export const getHasilObservasiKpsp = async (pendaftaranId) => {
   return await request(`/observasi/${pendaftaranId}/kpsp`);
 };
+
+export const getMasterPertanyaanKpsp = async () => {
+  return await request("/observasi/kpsp/pertanyaan");
+};
+
+export const createMasterPertanyaanKpsp = async (payload) => {
+  return await request("/observasi/kpsp/pertanyaan", {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const updateMasterPertanyaanKpsp = async (id, payload) => {
+  return await request(`/observasi/kpsp/pertanyaan/${id}`, {
+    method: "PUT",
+    body: payload,
+  });
+};
+
+export const nonaktifkanMasterPertanyaanKpsp = async (id) => {
+  return await request(`/observasi/kpsp/pertanyaan/${id}`, {
+    method: "DELETE",
+  });
+};
+
+export const aktifkanMasterPertanyaanKpsp = async (id) => {
+  return await request(`/observasi/kpsp/pertanyaan/${id}/restore`, {
+    method: "PUT",
+  });
+};
