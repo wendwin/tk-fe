@@ -357,7 +357,7 @@ const menuGroups = [
         name: "Observasi",
         subItems: [
           {
-            name: "Asesmsnen",
+            name: "Asesmen",
             to: { name: "AdminAsesmenObservasi" },
             meta: { role: [ROLES.ADMIN] },
           },
