@@ -233,6 +233,8 @@ import {
   UserRoundCheck,
   UserCog,
   Layers3,
+  CalendarClock,
+  NotepadText,
 } from "lucide-vue-next";
 import path from "node:path";
 
@@ -293,12 +295,6 @@ const menuGroups = [
     title: "Akademik",
     items: [
       {
-        icon: CalendarDays,
-        name: "Tahun Ajaran",
-        to: { name: "AdminTahunAjaran" },
-        meta: { role: [ROLES.ADMIN] },
-      },
-      {
         icon: School,
         name: "Kelas",
         to:
@@ -335,12 +331,47 @@ const menuGroups = [
   },
 
   {
-    title: "Pengaturan",
+    title: "Kelola",
     items: [
       {
         icon: UserCog,
         name: "User",
         to: { name: "AdminUser" },
+        meta: { role: [ROLES.ADMIN] },
+      },
+      {
+        icon: CalendarDays,
+        name: "Tahun Ajaran",
+        to: { name: "AdminTahunAjaran" },
+        meta: { role: [ROLES.ADMIN] },
+      },
+      ,
+      {
+        icon: CalendarClock,
+        name: "Gelombang",
+        to: { name: "AdminGelombang" },
+        meta: { role: [ROLES.ADMIN] },
+      },
+      {
+        icon: NotepadText,
+        name: "Observasi",
+        subItems: [
+          {
+            name: "Asesmsnen",
+            to: { name: "AdminAsesmenObservasi" },
+            meta: { role: [ROLES.ADMIN] },
+          },
+          {
+            name: "KPSP",
+            to: { name: "AdminKpspObservasi" },
+            meta: { role: [ROLES.ADMIN] },
+          },
+          {
+            name: "GPPH",
+            to: { name: "AdminGpphObservasi" },
+            meta: { role: [ROLES.ADMIN] },
+          },
+        ],
         meta: { role: [ROLES.ADMIN] },
       },
     ],
