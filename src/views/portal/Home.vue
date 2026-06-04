@@ -81,18 +81,25 @@ const handleLogout = async () => {
 <template>
   <div class="min-h-screen bg-gray-50 pt-20 px-4 pb-10">
     <div class="max-w-6xl mx-auto space-y-8">
-      <section class="bg-white rounded-xl border border-gray-100 p-6 md:p-8">
+      <section
+        class="bg-white rounded-xl border border-gray-100 p-6 md:p-8 shadow-sm"
+      >
         <div
           class="flex flex-col md:flex-row md:items-center md:justify-between gap-6"
         >
           <div>
-            <h1 class="mb-2 text-2xl md:text-3xl font-semibold text-gray-800">
-              Halo, Bunda!
+            <p
+              class="text-xs font-semibold tracking-widest text-[#1181B2] uppercase mb-2"
+            >
+              Syuhada School Portal
+            </p>
+            <h1 class="mb-2 text-xl md:text-2xl font-semibold text-gray-800">
+              Selamat Datang, {{ fullName }}!
             </h1>
 
-            <p class="text-base font-medium text-[#1181B2]">
+            <!-- <p class="text-base font-medium text-[#1181B2]">
               Selamat Datang di Syuhada School Portal
-            </p>
+            </p> -->
 
             <p class="mt-1 text-sm text-gray-500 max-w-xl leading-6">
               KB & TK Masjid Syuhada Yogyakarta. Kelola pendaftaran dan pantau
@@ -103,13 +110,12 @@ const handleLogout = async () => {
       </section>
 
       <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- PENDAFTARAN -->
-        <div class="bg-white rounded-xl border border-gray-100 p-6 space-y-5">
+        <div
+          class="bg-white rounded-xl border border-gray-100 p-6 space-y-5 shadow-sm"
+        >
           <div class="flex items-start justify-between gap-10">
             <div>
-              <h2 class="text-lg font-semibold text-gray-800">
-                Pendaftaran Anak
-              </h2>
+              <h2 class="text-lg font-semibold text-gray-800">Pendaftaran</h2>
               <p class="text-sm text-gray-500 mt-1">
                 Lanjutkan pendaftaran yang sudah dibuat atau daftarkan anak baru
               </p>
@@ -123,7 +129,10 @@ const handleLogout = async () => {
             </RouterLink>
           </div>
 
-          <div v-if="loadingPendaftaran" class="text-sm text-gray-400">
+          <div
+            v-if="loadingPendaftaran"
+            class="text-sm text-center text-gray-400"
+          >
             Memuat data pendaftaran...
           </div>
 
@@ -135,7 +144,7 @@ const handleLogout = async () => {
               Belum ada pendaftaran
             </p>
             <p class="text-sm text-gray-500 mt-1">
-              Silakan mulai pendaftaran anak baru
+              Silakan mulai pendaftaran murid baru
             </p>
           </div>
 
@@ -189,41 +198,46 @@ const handleLogout = async () => {
                   </div>
                 </div> -->
 
-                <!-- <RouterLink
+                <RouterLink
                   :to="{ name: 'Pendaftaran', query: { id: item.id } }"
-                  class="flex justify-end mt-4 text-sm font-medium text-[#1181B2] hover:underline"
+                  class="flex justify-end mt-0 text-sm font-medium text-[#1181B2] hover:underline"
                 >
-                  {{ item.status === "draft" ? "Lanjutkan" : "Lihat" }}
-                </RouterLink> -->
+                  {{
+                    item.status === "draft" ? "Lanjutkan" : "Lihat Pendaftaran"
+                  }}
+                </RouterLink>
               </RouterLink>
             </div>
           </div>
         </div>
 
-        <!-- MONITORING -->
-        <div class="bg-white rounded-xl border border-gray-100 p-6 space-y-5">
-          <div>
+        <div
+          class="bg-white rounded-xl border border-gray-100 p-6 space-y-5 shadow-sm"
+        >
+          <div class="border-b border-gray-200 pb-4">
             <h2 class="text-lg font-semibold text-gray-800">
               Monitoring Perkembangan
             </h2>
+
             <p class="text-sm text-gray-500 mt-1">
-              Lihat jurnal perkembangan anak yang sudah dipublikasikan guru
+              Lihat jurnal perkembangan pembelajaran yang sudah dipublikasikan
+              guru
             </p>
           </div>
 
-          <div class="border border-gray-100 rounded-lg p-5 bg-green-50/40">
-            <p class="text-sm font-medium text-gray-700">
+          <div>
+            <!-- <p class="text-sm font-medium text-gray-700">
               Jurnal Perkembangan Ananda
-            </p>
+            </p> -->
 
             <p class="text-sm text-gray-500 mt-1 leading-5">
-              Monitoring akan muncul jika anak sudah menjadi siswa dan guru
-              telah mempublikasikan jurnal mingguan
+              Monitoring akan muncul jika sudah menjadi siswa dan guru telah
+              mempublikasikan jurnal mingguan
             </p>
 
             <RouterLink
               :to="{ name: 'Monitoring' }"
-              class="inline-block mt-4 px-4 py-2 rounded-xl bg-green-600 text-white text-sm hover:bg-green-700"
+              class="inline-block mt-4 px-4 py-2 rounded-lg bg-green-600 text-white text-sm hover:bg-green-700"
             >
               Lihat Monitoring
             </RouterLink>
@@ -239,8 +253,12 @@ import { onMounted, ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { getMyPendaftaran } from "@/lib/services/pendaftaranService";
 import { showError } from "@/lib/utils/toast";
+import { useAuthStore } from "@/lib/stores/auth";
 
+const auth = useAuthStore();
 const router = useRouter();
+
+const fullName = computed(() => auth.user?.full_name || "User");
 
 const loadingPendaftaran = ref(false);
 const pendaftaranList = ref([]);
