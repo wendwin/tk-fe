@@ -171,6 +171,12 @@ const router = createRouter({
           meta: { role: [ROLES.ADMIN] },
         },
         {
+          path: "tahun-ajaran/:id",
+          name: "AdminTahunAjaranDetail",
+          component: () => import("../views/admin/tahunAjaran/Detail.vue"),
+          meta: { role: [ROLES.ADMIN] },
+        },
+        {
           path: "gelombang",
           name: "AdminGelombang",
           component: () => import("../views/admin/gelombang/Gelombang.vue"),

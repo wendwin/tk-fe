@@ -83,6 +83,16 @@
 
           <td class="px-6 py-4">
             <div class="flex items-center gap-2">
+              <router-link
+                :to="{
+                  name: 'AdminTahunAjaranDetail',
+                  params: { id: item.id },
+                }"
+                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-blue-600 text-xs"
+              >
+                <Eye class="w-4 h-4" />
+              </router-link>
+
               <button
                 @click="openEdit(item)"
                 class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-blue-600 text-xs"
@@ -185,7 +195,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from "vue";
-import { Search, SquarePen, Trash } from "lucide-vue-next";
+import { Search, SquarePen, Trash, Eye } from "lucide-vue-next";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 
 import BaseTable from "@/components/admin/common/BaseTable.vue";
