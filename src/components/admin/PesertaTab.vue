@@ -17,7 +17,7 @@
               <p class="text-sm text-gray-500">
                 {{ field.label }}
               </p>
-              <p class="text-sm text-gray-700 font-medium">
+              <p class="text-sm text-gray-700 font-medium uppercase">
                 {{ detail.peserta[field.key] || "-" }}
               </p>
             </div>
@@ -40,7 +40,7 @@
               <p class="text-sm text-gray-500">
                 {{ field.label }}
               </p>
-              <p class="text-sm text-gray-700 font-medium">
+              <p class="text-sm text-gray-700 font-medium uppercase">
                 {{ detail.alamat[field.key] || "-" }}
               </p>
             </div>
@@ -63,7 +63,7 @@
               <p class="text-sm text-gray-500">
                 {{ field.label }}
               </p>
-              <p class="text-sm text-gray-700 font-medium">
+              <p class="text-sm text-gray-700 font-medium uppercase">
                 {{ detail.alamat[field.key] || "-" }}
               </p>
             </div>
@@ -87,7 +87,7 @@
               <p class="text-sm text-gray-500">
                 {{ field.label }}
               </p>
-              <p class="text-sm text-gray-700 font-medium">
+              <p class="text-sm text-gray-700 font-medium uppercase">
                 {{ detail.kesehatan[field.key] || "-" }}
               </p>
             </div>
@@ -110,7 +110,7 @@
               <p class="text-sm text-gray-500">
                 {{ field.label }}
               </p>
-              <p class="text-sm text-gray-700 font-medium">
+              <p class="text-sm text-gray-700 font-medium uppercase">
                 {{ detail.informasi[field.key] || "-" }}
               </p>
             </div>

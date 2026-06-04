@@ -66,31 +66,31 @@
             <input type="checkbox" class="w-4 h-4" />
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ startNumber + index }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.guru?.email || "-" }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ formatKelas(item.kelas) }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.kelas.nama }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.tahun_ajaran?.label || "-" }}
           </td>
 
-          <td class="px-6 py-4 capitalize">
+          <td class="px-6 py-0 capitalize">
             {{ formatPeran(item.peran) }}
           </td>
 
-          <!-- <td class="px-6 py-4">
+          <!-- <td class="px-6 py-0">
             <span
               class="px-2 py-1 rounded-full text-xs font-medium"
               :class="
@@ -103,18 +103,18 @@
             </span>
           </td> -->
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <div class="flex items-center gap-2">
               <button
                 @click="openEdit(item)"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-blue-600 text-xs"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-blue-600 text-xs hover:bg-gray-100"
               >
                 <SquarePen class="w-4 h-4" />
               </button>
 
               <button
                 @click="handleDelete(item.id)"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-red-600 text-xs"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-red-600 text-xs hover:bg-gray-100"
               >
                 <Trash class="w-4 h-4" />
               </button>

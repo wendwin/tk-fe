@@ -31,6 +31,44 @@ export function formatPeriodeID(startDate, endDate) {
 
   if (isNaN(start) || isNaN(end)) return "-";
 
+  const sameMonth =
+    start.getMonth() === end.getMonth() &&
+    start.getFullYear() === end.getFullYear();
+
+  const sameYear = start.getFullYear() === end.getFullYear();
+
+  // 27 Juli - 31 Juli 2026
+  if (sameMonth) {
+    const startDay = start.toLocaleDateString("id-ID", {
+      day: "2-digit",
+    });
+
+    const endFormatted = end.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+
+    return `${startDay} - ${endFormatted}`;
+  }
+
+  // 27 Juli - 02 Agustus 2026
+  if (sameYear) {
+    const startFormatted = start.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+    });
+
+    const endFormatted = end.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+
+    return `${startFormatted} - ${endFormatted}`;
+  }
+
+  // beda tahun
   const startFormatted = start.toLocaleDateString("id-ID", {
     day: "2-digit",
     month: "long",

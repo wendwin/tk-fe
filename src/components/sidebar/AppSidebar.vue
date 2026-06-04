@@ -15,35 +15,35 @@
   >
     <div
       :class="[
-        'py-8 flex',
+        'py-4 flex',
         !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start',
       ]"
     >
-      <router-link to="/">
-        <img
-          v-if="isExpanded || isHovered || isMobileOpen"
-          class="dark:hidden"
-          src="@/assets/images/logo/logo.svg"
-          alt="Logo"
-          width="150"
-          height="40"
-        />
-        <img
-          v-if="isExpanded || isHovered || isMobileOpen"
-          class="hidden dark:block"
-          src="@/assets/images/logo/logo-dark.svg"
-          alt="Logo"
-          width="150"
-          height="40"
-        />
-        <img
-          v-else
-          src="@/assets/images/logo/logo-icon.svg"
-          alt="Logo"
-          width="32"
-          height="32"
-        />
-      </router-link>
+      <RouterLink to="/" class="flex items-center justify-center">
+        <!-- Saat sidebar expand / hover / mobile open -->
+        <template v-if="isExpanded || isHovered || isMobileOpen">
+          <img
+            class="h-10"
+            src="@/assets/images/logo/logo-tk.png"
+            alt="Logo TK"
+          />
+
+          <div
+            class="ml-2 text-sm font-semibold text-slate-700 dark:text-white whitespace-nowrap"
+          >
+            KB & TK Masjid Syuhada
+          </div>
+        </template>
+
+        <!-- Saat sidebar collapse -->
+        <template v-else>
+          <img
+            class="h-10"
+            src="@/assets/images/logo/logo-tk.png"
+            alt="Logo TK"
+          />
+        </template>
+      </RouterLink>
     </div>
     <div
       ref="sidebarScrollRef"
@@ -303,7 +303,12 @@ const menuGroups = [
           auth.role === ROLES.GURU
             ? { name: "GuruKelasSaya" }
             : { name: "AdminKelas" },
-        activeNames: ["AdminKelas", "AdminKelasDetail", "GuruKelasSaya"],
+        activeNames: [
+          "AdminKelas",
+          "AdminKelasDetail",
+          "GuruKelasSaya",
+          "AdminMonitoringSiswaCreate",
+        ],
         meta: { role: [ROLES.ADMIN, ROLES.GURU] },
       },
       {

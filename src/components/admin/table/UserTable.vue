@@ -73,35 +73,35 @@
             <input type="checkbox" class="w-4 h-4" />
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ index + 1 }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.first_name + " " + item.last_name }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.email }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <span class="">
               {{ formatRole(item.role?.name) }}
             </span>
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <span class="">
               {{ item.is_verified ? "Terverifikasi" : "Belum" }}
             </span>
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ formatDate(item.created_at) }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <div class="flex items-center gap-2">
               <button
                 @click="openEdit(item)"

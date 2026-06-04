@@ -1,5 +1,7 @@
 <template>
-  <div class="max-w-7xl mx-auto p-4 bg-gray-50 min-h-screen font-sans pt-20">
+  <div
+    class="max-w-7xl mx-auto p-4 lg:px-10 bg-gray-50 min-h-screen font-sans pt-20"
+  >
     <nav
       class="flex items-center justify-end gap-2 text-[13px] font-medium text-gray-400 mb-4 px-2"
     >
@@ -120,7 +122,7 @@
               >
                 <div class="flex justify-between items-start">
                   <span
-                    class="px-2 py-1 rounded-md bg-white/20 text-sm font-semibold"
+                    class="px-2 py-1 rounded-md bg-white/20 text-sm capitalize"
                   >
                     Minggu {{ pekan.minggu }}
                   </span>

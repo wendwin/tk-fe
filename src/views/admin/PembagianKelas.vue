@@ -15,9 +15,9 @@
           <label class="text-sm text-gray-600">Tahun Ajaran</label>
           <select
             v-model="tahunAjaranId"
-            class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+            class="w-full mt-1 border rounded-lg px-3 py-2 text-sm text-gray-600"
           >
-            <option value="">Pilih tahun ajaran</option>
+            <option value="">Pilih Tahun Ajaran</option>
             <option
               v-for="tahun in tahunAjaranOptions"
               :key="tahun.id"
@@ -32,9 +32,9 @@
           <label class="text-sm text-gray-600">Kelas Tujuan</label>
           <select
             v-model="kelasId"
-            class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+            class="w-full mt-1 border rounded-lg px-3 py-2 text-sm text-gray-600"
           >
-            <option value="">Pilih kelas</option>
+            <option value="">Pilih Kelas</option>
             <option
               v-for="kelas in filteredKelas"
               :key="kelas.id"
@@ -49,7 +49,7 @@
           <label class="text-sm text-gray-600">Program</label>
           <select
             v-model="program"
-            class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+            class="w-full mt-1 border rounded-lg px-3 py-2 text-sm text-gray-600"
           >
             <option value="">Semua</option>
             <option value="reguler">Reguler</option>

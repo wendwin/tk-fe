@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
-      <h1 class="text-2xl font-semibold text-gray-900">Monitoring Mingguan</h1>
+      <h1 class="text-2xl font-medium text-gray-800">Monitoring Mingguan</h1>
 
       <p class="text-sm text-gray-500 mt-1">
         Isi data umum pembelajaran mingguan untuk kelas.
@@ -10,7 +10,7 @@
       <div class="mt-4 grid md:grid-cols-3 gap-4">
         <div>
           <p class="text-sm text-gray-500">Tahun Ajaran</p>
-          <p class="font-medium">
+          <p class="font-medium text-gray-800">
             {{ tahunAjaranAktif?.label || "-" }}
           </p>
         </div>
@@ -18,7 +18,7 @@
         <div>
           <div>
             <p class="text-sm text-gray-500">Kelas</p>
-            <p class="font-medium">
+            <p class="font-medium text-gray-800">
               {{ formatKelas(selectedKelas?.kelas) }}
             </p>
           </div>
@@ -26,7 +26,7 @@
 
         <div>
           <p class="text-sm text-gray-500">Peran</p>
-          <p class="font-medium capitalize">
+          <p class="font-medium capitalize text-gray-800">
             {{ selectedKelas?.peran || "-" }}
           </p>
         </div>
@@ -34,7 +34,7 @@
     </div>
 
     <section class="bg-white rounded-2xl border border-gray-200 p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">
+      <h2 class="text-lg font-medium text-gray-800 mb-4">
         Monitoring yang Sudah Dibuat
       </h2>
 
@@ -42,7 +42,7 @@
         Belum ada monitoring mingguan untuk kelas ini.
       </div>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div v-else class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div
           v-for="item in monitoringList"
           :key="item.id"
@@ -50,7 +50,7 @@
         >
           <div class="flex items-center justify-between">
             <span
-              class="text-xs px-2 py-1 rounded-full bg-blue-50 text-blue-600 font-medium"
+              class="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-md"
             >
               Minggu {{ item.minggu }}
             </span>
@@ -67,7 +67,7 @@
             </span>
           </div>
 
-          <h3 class="font-semibold text-gray-900 mt-3">
+          <h3 class="font-medium text-gray-800 mt-3">
             {{ item.topik }}
           </h3>
 
@@ -76,30 +76,30 @@
           </p>
 
           <p class="text-xs text-gray-400 mt-2">
-            {{ item.tanggal_mulai }} - {{ item.tanggal_selesai }}
+            {{ formatPeriodeID(item.tanggal_mulai, item.tanggal_selesai) }}
           </p>
 
-          <div class="mt-4 pt-4 border-t border-gray-100">
-            <p class="text-xs text-gray-400 uppercase tracking-wide">
+          <div class="mt-4 pt-1 border-t border-gray-100">
+            <!-- <p class="text-xs text-gray-400 uppercase tracking-wide">
               Progress Monitoring
-            </p>
+            </p> -->
 
-            <div class="flex items-center justify-between mt-1">
+            <div class="flex items-center justify-end gap-2">
               <span class="text-sm font-medium text-gray-700">
                 {{ item.total_selesai || 0 }} /
                 {{ item.total_siswa || 0 }} siswa
               </span>
 
-              <span class="text-xs text-gray-500">
+              <!-- <span class="text-xs text-gray-500">
                 {{
                   item.total_siswa
                     ? Math.round((item.total_selesai / item.total_siswa) * 100)
                     : 0
                 }}%
-              </span>
+              </span> -->
             </div>
 
-            <div class="w-full h-2 bg-gray-100 rounded-full mt-2">
+            <!-- <div class="w-full h-2 bg-gray-100 rounded-full mt-2">
               <div
                 class="h-2 bg-blue-500 rounded-full"
                 :style="{
@@ -110,16 +110,16 @@
                   }%`,
                 }"
               />
-            </div>
+            </div> -->
           </div>
 
-          <div class="mt-4 flex gap-2">
+          <div class="mt-3 flex gap-2">
             <router-link
               :to="{
                 name: 'AdminMonitoringMingguanDetail',
                 params: { id: item.id },
               }"
-              class="flex-1 px-3 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 text-center"
+              class="flex-1 px-3 py-2 text-sm rounded-lg border border-gray-200 hover:bg-gray-100 text-center text-gray-700"
             >
               Detail
             </router-link>
@@ -147,7 +147,7 @@
       @submit.prevent="handleSubmit"
       class="bg-white rounded-2xl border border-gray-200 p-6 space-y-6"
     >
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">
+      <h2 class="text-lg font-medium text-gray-800 mb-4">
         {{ isEditMode ? "Edit Monitoring" : "Tambah Monitoring" }}
       </h2>
 
@@ -303,9 +303,7 @@
 
       <section class="space-y-4 mb-10">
         <div class="flex justify-between items-center">
-          <h2 class="font-semibold text-gray-900">
-            Tujuan Pembelajaran & KKTP
-          </h2>
+          <h2 class="font-medium text-gray-800">Tujuan Pembelajaran & KKTP</h2>
 
           <button
             type="button"
@@ -457,7 +455,7 @@
 
       <section class="space-y-4 mb-10">
         <div class="flex justify-between items-center">
-          <h2 class="font-semibold text-gray-900">Kegiatan</h2>
+          <h2 class="font-medium text-gray-800">Kegiatan</h2>
 
           <button
             type="button"
@@ -529,7 +527,7 @@
       </section>
 
       <section class="space-y-3 mb-10">
-        <h2 class="font-semibold text-gray-900">Asesmen Awal</h2>
+        <h2 class="font-medium text-gray-800">Asesmen Awal</h2>
 
         <div class="">
           <label class="block text-sm font-medium mb-1"
@@ -643,6 +641,7 @@ import {
 } from "@/lib/services/monitoringService";
 import { getMyGuruKelas } from "@/lib/services/guruKelasService";
 import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
+import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { Minus, Plus } from "lucide-vue-next";

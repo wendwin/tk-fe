@@ -53,15 +53,20 @@
 
         <div class="border border-gray-200 rounded-lg p-3">
           <p class="text-xs text-gray-500">Tanggal</p>
+
           <p class="text-sm font-medium text-gray-700">
-            {{ selectedMonitoring.tanggal_mulai }} -
-            {{ selectedMonitoring.tanggal_selesai }}
+            {{
+              formatPeriodeID(
+                selectedMonitoring.tanggal_mulai,
+                selectedMonitoring.tanggal_selesai,
+              )
+            }}
           </p>
         </div>
       </div>
     </section>
 
-    <div
+    <!-- <div
       v-if="selectedMonitoring"
       class="rounded-xl border p-4 text-sm"
       :class="
@@ -85,7 +90,7 @@
             : "Silakan isi data perkembangan anak untuk minggu yang dipilih."
         }}
       </p>
-    </div>
+    </div> -->
 
     <form
       v-if="selectedMonitoring"
@@ -601,6 +606,7 @@ import {
   getMonitoringSiswaById,
   updateMonitoringSiswa,
 } from "@/lib/services/monitoringService";
+import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 
