@@ -241,7 +241,7 @@ import StatusBadge from "@/components/admin/common/StatusBadge.vue";
 import { getAllPendaftaran } from "@/lib/services/pendaftaranService";
 import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
-import formatDateTimeID from "@/lib/utils/formatDateTimeID";
+import { formatDateTimeID } from "@/lib/utils/formatDateTimeID";
 
 const list = ref([]);
 const meta = ref({});

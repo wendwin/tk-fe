@@ -1,4 +1,4 @@
-export default function formatDateTimeID(date, options = { withTime: true }) {
+export function formatDateTimeID(date, options = { withTime: true }) {
   if (!date) return "-";
 
   const d = new Date(date);

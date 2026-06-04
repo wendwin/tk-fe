@@ -30,9 +30,7 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import GelombangTable from "@/components/admin/GelombangTable.vue";
 import { getTahunAjaranById } from "@/lib/services/tahunAjaranService";
-import formatDateTimeID, {
-  formatPeriodeID,
-} from "@/lib/utils/formatDateTimeID";
+import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 
 const route = useRoute();
 const id = Number(route.params.id);
