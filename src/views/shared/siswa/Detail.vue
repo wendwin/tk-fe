@@ -78,10 +78,7 @@ import ObservasiForm from "@/components/admin/observasi/ObservasiForm.vue";
 import EditSiswaModal from "@/components/admin/common/EditSiswaModal.vue";
 
 import { getSiswaById } from "@/lib/services/siswaService";
-import {
-  getPertanyaanAsesmen,
-  getJawabanAsesmen,
-} from "@/lib/services/asesmenService";
+import { getJawabanAsesmen } from "@/lib/services/asesmenService";
 
 import {
   pesertaFields,
@@ -101,7 +98,6 @@ const openEditSiswa = ref(false);
 const tabs = ["Peserta Didik", "Orang Tua", "Asesmen", "Observasi"];
 
 const loading = ref(false);
-const pertanyaan = ref([]);
 const jawaban = ref([]);
 
 const backRouteName = computed(() => {
@@ -241,29 +237,22 @@ const fetchAsesmen = async () => {
   try {
     if (!detail.meta.pendaftaran_id) return;
 
-    const [resPertanyaan, resJawaban] = await Promise.all([
-      getPertanyaanAsesmen(),
-      getJawabanAsesmen(detail.meta.pendaftaran_id),
-    ]);
+    const resJawaban = await getJawabanAsesmen(detail.meta.pendaftaran_id);
 
-    pertanyaan.value = resPertanyaan.data;
-    jawaban.value = resJawaban.data;
+    jawaban.value = resJawaban.data?.data || resJawaban.data || [];
   } catch (err) {
+    jawaban.value = [];
     showError(err.message || "Gagal memuat data asesmen");
   }
 };
 
 const hasilAsesmen = computed(() => {
-  return pertanyaan.value.map((q) => {
-    const j = jawaban.value.find((a) => a.id_pertanyaan === q.id);
-
-    return {
-      id: q.id,
-      urutan: q.urutan,
-      pertanyaan: q.pertanyaan,
-      jawaban: j?.jawaban || "-",
-    };
-  });
+  return jawaban.value.map((item, index) => ({
+    id: item.id,
+    urutan: index + 1,
+    pertanyaan: item.pertanyaan,
+    jawaban: item.jawaban || "-",
+  }));
 });
 
 const handleUpdatedSiswa = async () => {
