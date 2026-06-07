@@ -26,7 +26,7 @@
                   stroke-linejoin="round"
                 />
               </svg>
-              Back to home
+              Kembali ke beranda
             </router-link>
           </div>
           <div
@@ -37,10 +37,10 @@
                 <h1
                   class="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md"
                 >
-                  Login
+                  Login Akun
                 </h1>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                  Enter your email and password to login!
+                  Masukkan email dan kata sandi untuk masuk!
                 </p>
               </div>
 
@@ -63,7 +63,7 @@
                         type="email"
                         id="email"
                         name="email"
-                        placeholder="info@gmail.com"
+                        placeholder="username@gmail.com"
                         :class="[
                           'base-class',
                           fieldErrors.email ? 'border-red-500' : '',
@@ -90,7 +90,7 @@
                           v-model="password"
                           :type="showPassword ? 'text' : 'password'"
                           id="password"
-                          placeholder="Enter your password"
+                          placeholder="Masukkan kata sandi"
                           :class="[
                             'base-class',
                             fieldErrors.password ? 'border-red-500' : '',
@@ -183,13 +183,13 @@
                               </span>
                             </div>
                           </div>
-                          Keep me logged in
+                          Ingat saya
                         </label>
                       </div>
                       <router-link
                         to="/reset-password"
                         class="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                        >Forgot password?</router-link
+                        >Lupa kata sandi?</router-link
                       >
                     </div>
                     <!-- Button -->
@@ -205,7 +205,7 @@
                         "
                       >
                         <span v-if="loading">Loading...</span>
-                        <span v-else>Login</span>
+                        <span v-else>Masuk</span>
                       </button>
                     </div>
                   </div>
@@ -214,11 +214,11 @@
                   <p
                     class="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start"
                   >
-                    Don't have an account?
+                    Belum punya akun?
                     <router-link
                       to="/register"
                       class="text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                      >Register</router-link
+                      >Daftar</router-link
                     >
                   </p>
                 </div>

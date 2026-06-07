@@ -27,7 +27,7 @@
             <div class="relative">
               <select
                 v-model="tahunFilter"
-                class="border rounded-lg px-3 py-2 text-sm"
+                class="border rounded-lg px-3 py-2 text-sm text-gray-600"
               >
                 <option value="">Semua tahun ajaran</option>
                 <option
@@ -69,19 +69,19 @@
             <input type="checkbox" class="w-4 h-4" />
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ startNumber + index }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.nama }}
           </td>
 
-          <td class="px-6 py-4 uppercase">
+          <td class="px-6 py-0 uppercase">
             {{ item.jenjang }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{
               item.kelompok
                 ? `${item.kelompok.toUpperCase()}${
@@ -91,37 +91,37 @@
             }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.kapasitas || "-" }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.total_guru || "-" }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.tahun_ajaran?.label || "-" }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <div class="flex items-center gap-2">
               <button
                 @click="openEdit(item)"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-amber-600 text-xs"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-amber-600 text-xs hover:bg-gray-100"
               >
                 <SquarePen class="w-4 h-4" />
               </button>
 
               <router-link
                 :to="{ name: 'AdminKelasDetail', params: { id: item.id } }"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-blue-600 text-xs"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-blue-600 text-xs hover:bg-gray-100"
               >
                 <Eye class="w-4 h-4" />
               </router-link>
 
               <button
                 @click="handleDelete(item.id)"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-red-600 text-xs"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-red-600 text-xs hover:bg-gray-100"
               >
                 <Trash class="w-4 h-4" />
               </button>

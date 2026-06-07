@@ -26,7 +26,7 @@
                   stroke-linejoin="round"
                 />
               </svg>
-              Back to home
+              Kembali ke beranda
             </router-link>
           </div>
           <!-- Form -->
@@ -37,10 +37,10 @@
               <h1
                 class="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md"
               >
-                Register
+                Daftar Akun
               </h1>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                Enter your email and password to Register!
+                Masukkan email dan kata sandi untuk mendaftar!
               </p>
             </div>
             <div>
@@ -58,14 +58,14 @@
                         for="fname"
                         class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                       >
-                        First Name<span class="text-error-500">*</span>
+                        Nama Depan<span class="text-error-500">*</span>
                       </label>
                       <input
                         v-model="firstName"
                         type="text"
                         id="fname"
                         name="fname"
-                        placeholder="Enter your first name"
+                        placeholder="Masukkan nama depan"
                         class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                       />
                     </div>
@@ -75,14 +75,14 @@
                         for="lname"
                         class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                       >
-                        Last Name<span class="text-error-500">*</span>
+                        Nama Belakang<span class="text-error-500">*</span>
                       </label>
                       <input
                         v-model="lastName"
                         type="text"
                         id="lname"
                         name="lname"
-                        placeholder="Enter your last name"
+                        placeholder="Masukkan nama belakang"
                         class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                       />
                     </div>
@@ -100,7 +100,7 @@
                       type="email"
                       id="email"
                       name="email"
-                      placeholder="Enter your email"
+                      placeholder="Masukkan email"
                       :class="[
                         'base-class',
                         fieldErrors.email ? 'border-red-500' : '',
@@ -127,7 +127,7 @@
                         v-model="password"
                         :type="showPassword ? 'text' : 'password'"
                         id="password"
-                        placeholder="Enter your password"
+                        placeholder="Masukkan kata sandi"
                         :class="[
                           'base-class',
                           fieldErrors.password ? 'border-red-500' : '',
@@ -223,13 +223,13 @@
                         <p
                           class="inline-block font-normal text-gray-500 dark:text-gray-400"
                         >
-                          By creating an account means you agree to the
+                          Dengan membuat akun, Anda menyetujui
                           <span class="text-gray-800 dark:text-white/90">
-                            Terms and Conditions,
+                            Syarat dan Ketentuan,
                           </span>
                           and our
                           <span class="text-gray-800 dark:text-white">
-                            Privacy Policy
+                            serta Kebijakan Privasi kami.
                           </span>
                         </p>
                       </label>
@@ -248,7 +248,7 @@
                       "
                     >
                       <span v-if="loading">Loading...</span>
-                      <span v-else>Register</span>
+                      <span v-else>Daftar</span>
                     </button>
                   </div>
                 </div>
@@ -257,11 +257,11 @@
                 <p
                   class="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start"
                 >
-                  Already have an account?
+                  Sudah punya akun?
                   <router-link
                     to="/login"
                     class="text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                    >Login</router-link
+                    >Masuk</router-link
                   >
                 </p>
               </div>

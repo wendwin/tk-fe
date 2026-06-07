@@ -255,7 +255,7 @@ import { setJadwalObservasi } from "@/lib/services/observasiService";
 
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
-import formatDateTimeID from "@/lib/utils/formatDateTimeID";
+import { formatDateTimeID } from "@/lib/utils/formatDateTimeID";
 
 import { useAuthStore } from "@/lib/stores/auth";
 import { ROLES } from "@/lib/constants/roles";

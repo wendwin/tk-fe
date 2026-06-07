@@ -35,12 +35,12 @@
           <!-- <div
             class="w-7 h-7 rounded-full bg-blue-50 text-blue-500 text-sm flex items-center justify-center shrink-0"
           >
-            {{ item.nomor }}
+            {{ item.urutan }}
           </div> -->
 
           <div class="flex-1">
             <p class="text-sm text-gray-700 mb-3">
-              {{ item.nomor }}. {{ item.pertanyaan }}
+              {{ item.urutan }}. {{ item.pertanyaan }}
             </p>
 
             <div class="flex flex-wrap gap-8">
@@ -175,7 +175,7 @@ const fetchPertanyaan = async () => {
 
     const res = await getPertanyaanGpph();
 
-    pertanyaan.value = res.data || [];
+    pertanyaan.value = res.data?.data || res.data || [];
 
     pertanyaan.value.forEach((item) => {
       jawaban.value[item.id] ??= null;
@@ -241,13 +241,11 @@ const fetchHasil = async () => {
     hasil.value = data;
     isSubmitted.value = true;
 
-    if (props.readonly) {
-      pertanyaan.value = data.jawaban.map((item) => ({
-        id: item.pertanyaan_id,
-        nomor: item.nomor,
-        pertanyaan: item.pertanyaan,
-      }));
-    }
+    pertanyaan.value = data.jawaban.map((item, index) => ({
+      id: item.pertanyaan_id,
+      urutan: item.urutan || index + 1,
+      pertanyaan: item.pertanyaan,
+    }));
 
     data.jawaban.forEach((item) => {
       jawaban.value[item.pertanyaan_id] = item.nilai;
@@ -263,12 +261,10 @@ const fetchHasil = async () => {
 };
 
 onMounted(async () => {
-  if (props.readonly) {
-    await fetchHasil();
-    return;
-  }
-
-  await fetchPertanyaan();
   await fetchHasil();
+
+  if (!isSubmitted.value && !props.readonly) {
+    await fetchPertanyaan();
+  }
 });
 </script>

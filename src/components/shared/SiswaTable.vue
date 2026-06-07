@@ -54,42 +54,42 @@
           <td class="p-4">
             <input type="checkbox" class="w-4 h-4" />
           </td>
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ meta.from ? meta.from + index : index + 1 }}
           </td>
 
-          <td class="px-6 py-4 font-medium text-gray-700">
+          <td class="px-6 py-0 font-medium text-gray-700">
             {{ item.nama_lengkap }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.nisn || "-" }}
           </td>
 
-          <td class="px-6 py-4 uppercase">
+          <td class="px-6 py-0 uppercase">
             {{ item.jenis || "-" }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.kelas || "Belum ada kelas" }}
           </td>
 
-          <td class="px-6 py-4 capitalize">
+          <td class="px-6 py-0 capitalize">
             {{ item.program || "-" }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.tahun_ajaran || "-" }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <StatusBadge
               :label="item.status"
               :custom-class="studentStatusClass(item.status)"
             />
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <router-link
               :to="detailRoute(item.id)"
               class="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 inline-block"

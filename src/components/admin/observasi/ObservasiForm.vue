@@ -1,4 +1,3 @@
-<!-- ObservasiForm.vue -->
 <template>
   <div class="space-y-10">
     <GpphForm :pendaftaran-id="pendaftaranId" />

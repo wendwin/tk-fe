@@ -1,4 +1,3 @@
-<!-- src/components/admin/user/UserTable.vue -->
 <template>
   <div>
     <BaseTable :loading="loading" :is-empty="list.length === 0" :colspan="7">
@@ -19,7 +18,7 @@
 
               <input
                 v-model="search"
-                @keyup.enter="loadUsers"
+                @keyup.enter="loadUsers(1)"
                 type="text"
                 placeholder="Search"
                 class="h-9 w-[280px] rounded-lg border border-gray-200 bg-white py-2 pl-10 pr-3 text-sm"
@@ -39,7 +38,7 @@
             </select>
 
             <button
-              @click="loadUsers"
+              @click="loadUsers(1)"
               class="text-sm px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
             >
               Cari
@@ -73,35 +72,35 @@
             <input type="checkbox" class="w-4 h-4" />
           </td>
 
-          <td class="px-6 py-4">
-            {{ index + 1 }}
+          <td class="px-6 py-0">
+            {{ meta.from ? meta.from + index : index + 1 }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.first_name + " " + item.last_name }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.email }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <span class="">
               {{ formatRole(item.role?.name) }}
             </span>
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <span class="">
               {{ item.is_verified ? "Terverifikasi" : "Belum" }}
             </span>
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ formatDate(item.created_at) }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <div class="flex items-center gap-2">
               <button
                 @click="openEdit(item)"
@@ -119,6 +118,9 @@
             </div>
           </td>
         </tr>
+      </template>
+      <template #pagination>
+        <TablePagination :meta="meta" @change="loadUsers" />
       </template>
     </BaseTable>
 
@@ -210,11 +212,12 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { Search, SquarePen, Trash } from "lucide-vue-next";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 
 import BaseTable from "@/components/admin/common/BaseTable.vue";
+import TablePagination from "@/components/admin/common/TablePagination.vue";
 import TableToolbar from "@/components/admin/common/TableToolbar.vue";
 
 import {
@@ -229,11 +232,16 @@ const loading = ref(false);
 const saving = ref(false);
 
 const search = ref("");
+let searchTimeout = null;
 const roleFilter = ref("");
 
 const showModal = ref(false);
 const isEdit = ref(false);
 const selectedId = ref(null);
+
+const meta = ref({});
+const isFirstLoad = ref(true);
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const form = reactive({
   first_name: "",
@@ -264,23 +272,30 @@ const resetForm = () => {
   form.is_verified = true;
 };
 
-const loadUsers = async () => {
+const loadUsers = async (page = 1) => {
   try {
     loading.value = true;
 
     const params = new URLSearchParams();
 
+    params.append("page", page);
+    params.append("per_page", 10);
+
     if (search.value) params.append("search", search.value);
     if (roleFilter.value) params.append("role", roleFilter.value);
 
-    const query = params.toString() ? `?${params.toString()}` : "";
+    const [res] = await Promise.all([
+      getAllUsers(`?${params.toString()}`),
+      isFirstLoad.value ? sleep(500) : Promise.resolve(),
+    ]);
 
-    const res = await getAllUsers(query);
     list.value = res.data || [];
+    meta.value = res.meta || {};
   } catch (err) {
     showError(err.message || "Gagal mengambil data user");
   } finally {
     loading.value = false;
+    isFirstLoad.value = false;
   }
 };
 

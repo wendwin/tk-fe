@@ -167,7 +167,7 @@ import PesertaTab from "@/components/admin/PesertaTab.vue";
 import OrangTuaTab from "@/components/admin/OrangTuaTab.vue";
 
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
-import formatDateTimeID from "@/lib/utils/formatDateTimeID";
+import { formatDateTimeID } from "@/lib/utils/formatDateTimeID";
 
 const props = defineProps({
   title: {

@@ -49,10 +49,7 @@ import {
   orangTuaIbuFields,
 } from "@/lib/constants/pendaftaranFields";
 
-import {
-  getPertanyaanAsesmen,
-  getJawabanAsesmen,
-} from "@/lib/services/asesmenService";
+import { getJawabanAsesmen } from "@/lib/services/asesmenService";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 
 const route = useRoute();
@@ -62,35 +59,27 @@ const tabs = ["Peserta Didik", "Orang Tua", "Asesmen", "Observasi"];
 
 const { detail, form, loading, fetchDetail } = usePendaftaranDetail(id);
 
-const pertanyaan = ref([]);
 const jawaban = ref([]);
 
 const fetchAsesmen = async () => {
   try {
-    const [resPertanyaan, resJawaban] = await Promise.all([
-      getPertanyaanAsesmen(),
-      getJawabanAsesmen(id),
-    ]);
+    const resJawaban = await getJawabanAsesmen(id);
 
-    pertanyaan.value = resPertanyaan.data;
-    jawaban.value = resJawaban.data;
+    jawaban.value = resJawaban.data?.data || resJawaban.data || [];
   } catch (err) {
     console.log(err);
+    jawaban.value = [];
     showError(err.message || "Gagal memuat data asesmen");
   }
 };
 
 const hasilAsesmen = computed(() => {
-  return pertanyaan.value.map((q) => {
-    const j = jawaban.value.find((a) => a.id_pertanyaan === q.id);
-
-    return {
-      id: q.id,
-      urutan: q.urutan,
-      pertanyaan: q.pertanyaan,
-      jawaban: j?.jawaban || "-",
-    };
-  });
+  return jawaban.value.map((item, index) => ({
+    id: item.id,
+    urutan: index + 1,
+    pertanyaan: item.pertanyaan,
+    jawaban: item.jawaban || "-",
+  }));
 });
 
 onMounted(async () => {

@@ -132,7 +132,7 @@ import {
 import { getPendaftaranId } from "@/lib/utils/storage";
 import { clearPendaftaranId } from "@/lib/utils/storage";
 import {
-  getPertanyaanAsesmen,
+  getPertanyaanAsesmenAktif,
   getJawabanAsesmen,
 } from "@/lib/services/asesmenService";
 
@@ -169,8 +169,8 @@ const asesmenJawaban = ref([]);
 
 const loadAsesmen = async (id) => {
   try {
-    const pertanyaanRes = await getPertanyaanAsesmen();
-    asesmenPertanyaan.value = pertanyaanRes.data;
+    const pertanyaanRes = await getPertanyaanAsesmenAktif();
+    asesmenPertanyaan.value = pertanyaanRes.data || [];
 
     if (!id) {
       asesmenJawaban.value = [];

@@ -7,8 +7,38 @@ export const setJadwalObservasi = async (payload) => {
   });
 };
 
-export const getPertanyaanGpph = async () => {
+export const getMasterPertanyaanGpph = async () => {
   return await request("/observasi/gpph/pertanyaan");
+};
+
+export const getPertanyaanGpph = async () => {
+  return await request("/observasi/gpph/pertanyaan?active_only=true");
+};
+
+export const createMasterPertanyaanGpph = async (payload) => {
+  return await request("/observasi/gpph/pertanyaan", {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const updateMasterPertanyaanGpph = async (id, payload) => {
+  return await request(`/observasi/gpph/pertanyaan/${id}`, {
+    method: "PUT",
+    body: payload,
+  });
+};
+
+export const nonaktifkanMasterPertanyaanGpph = async (id) => {
+  return await request(`/observasi/gpph/pertanyaan/${id}`, {
+    method: "DELETE",
+  });
+};
+
+export const aktifkanMasterPertanyaanGpph = async (id) => {
+  return await request(`/observasi/gpph/pertanyaan/${id}/restore`, {
+    method: "PUT",
+  });
 };
 
 export const createObservasiGpph = async (pendaftaranId, payload) => {
@@ -35,4 +65,34 @@ export const createObservasiKpsp = async (pendaftaranId, payload) => {
 
 export const getHasilObservasiKpsp = async (pendaftaranId) => {
   return await request(`/observasi/${pendaftaranId}/kpsp`);
+};
+
+export const getMasterPertanyaanKpsp = async () => {
+  return await request("/observasi/kpsp/pertanyaan");
+};
+
+export const createMasterPertanyaanKpsp = async (payload) => {
+  return await request("/observasi/kpsp/pertanyaan", {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const updateMasterPertanyaanKpsp = async (id, payload) => {
+  return await request(`/observasi/kpsp/pertanyaan/${id}`, {
+    method: "PUT",
+    body: payload,
+  });
+};
+
+export const nonaktifkanMasterPertanyaanKpsp = async (id) => {
+  return await request(`/observasi/kpsp/pertanyaan/${id}`, {
+    method: "DELETE",
+  });
+};
+
+export const aktifkanMasterPertanyaanKpsp = async (id) => {
+  return await request(`/observasi/kpsp/pertanyaan/${id}/restore`, {
+    method: "PUT",
+  });
 };

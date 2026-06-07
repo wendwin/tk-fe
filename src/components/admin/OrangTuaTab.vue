@@ -20,7 +20,7 @@
               {{ field.label }}
             </p>
 
-            <p class="text-sm text-gray-700 font-medium">
+            <p class="text-sm text-gray-700 font-medium uppercase">
               {{ detail.ayah[field.key] || "-" }}
             </p>
           </div>
@@ -40,7 +40,7 @@
               {{ field.label }}
             </p>
 
-            <p class="text-sm text-gray-700 font-medium">
+            <p class="text-sm text-gray-700 font-medium uppercase">
               {{ detail.ibu[field.key] || "-" }}
             </p>
           </div>

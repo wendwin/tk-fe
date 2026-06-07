@@ -171,44 +171,44 @@
             <input type="checkbox" class="w-4 h-4" />
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.no_pendaftaran }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ item.nama_lengkap }}
           </td>
 
-          <td class="px-6 py-4 capitalize">
+          <td class="px-6 py-0 capitalize">
             {{ item.umur }}
           </td>
-          <td class="px-6 py-4 uppercase">
+          <td class="px-6 py-0 uppercase">
             {{ item.jenis }}
           </td>
 
-          <td class="px-6 py-4 capitalize">
+          <td class="px-6 py-0 capitalize">
             {{ item.program }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             {{ formatDateTimeID(item.created_at) }}
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <StatusBadge
               :label="statusConfig(item.status).label"
               :custom-class="statusConfig(item.status).class"
             />
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <StatusBadge
               :label="paymentConfig(item.status_pembayaran).label"
               :custom-class="paymentConfig(item.status_pembayaran).class"
             />
           </td>
 
-          <td class="px-6 py-4">
+          <td class="px-6 py-0">
             <router-link
               :to="{
                 name: 'AdminPendaftarDetail',
@@ -241,7 +241,7 @@ import StatusBadge from "@/components/admin/common/StatusBadge.vue";
 import { getAllPendaftaran } from "@/lib/services/pendaftaranService";
 import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 import { statusConfig, paymentConfig } from "@/lib/utils/status";
-import formatDateTimeID from "@/lib/utils/formatDateTimeID";
+import { formatDateTimeID } from "@/lib/utils/formatDateTimeID";
 
 const list = ref([]);
 const meta = ref({});

@@ -171,6 +171,18 @@ const router = createRouter({
           meta: { role: [ROLES.ADMIN] },
         },
         {
+          path: "tahun-ajaran/:id",
+          name: "AdminTahunAjaranDetail",
+          component: () => import("../views/admin/tahunAjaran/Detail.vue"),
+          meta: { role: [ROLES.ADMIN] },
+        },
+        // {
+        //   path: "gelombang",
+        //   name: "AdminGelombang",
+        //   component: () => import("../views/admin/gelombang/Gelombang.vue"),
+        //   meta: { role: [ROLES.ADMIN] },
+        // },
+        {
           path: "guru-kelas",
           name: "AdminGuruKelas",
           component: () => import("../views/admin/guruKelas/GuruKelas.vue"),
@@ -201,6 +213,25 @@ const router = createRouter({
           component: () => import("../views/admin/monitoring/Detail.vue"),
           meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
+        {
+          path: "observasi/asesmen",
+          name: "AdminAsesmenObservasi",
+          component: () => import("../views/admin/observasi/Asesmen.vue"),
+          meta: { role: [ROLES.ADMIN] },
+        },
+        {
+          path: "observasi/kpsp",
+          name: "AdminKpspObservasi",
+          component: () => import("../views/admin/observasi/Kpsp.vue"),
+          meta: { role: [ROLES.ADMIN] },
+        },
+        {
+          path: "observasi/gpph",
+          name: "AdminGpphObservasi",
+          component: () => import("../views/admin/observasi/gpph.vue"),
+          meta: { role: [ROLES.ADMIN] },
+        },
+
         // {
         //   path: "monitoring",
         //   name: "Monitoring",
