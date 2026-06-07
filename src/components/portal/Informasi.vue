@@ -5,7 +5,9 @@
         class="px-6 pt-5 pb-4 border-b border-gray-200 flex items-start gap-3"
       >
         <div>
-          <h2 class="text-[16px] font-semibold mb-1">Informasi Pendaftaran</h2>
+          <h2 class="text-[16px] font-medium text-gray-800 mb-1">
+            Informasi Pendaftaran
+          </h2>
 
           <div class="flex items-start gap-2 text-sm text-gray-500">
             <CircleAlert class="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
@@ -21,7 +23,7 @@
       <div class="px-6 py-8 space-y-6">
         <div class="text-center space-y-2">
           <h1
-            class="text-2xl font-bold text-gray-800"
+            class="text-2xl font-semibold text-gray-800"
             :class="['text-2xl font-bold', statusClass]"
           >
             {{ statusText }}

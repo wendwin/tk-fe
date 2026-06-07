@@ -4,9 +4,10 @@
       <div
         class="px-6 pt-5 pb-4 border-b border-gray-200 flex items-start gap-3"
       >
-        <!-- text -->
         <div>
-          <h2 class="text-[16px] font-medium">Formulir Pendaftaran</h2>
+          <h2 class="text-[16px] font-medium text-slate-800">
+            Formulir Pendaftaran
+          </h2>
           <p class="text-sm text-gray-500">
             Isi data peserta didik, data kesehatan, data orang tua, dan
             informasi tambahan dengan lengkap.
@@ -16,7 +17,6 @@
 
       <form @submit.prevent="simpanFormulir">
         <div class="p-6">
-          <!-- program -->
           <div class="mb-6">
             <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
               <School />Pilihan Pendaftaran
@@ -81,7 +81,6 @@
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-              <!-- kiri -->
               <div class="space-y-3">
                 <!-- nama lengkap -->
                 <div>
@@ -314,7 +313,6 @@
                 </div>
               </div>
 
-              <!-- kanan -->
               <div class="space-y-3">
                 <!-- no kk -->
                 <div>
@@ -2543,11 +2541,13 @@ const doSubmit = async () => {
   try {
     const res = await createPendaftaran(payloadRef.value);
 
-    setPendaftaranId(res.data.id);
+    const id = res.data.id;
+
+    setPendaftaranId(id);
 
     showSuccess("Formulir berhasil disimpan");
 
-    emit("saved");
+    emit("saved", id);
   } catch (err) {
     console.log(err);
 

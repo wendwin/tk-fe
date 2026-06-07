@@ -5,7 +5,7 @@
         class="px-6 pt-5 pb-4 border-b border-gray-200 flex items-start gap-3"
       >
         <div>
-          <h2 class="text-[16px] font-semibold mb-1">
+          <h2 class="text-[16px] font-medium text-slate-800 mb-1">
             Pembayaran Biaya Pendaftaran
           </h2>
 
@@ -154,7 +154,7 @@
                 : 'bg-gray-300 cursor-not-allowed'
             "
           >
-            Daftar
+            Bayar
           </button>
         </div>
       </div>

@@ -87,9 +87,10 @@
       <div v-if="activeTab === 'formulir'" key="formulir">
         <Form :initial-data="pendaftaranData" @saved="handleFormSaved" />
       </div>
-      <div v-else-if="activeTab === 'berkas'" key="berkas">
+      <div v-else-if="activeTab === 'berkas' && pendaftaranId" key="berkas">
         <UploadBerkas
           :pendaftaran-id="pendaftaranId"
+          :status-berkas="pendaftaranData?.status_berkas || 'belum_upload'"
           @saved="handleBerkasSaved"
         />
       </div>
@@ -266,13 +267,18 @@ const goTab = (tab) => {
   activeTab.value = tab.id;
 };
 
-const handleFormSaved = async () => {
-  pendaftaranId.value = Number(getPendaftaranId());
+const handleFormSaved = async (id) => {
+  pendaftaranId.value = Number(id);
+
+  await router.replace({
+    name: "Pendaftaran",
+    query: { id: pendaftaranId.value },
+  });
+
   await loadPendaftaran();
 
   activeTab.value = "berkas";
 };
-
 const handleBerkasSaved = async () => {
   await loadPendaftaran();
 

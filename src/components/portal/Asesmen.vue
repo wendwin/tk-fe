@@ -5,7 +5,7 @@
         class="px-6 pt-5 pb-4 border-b border-gray-200 flex items-start gap-3"
       >
         <div>
-          <h2 class="text-[16px] font-semibold mb-1">
+          <h2 class="text-[16px] font-medium text-gray-800 mb-1">
             Asesmen Orang Tua/Wali Murid
           </h2>
 
