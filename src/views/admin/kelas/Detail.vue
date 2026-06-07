@@ -21,11 +21,17 @@
         <div class="flex items-start justify-between gap-4">
           <div>
             <p class="text-sm text-gray-500">Kelas</p>
+
             <h2 class="text-2xl font-medium text-gray-800 mt-1">
-              {{ formatKelas(kelas) }}
+              {{ emptyMessage ? "-" : formatKelas(kelas) }}
             </h2>
-            <p class="text-sm text-gray-500 mt-2">
-              Tahun ajaran {{ kelas?.tahun_ajaran?.label || "-" }}
+
+            <p class="text-sm mt-2 text-slate-700">
+              {{
+                emptyMessage
+                  ? emptyMessage
+                  : `Tahun ajaran ${kelas?.tahun_ajaran?.label || "-"}`
+              }}
             </p>
           </div>
 
@@ -36,20 +42,6 @@
             </p>
           </div>
         </div>
-
-        <!-- <div class="mt-6">
-              <div class="flex justify-between text-xs text-gray-500 mb-2">
-                <span>Terisi {{ jumlahSiswa }} siswa</span>
-                <span>Sisa {{ sisaKursi }} kursi</span>
-              </div>
-      
-              <div class="w-full bg-gray-100 rounded-full h-2">
-                <div
-                  class="bg-blue-500 h-2 rounded-full"
-                  :style="{ width: `${persentaseKapasitas}%` }"
-                ></div>
-              </div>
-            </div> -->
 
         <div class="grid grid-cols-3 gap-3 mt-6">
           <div class="rounded-lg border border-gray-200 p-3">
@@ -93,11 +85,6 @@
                 <p class="text-sm text-gray-700 truncate">
                   {{ item.guru?.full_name || "-" }}
                 </p>
-                <!-- <p class="text-xs text-gray-500 mt-1">
-                      {{
-                        item.tahun_ajaran?.label || kelas?.tahun_ajaran?.label || "-"
-                      }}
-                    </p> -->
               </div>
 
               <span class="shrink-0 text-sm text-gray-500 capitalize">
@@ -116,9 +103,6 @@
     <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
       <div class="p-4 border-b">
         <h2 class="font-medium text-gray-700">Daftar Siswa</h2>
-        <!-- <p class="text-sm text-gray-500">
-          Siswa yang sudah masuk ke kelas ini.
-        </p> -->
       </div>
 
       <KelasSiswaTable :items="siswaKelas" />
@@ -132,26 +116,29 @@ import { useRoute } from "vue-router";
 
 import { useAuthStore } from "@/lib/stores/auth";
 import { ROLES } from "@/lib/constants/roles";
-
 import { showError } from "@/lib/utils/toast";
 
 import { getKelasById } from "@/lib/services/kelasService";
+import { getMyGuruKelas } from "@/lib/services/guruKelasService";
+
 import KelasSiswaTable from "@/components/admin/KelasSiswaTable.vue";
 import { ChevronRight } from "lucide-vue-next";
 
 const route = useRoute();
-
 const auth = useAuthStore();
+
 const isGuru = computed(() => auth.role === ROLES.GURU);
 
 const kelas = ref(null);
 const loading = ref(false);
+const emptyMessage = ref("");
 
 const siswaKelas = computed(() => kelas.value?.siswa_kelas || []);
 const guruKelas = computed(() => kelas.value?.guru_kelas || []);
-const jumlahSiswa = computed(
-  () => kelas.value?.jumlah_siswa || siswaKelas.value.length,
-);
+
+const jumlahSiswa = computed(() => {
+  return kelas.value?.jumlah_siswa || siswaKelas.value.length;
+});
 
 const formatKelas = (kelas) => {
   if (!kelas) return "-";
@@ -167,42 +154,49 @@ const formatKelas = (kelas) => {
   return nama || jenjang || "-";
 };
 
-// const formatPeran = (peran) => {
-//   const map = {
-//     wali_kelas: "Wali Kelas",
-//     pendamping: "Pendamping",
-//   };
-
-//   return map[peran] || "-";
-// };
-
 const loadDetail = async () => {
   try {
-    const id = route.params.id;
+    loading.value = true;
+    emptyMessage.value = "";
+
+    let id = route.params.id;
+
+    if (isGuru.value && !id) {
+      const res = await getMyGuruKelas();
+      id = res.data?.[0]?.kelas?.id;
+
+      if (!id) {
+        kelas.value = null;
+        emptyMessage.value =
+          "Anda belum ditugaskan sebagai guru kelas pada tahun ajaran aktif.";
+        return;
+      }
+    }
 
     if (!id) return;
 
-    loading.value = true;
-
     const res = await getKelasById(id);
     kelas.value = res.data;
-    console.log(JSON.parse(JSON.stringify(kelas.value)));
   } catch (err) {
+    kelas.value = null;
+
+    if (isGuru.value) {
+      emptyMessage.value =
+        err.message || "Anda belum ditugaskan sebagai guru kelas.";
+      return;
+    }
+
     showError(err.message || "Gagal memuat detail kelas");
   } finally {
     loading.value = false;
   }
 };
 
-onMounted(() => {
-  loadDetail();
-});
+onMounted(loadDetail);
 
 watch(
   () => route.params.id,
-  (id) => {
-    if (!id) return;
-
+  () => {
     kelas.value = null;
     loadDetail();
   },

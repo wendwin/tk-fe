@@ -142,27 +142,14 @@ const router = createRouter({
         {
           path: "kelas-saya",
           name: "GuruKelasSaya",
-          beforeEnter: async () => {
-            const res = await getMyGuruKelas();
-
-            if (!res.data?.length) {
-              return { name: "Dashboard" };
-            }
-
-            return {
-              name: "AdminKelasDetail",
-              params: {
-                id: res.data[0].kelas.id,
-              },
-            };
-          },
+          component: () => import("../views/admin/kelas/Detail.vue"),
           meta: { role: [ROLES.GURU] },
         },
         {
           path: "kelas/:id",
           name: "AdminKelasDetail",
           component: () => import("../views/admin/kelas/Detail.vue"),
-          meta: { role: [ROLES.ADMIN] },
+          meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
         {
           path: "tahun-ajaran",
