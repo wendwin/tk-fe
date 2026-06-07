@@ -80,6 +80,10 @@
       </div>
     </div>
 
+    <p v-if="loading" class="text-center text-gray-500 mt-10">
+      <span class="animate-pulse text-gray-500">Memuat jurnal...</span>
+    </p>
+
     <div v-for="grup in historiMonitoring" :key="grup.bulan" class="mb-8">
       <div class="flex items-center gap-3 mb-4">
         <h2 class="text-lg font-bold text-gray-700 whitespace-nowrap">

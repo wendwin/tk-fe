@@ -16,11 +16,11 @@
 
       <template #head>
         <tr>
-          <th class="px-6 py-3">No</th>
-          <th class="px-6 py-3">Nama</th>
-          <th class="px-6 py-3">Tanggal Mulai</th>
-          <th class="px-6 py-3">Tanggal Selesai</th>
-          <th class="px-6 py-3">Aksi</th>
+          <th class="px-6 py-4">No</th>
+          <th class="px-6 py-4">Nama</th>
+          <th class="px-6 py-4">Tanggal Mulai</th>
+          <th class="px-6 py-4">Tanggal Selesai</th>
+          <th class="px-6 py-4">Aksi</th>
         </tr>
       </template>
 

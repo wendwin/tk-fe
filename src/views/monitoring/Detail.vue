@@ -1,6 +1,9 @@
 <template>
   <div class="max-w-7xl mx-auto p-4 bg-gray-50 min-h-screen font-sans mt-16">
-    <div v-if="!detail" class="bg-white rounded-2xl p-6 text-sm text-gray-500">
+    <div
+      v-if="!detail"
+      class="bg-white rounded-2xl p-6 text-center text-gray-500 mt-10"
+    >
       Memuat detail monitoring...
     </div>
 
@@ -43,14 +46,16 @@
         <h1 class="text-2xl font-semibold text-gray-800 mt-2">
           Tema: {{ mingguan.topik }}
         </h1>
+        <h1 class="text-lg font-medium text-gray-700 mt-1">
+          Sub: {{ mingguan.sub_topik }}
+        </h1>
 
         <p class="text-gray-500 text-sm mt-1">
-          Sub-topik: {{ mingguan.sub_topik }} •
           <span class="italic text-gray-400">{{ rentangTanggal }}</span>
         </p>
 
         <p class="text-sm text-gray-500 mt-3">
-          Ananda:
+          Nama:
           <span class="font-medium text-gray-700">
             {{ siswa.nama_lengkap || "-" }}
           </span>
@@ -75,13 +80,13 @@
             Kegiatan Pekan Ini
           </h2>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div class="grid grid-cols-1 gap-2">
             <div
               v-for="item in mingguan.kegiatan || []"
               :key="item.id"
-              class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"
+              class="p-2.5 bg-gray-100 rounded-lg border border-gray-100"
             >
-              <p class="text-sm font-semibold text-gray-800">
+              <p class="text-sm font-medium text-gray-800">
                 {{ item.nama }}
               </p>
             </div>
@@ -147,7 +152,7 @@
           <section
             class="bg-white rounded-2xl p-6 shadow-xs border border-gray-150"
           >
-            <h2 class="text-xl font-semibold text-gray-800 mb-1">
+            <h2 class="text-xl font-medium text-gray-800 mb-1">
               Jurnal Capaian Pembelajaran
             </h2>
 
@@ -184,10 +189,13 @@
                   >
                     <CircleCheckBig
                       v-if="item.muncul"
-                      class="w-4 h-4 text-green-500 mt-0.5"
+                      class="w-5 h-5 shrink-0 text-green-500 mt-0.5"
                     />
 
-                    <CircleAlert v-else class="w-4 h-4 text-amber-500 mt-0.5" />
+                    <CircleAlert
+                      v-else
+                      class="w-5 h-5 shrink-0 text-amber-500 mt-0.5"
+                    />
 
                     <div>
                       <p
@@ -200,24 +208,24 @@
                       </p>
 
                       <div v-if="item.tp?.kktp?.length" class="mt-2">
-                        <p class="text-xs font-semibold text-gray-500 mb-2">
+                        <p class="text-sm font-semibold text-gray-500 mb-2">
                           Indikator Perkembangan
                         </p>
 
-                        <ul class="space-y-1">
+                        <ul class="space-y-1 list-disc list-inside">
                           <li
                             v-for="kktp in item.tp.kktp"
                             :key="kktp.id"
-                            class="text-xs text-gray-600"
+                            class="text-sm text-gray-600"
                           >
-                            • {{ kktp.deskripsi }}
+                            {{ kktp.deskripsi }}
                           </li>
                         </ul>
                       </div>
 
                       <p
                         v-if="item.kejadian_teramati"
-                        class="text-xs text-gray-500 mt-3"
+                        class="text-sm text-gray-500 mt-3"
                       >
                         <span class="font-semibold text-gray-700">
                           Hasil Pengamatan Guru:
@@ -231,7 +239,7 @@
             </div>
           </section>
 
-          <section
+          <!-- <section
             v-if="detail.rekomendasi?.length"
             class="bg-amber-50/60 rounded-2xl p-6 border border-amber-100"
           >
@@ -256,7 +264,7 @@
                 </p>
               </div>
             </div>
-          </section>
+          </section> -->
         </div>
 
         <div class="space-y-6">
@@ -359,7 +367,7 @@
               <div
                 v-for="anekdot in detail.anekdot"
                 :key="anekdot.id"
-                class="p-4 bg-purple-50/40 rounded-xl border border-purple-100 text-xs"
+                class="bg-purple-50/40 text-xs"
               >
                 <div class="text-xs text-gray-500 font-bold uppercase mb-2">
                   {{ formatDateTime(anekdot.waktu) }}
