@@ -11,9 +11,13 @@
 
     <section class="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
       <div>
-        <label class="text-sm font-medium text-gray-700">
+        <!-- <label class="text-sm font-medium text-gray-700">
           Monitoring Mingguan
-        </label>
+        </label> -->
+
+        <h2 class="font-medium text-gray-700">
+          Monitoring Mingguan <span class="text-red-500">*</span>
+        </h2>
 
         <select
           v-model.number="selectedMonitoringId"
@@ -121,7 +125,7 @@
             class="min-w-[1100px] w-full text-sm border border-gray-300 border-collapse"
           >
             <thead>
-              <tr class="bg-gray-50">
+              <tr class="bg-gray-50 font-medium text-gray-700">
                 <th class="border border-gray-300 px-4 py-3 text-center w-16">
                   No
                 </th>
