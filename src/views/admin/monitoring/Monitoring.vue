@@ -4,7 +4,7 @@
       <h1 class="text-2xl font-medium text-gray-800">Monitoring Mingguan</h1>
 
       <p class="text-sm text-gray-500 mt-1">
-        Isi data umum pembelajaran mingguan untuk kelas.
+        Isi data Perencanaan Pembelajaran Mendalam mingguan untuk kelas
       </p>
 
       <div class="mt-4 grid md:grid-cols-3 gap-4">
@@ -35,7 +35,7 @@
 
     <section class="bg-white rounded-2xl border border-gray-200 p-6">
       <h2 class="text-lg font-medium text-gray-800 mb-4">
-        Monitoring yang Sudah Dibuat
+        Daftar Monitoring Mingguan
       </h2>
 
       <div v-if="monitoringList.length === 0" class="text-sm text-gray-500">
@@ -67,11 +67,11 @@
             </span>
           </div>
 
-          <h3 class="font-medium text-gray-800 mt-3">
+          <h3 class="font-medium text-gray-800 mt-3 capitalize">
             {{ item.topik }}
           </h3>
 
-          <p class="text-sm text-gray-500">
+          <p class="text-sm text-gray-500 capitalize">
             {{ item.sub_topik }}
           </p>
 
@@ -85,7 +85,7 @@
             </p> -->
 
             <div class="flex items-center justify-end gap-2">
-              <span class="text-sm font-medium text-gray-700">
+              <span class="text-sm font-medium text-gray-700 text-gray-700">
                 {{ item.total_selesai || 0 }} /
                 {{ item.total_siswa || 0 }} siswa
               </span>
@@ -153,7 +153,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
         <div>
-          <label class="text-sm font-medium"
+          <label class="text-sm font-medium text-gray-700 text-gray-700"
             >Semester <span class="text-red-500">*</span></label
           >
 
@@ -179,7 +179,7 @@
         </div>
 
         <div>
-          <label class="text-sm font-medium"
+          <label class="text-sm font-medium text-gray-700"
             >Minggu <span class="text-red-500">*</span></label
           >
 
@@ -207,7 +207,7 @@
         </div>
 
         <div>
-          <label class="text-sm font-medium"
+          <label class="text-sm font-medium text-gray-700"
             >Topik <span class="text-red-500">*</span></label
           >
           <input
@@ -228,7 +228,7 @@
         </div>
 
         <div>
-          <label class="text-sm font-medium"
+          <label class="text-sm font-medium text-gray-700"
             >Sub Topik <span class="text-red-500">*</span></label
           >
           <input
@@ -250,42 +250,60 @@
         </div>
 
         <div>
-          <label class="text-sm font-medium"
-            >Tanggal Mulai <span class="text-red-500">*</span></label
-          >
-          <input
-            v-model="form.tanggal_mulai"
-            type="date"
-            required
-            class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-            :class="[
-              'w-full rounded-lg px-3 py-2 text-sm',
-              errors.tanggal_mulai
-                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
-                : 'border border-gray-200',
-            ]"
-          />
+          <label class="text-sm font-medium text-gray-700">
+            Tanggal Mulai <span class="text-red-500">*</span>
+          </label>
+
+          <div class="relative">
+            <flat-pickr
+              v-model="form.tanggal_mulai"
+              :config="flatpickrConfig"
+              placeholder="Pilih tanggal mulai"
+              class="w-full rounded-lg px-3 py-2 pr-10 text-sm"
+              :class="
+                errors.tanggal_mulai
+                  ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                  : 'border border-gray-200'
+              "
+            />
+
+            <span
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+            >
+              <Calendar class="w-4 h-4" />
+            </span>
+          </div>
+
           <p v-if="errors.tanggal_mulai" class="mt-1 text-xs text-red-500">
             {{ errors.tanggal_mulai[0] }}
           </p>
         </div>
 
         <div>
-          <label class="text-sm font-medium"
-            >Tanggal Selesai <span class="text-red-500">*</span></label
-          >
-          <input
-            v-model="form.tanggal_selesai"
-            type="date"
-            required
-            class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-            :class="[
-              'w-full rounded-lg px-3 py-2 text-sm',
-              errors.tanggal_selesai
-                ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
-                : 'border border-gray-200',
-            ]"
-          />
+          <label class="text-sm font-medium text-gray-700">
+            Tanggal Selesai <span class="text-red-500">*</span>
+          </label>
+
+          <div class="relative">
+            <flat-pickr
+              v-model="form.tanggal_selesai"
+              :config="flatpickrConfig"
+              placeholder="Pilih tanggal selesai"
+              class="w-full rounded-lg px-3 py-2 pr-10 text-sm"
+              :class="
+                errors.tanggal_selesai
+                  ? 'border border-red-500 focus:ring-2 focus:ring-red-100 focus:border-red-500'
+                  : 'border border-gray-200'
+              "
+            />
+
+            <span
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+            >
+              <Calendar class="w-4 h-4" />
+            </span>
+          </div>
+
           <p v-if="errors.tanggal_selesai" class="mt-1 text-xs text-red-500">
             {{ errors.tanggal_selesai[0] }}
           </p>
@@ -322,7 +340,7 @@
         >
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label class="block text-sm font-medium mb-1"
+              <label class="block text-sm font-medium text-gray-700 mb-1"
                 >Elemen {{ tpIndex + 1 }}
                 <span class="text-red-500">*</span></label
               >
@@ -354,7 +372,7 @@
             </div>
 
             <div class="md:col-span-2">
-              <label class="block text-sm font-medium mb-1"
+              <label class="block text-sm font-medium text-gray-700 mb-1"
                 >Tujuan Pembelajaran <span class="text-red-500">*</span></label
               >
 
@@ -383,7 +401,7 @@
 
           <div class="space-y-2 mt-8">
             <div class="flex justify-between items-center">
-              <p class="text-sm font-medium">
+              <p class="text-sm font-medium text-gray-700">
                 KKTP <span class="text-red-500">*</span>
               </p>
 
@@ -474,7 +492,7 @@
         >
           <div class="grid flex-1 grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label class="block text-sm font-medium mb-1"
+              <label class="block text-sm font-medium text-gray-700 mb-1"
                 >Kegiatan {{ index + 1 }}
                 <span class="text-red-500">*</span></label
               >
@@ -504,7 +522,9 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-1">Media/Bahan</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Media/Bahan</label
+              >
               <input
                 v-model="item.media"
                 :disabled="detailLocked"
@@ -530,7 +550,7 @@
         <h2 class="font-medium text-gray-800">Asesmen Awal</h2>
 
         <div class="">
-          <label class="block text-sm font-medium mb-1"
+          <label class="block text-sm font-medium text-gray-700 mb-1"
             >Teknik Asesmen <span class="text-red-500">*</span></label
           >
           <input
@@ -556,7 +576,7 @@
         </div>
 
         <div class="">
-          <label class="block text-sm font-medium mb-1"
+          <label class="block text-sm font-medium text-gray-700 mb-1"
             >Rancangan Kegiatan <span class="text-red-500">*</span></label
           >
           <textarea
@@ -581,7 +601,9 @@
         </div>
 
         <div class="">
-          <label class="block text-sm font-medium mb-1">Hasil Asesmen</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Hasil Asesmen</label
+          >
           <textarea
             v-model="form.asesmen_awal.hasil"
             :disabled="detailLocked"
@@ -644,7 +666,16 @@ import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
-import { Minus, Plus } from "lucide-vue-next";
+import { Minus, Plus, Calendar } from "lucide-vue-next";
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+
+const flatpickrConfig = {
+  dateFormat: "Y-m-d",
+  altInput: true,
+  altFormat: "d F Y",
+  allowInput: true,
+};
 
 const formAnchor = ref(null);
 

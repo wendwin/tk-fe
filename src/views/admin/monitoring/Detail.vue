@@ -22,7 +22,7 @@
     <div class="bg-white border border-gray-200 rounded-2xl p-6">
       <div class="flex items-start justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-semibold text-gray-900">
+          <h1 class="text-2xl font-medium text-gray-800">
             Minggu {{ detail?.minggu }} - {{ detail?.topik }}
           </h1>
 
@@ -52,8 +52,9 @@
             </div>
             <p class="text-sm text-gray-500 mt-1">
               Tanggal:
-              {{ formatTanggal(detail?.tanggal_mulai) }} -
-              {{ formatTanggal(detail?.tanggal_selesai) }}
+              {{
+                formatPeriodeID(detail?.tanggal_mulai, detail?.tanggal_selesai)
+              }}
             </p>
           </div>
         </div>
@@ -66,7 +67,7 @@
                 edit_id: detail?.id,
               },
             }"
-            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500 text-white text-sm hover:bg-amber-600 mb-4"
+            class="inline-flex items-center gap-2 px-3 py-1.5 text-slate-600 border rounded-lg hover:bg-gray-100 text-sm mb-4"
           >
             <SquarePen class="w-4 h-4" />
             Edit
@@ -75,12 +76,12 @@
           <p class="text-2xl font-bold text-slate-600">
             {{ totalSelesai }}/{{ totalSiswa }}
           </p>
-          <p class="text-xs text-gray-500">Monitoring Siswa</p>
+          <p class="text-sm text-gray-500">Monitoring Siswa</p>
         </div>
       </div>
 
       <div class="mt-5">
-        <div class="flex justify-between text-xs text-gray-500 mb-2">
+        <div class="flex justify-between text-sm text-gray-500 mb-2">
           <span>Progress Pengisian</span>
           <span>{{ progress }}%</span>
         </div>
@@ -95,9 +96,7 @@
     </div>
 
     <section class="bg-white border border-gray-200 rounded-2xl p-6">
-      <h2 class="font-semibold text-gray-900 mb-4">
-        Tujuan Pembelajaran & KKTP
-      </h2>
+      <h2 class="font-medium text-gray-800 mb-4">Tujuan Pembelajaran & KKTP</h2>
 
       <div class="overflow-x-auto">
         <table
@@ -164,7 +163,7 @@
 
     <div class="mt-4 grid md:grid-cols-2 gap-4">
       <section class="bg-white border border-gray-200 rounded-2xl p-6">
-        <h2 class="font-semibold text-gray-900 mb-4">Kegiatan</h2>
+        <h2 class="font-medium text-gray-800 mb-4">Kegiatan</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div v-for="item in detail?.kegiatan || []" :key="item.id" class="">
@@ -180,7 +179,7 @@
         v-if="detail?.asesmen_awal"
         class="bg-white border border-gray-200 rounded-2xl p-6"
       >
-        <h2 class="font-semibold text-gray-900 mb-4">Asesmen Awal</h2>
+        <h2 class="font-medium text-gray-800 mb-4">Asesmen Awal</h2>
 
         <div class="space-y-3 text-sm">
           <p>
@@ -203,7 +202,7 @@
 
     <section class="bg-white border border-gray-200 rounded-2xl p-6">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="font-semibold text-gray-900">Daftar Siswa</h2>
+        <h2 class="font-medium text-gray-800">Daftar Siswa</h2>
 
         <button
           v-if="canPublish"
@@ -273,9 +272,18 @@
                       nama: item.nama,
                     },
                   }"
-                  class="text-blue-600 hover:text-blue-700 font-medium"
+                  :class="
+                    item.sudah_diisi
+                      ? 'bg-blue-500 hover:bg-blue-600'
+                      : 'bg-green-500 hover:bg-green-600'
+                  "
+                  class="text-white px-2 py-1 rounded-md inline-block"
+                  :title="
+                    item.sudah_diisi ? 'Lihat Monitoring' : 'Isi Monitoring'
+                  "
                 >
-                  {{ item.sudah_diisi ? "Lihat" : "Isi Monitoring" }}
+                  <Eye v-if="item.sudah_diisi" class="w-4 h-4" />
+                  <Pencil v-else class="w-4 h-4" />
                 </router-link>
               </td>
             </tr>
@@ -289,7 +297,7 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { ChevronRight, SquarePen } from "lucide-vue-next";
+import { ChevronRight, SquarePen, Eye, Pencil } from "lucide-vue-next";
 
 import {
   getMonitoringMingguanById,
@@ -298,6 +306,7 @@ import {
 } from "@/lib/services/monitoringService";
 import { getKelasById } from "@/lib/services/kelasService";
 import { showError, showSuccess } from "@/lib/utils/toast";
+import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 
 const route = useRoute();
 
