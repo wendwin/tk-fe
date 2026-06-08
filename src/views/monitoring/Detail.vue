@@ -1,5 +1,7 @@
 <template>
-  <div class="max-w-7xl mx-auto p-4 bg-gray-50 min-h-screen font-sans mt-16">
+  <div
+    class="max-w-7xl mx-auto p-4 md:py-4 md:px-8 bg-gray-50 min-h-screen font-sans mt-16"
+  >
     <div
       v-if="!detail"
       class="bg-white rounded-2xl p-6 text-center text-gray-500 mt-10"

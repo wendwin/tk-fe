@@ -197,11 +197,11 @@
                       <button
                         type="submit"
                         :disabled="loading"
-                        class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+                        class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-[#284945] hover:bg-[#1c3431]shadow-theme-xs"
                         :class="
                           loading
                             ? 'bg-gray-400 cursor-not-allowed text-white'
-                            : 'bg-brand-500 hover:bg-brand-600 text-white'
+                            : 'bg-[#284945] hover:bg-[#1c3431] text-white'
                         "
                       >
                         <span v-if="loading">Loading...</span>
