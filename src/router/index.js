@@ -25,6 +25,11 @@ const router = createRouter({
       component: () => import("../views/auth/Register.vue"),
       meta: { layout: "AuthLayout", guestOnly: true },
     },
+    {
+      path: "/verify-email",
+      name: "VerifyEmailStatus",
+      component: () => import("../views/auth/VerifyEmailStatus.vue"),
+    },
     // {
     //   path: "/pendaftaran",
     //   name: "Pendaftaran",

@@ -45,6 +45,8 @@ export const useAuthStore = defineStore("auth", {
       this.isAuthenticated = false;
       this.isLoaded = true;
       this.isLoading = false;
+
+      sessionStorage.removeItem("csrf_token");
     },
   },
 });
