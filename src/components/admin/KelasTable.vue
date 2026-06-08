@@ -106,6 +106,7 @@
           <td class="px-6 py-0">
             <div class="flex items-center gap-2">
               <button
+                title="Edit"
                 @click="openEdit(item)"
                 class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-amber-600 text-xs hover:bg-gray-100"
               >
@@ -113,6 +114,7 @@
               </button>
 
               <router-link
+                title="Lihat"
                 :to="{ name: 'AdminKelasDetail', params: { id: item.id } }"
                 class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-blue-600 text-xs hover:bg-gray-100"
               >
@@ -120,6 +122,7 @@
               </router-link>
 
               <button
+                title="Hapus"
                 @click="handleDelete(item.id)"
                 class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-red-600 text-xs hover:bg-gray-100"
               >

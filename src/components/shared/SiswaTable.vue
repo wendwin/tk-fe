@@ -91,6 +91,7 @@
 
           <td class="px-6 py-0">
             <router-link
+              title="Lihat"
               :to="detailRoute(item.id)"
               class="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 inline-block"
             >
