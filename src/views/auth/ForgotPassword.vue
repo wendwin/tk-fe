@@ -3,11 +3,13 @@
     <div class="w-full max-w-md">
       <div class="bg-white rounded-2xl shadow-md p-8">
         <div class="text-center mb-6">
-          <img
-            src="@/assets/images/logo/logo-tk.png"
-            alt="Logo"
-            class="h-16 mx-auto mb-4"
-          />
+          <router-link :to="{ name: 'Home' }">
+            <img
+              src="@/assets/images/logo/logo-tk.png"
+              alt="Logo"
+              class="h-16 mx-auto mb-4"
+            />
+          </router-link>
 
           <h1 class="text-2xl font-semibold text-[#284945]">Lupa Password</h1>
 
@@ -63,6 +65,7 @@
 import { ref, onUnmounted } from "vue";
 import { forgotPassword } from "@/lib/services/authService";
 import { showError, showWarning } from "@/lib/utils/toast";
+import Home from "../Home.vue";
 
 const form = ref({
   email: "",
