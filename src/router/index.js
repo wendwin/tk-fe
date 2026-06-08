@@ -30,6 +30,18 @@ const router = createRouter({
       name: "VerifyEmailStatus",
       component: () => import("../views/auth/VerifyEmailStatus.vue"),
     },
+    {
+      path: "/forgot-password",
+      name: "ForgotPassword",
+      component: () => import("../views/auth/ForgotPassword.vue"),
+      meta: { layout: "AuthLayout", guestOnly: true },
+    },
+    {
+      path: "/reset-password",
+      name: "ResetPassword",
+      component: () => import("../views/auth/ResetPassword.vue"),
+      meta: { layout: "AuthLayout", guestOnly: true },
+    },
     // {
     //   path: "/pendaftaran",
     //   name: "Pendaftaran",

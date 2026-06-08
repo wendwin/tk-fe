@@ -30,3 +30,17 @@ export const logout = () => {
     credentials: "include",
   });
 };
+
+export const forgotPassword = async (payload) => {
+  return await request("/auth/forgot-password", {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const resetPassword = async (payload) => {
+  return await request("/auth/reset-password", {
+    method: "POST",
+    body: payload,
+  });
+};
