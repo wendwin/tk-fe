@@ -13,6 +13,7 @@
     "@heroicons/vue": "^2.2.0",
     "@tailwindcss/vite": "^4.2.2",
     "@vuepic/vue-datepicker": "^14.0.0",
+    "dropzone": "^6.0.0-beta.2",
     "flatpickr": "^4.6.13",
     "flowbite": "^4.0.1",
     "ionicons": "^8.0.13",
