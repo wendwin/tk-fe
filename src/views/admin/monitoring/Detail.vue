@@ -22,11 +22,11 @@
     <div class="bg-white border border-gray-200 rounded-2xl p-6">
       <div class="flex items-start justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-medium text-gray-800">
+          <h1 class="text-2xl font-medium text-gray-800 capitalize">
             Minggu {{ detail?.minggu }} - {{ detail?.topik }}
           </h1>
 
-          <p class="text-xl font-medium text-gray-700 mt-1">
+          <p class="text-xl font-medium text-gray-700 mt-1 capitalize">
             {{ detail?.sub_topik }}
           </p>
 

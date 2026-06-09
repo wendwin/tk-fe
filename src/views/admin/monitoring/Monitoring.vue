@@ -38,13 +38,67 @@
         Daftar Monitoring Mingguan
       </h2>
 
+      <div class="flex flex-col md:flex-row gap-3 mb-4">
+        <select
+          v-model="filterBulan"
+          class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600"
+        >
+          <option value="">Semua Bulan</option>
+
+          <option
+            v-for="bulan in bulanFilterOptions"
+            :key="bulan"
+            :value="bulan"
+          >
+            {{ bulan }}
+          </option>
+        </select>
+
+        <select
+          v-model="filterSemester"
+          class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600"
+        >
+          <option value="">Semua Semester</option>
+          <option value="ganjil">Ganjil</option>
+          <option value="genap">Genap</option>
+        </select>
+
+        <select
+          v-model="filterStatus"
+          class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600"
+        >
+          <option value="">Semua Status</option>
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+
+        <button
+          v-if="hasActiveFilter"
+          type="button"
+          @click="resetFilter"
+          class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-100"
+        >
+          Reset
+        </button>
+      </div>
+
       <div v-if="monitoringList.length === 0" class="text-sm text-gray-500">
         Belum ada monitoring mingguan untuk kelas ini.
       </div>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div
+        v-else-if="filteredMonitoringList.length === 0"
+        class="text-sm text-gray-500"
+      >
+        Tidak ada monitoring mingguan yang sesuai dengan filter.
+      </div>
+
+      <div
+        v-else-if="filteredMonitoringList.length > 0"
+        class="grid grid-cols-1 md:grid-cols-4 gap-4"
+      >
         <div
-          v-for="item in monitoringList"
+          v-for="item in filteredMonitoringList"
           :key="item.id"
           class="border border-gray-200 rounded-xl p-4 bg-white hover:shadow-md transition"
         >
@@ -52,7 +106,10 @@
             <span
               class="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-md"
             >
-              Minggu {{ item.minggu }}
+              {{
+                getNamaBulanMonitoring(item.tanggal_mulai, item.tanggal_selesai)
+              }}
+              - Minggu {{ item.minggu }}
             </span>
 
             <span
@@ -308,6 +365,17 @@
             {{ errors.tanggal_selesai[0] }}
           </p>
         </div>
+        <!-- <div
+          v-if="form.tanggal_mulai && form.minggu"
+          class="md:col-span-2 rounded-lg bg-blue-50 border border-blue-100 px-4 py-3 text-sm text-blue-700"
+        >
+          Monitoring akan dibuat untuk bulan
+          <span class="font-medium">
+            {{
+              getNamaBulanMonitoring(form.tanggal_mulai, form.tanggal_selesai)
+            }}
+          </span>
+        </div> -->
       </div>
 
       <div
@@ -700,6 +768,20 @@ const monitoringList = ref([]);
 
 const errors = ref({});
 
+const filterBulan = ref("");
+const filterSemester = ref("");
+const filterStatus = ref("");
+
+const hasActiveFilter = computed(() => {
+  return filterBulan.value || filterSemester.value || filterStatus.value;
+});
+
+const resetFilter = () => {
+  filterBulan.value = "";
+  filterSemester.value = "";
+  filterStatus.value = "";
+};
+
 const getError = (path) => {
   return path.split(".").reduce((obj, key) => obj?.[key], errors.value)?.[0];
 };
@@ -717,6 +799,68 @@ const formatKelas = (kelas) => {
 
   return nama || jenjang || "-";
 };
+
+const getBulanSaatIni = () => {
+  return getNamaBulanMonitoring(new Date(), new Date());
+};
+
+const getNamaBulanMonitoring = (tanggalMulai, tanggalSelesai) => {
+  if (!tanggalMulai) return "-";
+
+  const mulai = new Date(tanggalMulai);
+  const selesai = new Date(tanggalSelesai || tanggalMulai);
+
+  const tanggalAcuan =
+    mulai.getMonth() !== selesai.getMonth() ? selesai : mulai;
+
+  return tanggalAcuan.toLocaleDateString("id-ID", {
+    month: "long",
+  });
+};
+
+const bulanOptions = computed(() => {
+  const map = new Map();
+
+  monitoringList.value.forEach((item) => {
+    const bulan = getNamaBulanMonitoring(
+      item.tanggal_mulai,
+      item.tanggal_selesai,
+    );
+
+    map.set(bulan, bulan);
+  });
+
+  return Array.from(map.values());
+});
+
+const bulanFilterOptions = computed(() => {
+  const bulanSaatIni = getBulanSaatIni();
+  const options = new Set([bulanSaatIni, ...bulanOptions.value]);
+
+  return Array.from(options);
+});
+
+const filteredMonitoringList = computed(() => {
+  return monitoringList.value.filter((item) => {
+    const bulan = getNamaBulanMonitoring(
+      item.tanggal_mulai,
+      item.tanggal_selesai,
+    );
+
+    const matchBulan =
+      !filterBulan.value ||
+      filterBulan.value === "__CURRENT_MONTH__" ||
+      bulan === filterBulan.value;
+
+    const matchSemester =
+      !filterSemester.value || item.semester === filterSemester.value;
+
+    const matchStatus =
+      !filterStatus.value || item.status === filterStatus.value;
+
+    return matchBulan && matchSemester && matchStatus;
+  });
+});
 
 const loadData = async () => {
   try {
@@ -752,7 +896,11 @@ const loadMonitoring = async () => {
     tahun_ajaran_id: tahunAjaranAktif.value.id,
   });
 
-  monitoringList.value = res.data;
+  monitoringList.value = res.data || [];
+
+  if (!filterBulan.value) {
+    filterBulan.value = getBulanSaatIni();
+  }
 };
 
 const defaultForm = () => ({
@@ -960,7 +1108,6 @@ const handleSubmit = async () => {
 
     if (error.code === 422) {
       errors.value = error.errors || {};
-      return;
     }
 
     showError(

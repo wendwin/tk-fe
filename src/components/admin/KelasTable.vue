@@ -92,7 +92,7 @@
           </td>
 
           <td class="px-6 py-0">
-            {{ item.jumlah_siswa || "-" }} /{{ item.kapasitas || "-" }}
+            {{ item.jumlah_siswa || "0" }} /{{ item.kapasitas || "-" }}
           </td>
 
           <td class="px-6 py-0">

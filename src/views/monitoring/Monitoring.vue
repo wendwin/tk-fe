@@ -208,6 +208,7 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { House } from "lucide-vue-next";
 import { getPortalMonitoring } from "@/lib/services/portalMonitoringService";
+import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 import { showError } from "@/lib/utils/toast";
 
 const router = useRouter();
@@ -216,22 +217,22 @@ const loading = ref(false);
 const monitoringList = ref([]);
 const selectedSiswaId = ref(null);
 
-const formatTanggal = (tanggalMulai, tanggalSelesai) => {
-  const mulai = new Date(tanggalMulai);
-  const selesai = new Date(tanggalSelesai);
+// const formatTanggal = (tanggalMulai, tanggalSelesai) => {
+//   const mulai = new Date(tanggalMulai);
+//   const selesai = new Date(tanggalSelesai);
 
-  const mulaiText = mulai.toLocaleDateString("id-ID", {
-    day: "2-digit",
-  });
+//   const mulaiText = mulai.toLocaleDateString("id-ID", {
+//     day: "2-digit",
+//   });
 
-  const selesaiText = selesai.toLocaleDateString("id-ID", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+//   const selesaiText = selesai.toLocaleDateString("id-ID", {
+//     day: "2-digit",
+//     month: "long",
+//     year: "numeric",
+//   });
 
-  return `${mulaiText} - ${selesaiText}`;
-};
+//   return `${mulaiText} - ${selesaiText}`;
+// };
 
 const formatBulan = (tanggal) => {
   return new Date(tanggal).toLocaleDateString("id-ID", {
@@ -291,6 +292,19 @@ const anakList = computed(() => {
   return Object.values(map);
 });
 
+const formatBulanMonitoring = (tanggalMulai, tanggalSelesai) => {
+  const mulai = new Date(tanggalMulai);
+  const selesai = new Date(tanggalSelesai || tanggalMulai);
+
+  const tanggalAcuan =
+    mulai.getMonth() !== selesai.getMonth() ? selesai : mulai;
+
+  return tanggalAcuan.toLocaleDateString("id-ID", {
+    month: "long",
+    year: "numeric",
+  });
+};
+
 const filteredMonitoringList = computed(() => {
   if (!selectedSiswaId.value) return monitoringList.value;
 
@@ -304,7 +318,11 @@ const historiMonitoring = computed(() => {
 
   filteredMonitoringList.value.forEach((item) => {
     const mingguan = item.monitoring_mingguan;
-    const bulan = formatBulan(mingguan.tanggal_mulai);
+
+    const bulan = formatBulanMonitoring(
+      mingguan.tanggal_mulai,
+      mingguan.tanggal_selesai,
+    );
 
     if (!groups[bulan]) {
       groups[bulan] = {
@@ -319,7 +337,7 @@ const historiMonitoring = computed(() => {
       semester: mingguan.semester,
       topik: mingguan.topik,
       subTopik: mingguan.sub_topik,
-      rentangTanggal: formatTanggal(
+      rentangTanggal: formatPeriodeID(
         mingguan.tanggal_mulai,
         mingguan.tanggal_selesai,
       ),
