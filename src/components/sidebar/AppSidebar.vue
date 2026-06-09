@@ -233,6 +233,7 @@ import {
   UserRoundCheck,
   UserCog,
   NotepadText,
+  FileBarChart,
 } from "lucide-vue-next";
 
 const route = useRoute();
@@ -251,7 +252,7 @@ const menuGroups = [
         name: "Dashboard",
         to: { name: "AdminDashboard" },
         activeNames: ["AdminDashboard"],
-        meta: { role: [ROLES.ADMIN, ROLES.GURU] },
+        meta: { role: [ROLES.ADMIN, ROLES.KEPSEK] },
       },
       {
         icon: Users,
@@ -266,6 +267,13 @@ const menuGroups = [
         to: { name: "AdminObservasi" },
         activeNames: ["AdminObservasi", "AdminObservasiDetail"],
         meta: { role: [ROLES.ADMIN, ROLES.GURU] },
+      },
+      {
+        icon: FileBarChart,
+        name: "Laporan",
+        to: { name: "KepsekLaporan" },
+        activeNames: ["KepsekLaporan"],
+        meta: { role: [ROLES.KEPSEK] },
       },
     ],
   },
@@ -309,14 +317,14 @@ const menuGroups = [
           "GuruKelasSaya",
           "AdminMonitoringSiswaCreate",
         ],
-        meta: { role: [ROLES.ADMIN, ROLES.GURU] },
+        meta: { role: [ROLES.ADMIN, ROLES.GURU, ROLES.KEPSEK] },
       },
       {
         icon: UserRoundCheck,
         name: "Guru Kelas",
         to: { name: "AdminGuruKelas" },
         activeNames: ["AdminGuruKelas"],
-        meta: { role: [ROLES.ADMIN] },
+        meta: { role: [ROLES.ADMIN, ROLES.KEPSEK] },
       },
       {
         icon: Shuffle,
@@ -335,14 +343,14 @@ const menuGroups = [
           "GuruSiswa",
           "GuruSiswaDetail",
         ],
-        meta: { role: [ROLES.ADMIN] },
+        meta: { role: [ROLES.ADMIN, ROLES.KEPSEK] },
       },
       {
         icon: PieChartIcon,
         name: "Monitoring",
         to: { name: "AdminMonitoring" },
         activeNames: ["AdminMonitoring", "AdminMonitoringDetail"],
-        meta: { role: [ROLES.ADMIN, ROLES.GURU] },
+        meta: { role: [ROLES.ADMIN, ROLES.GURU, ROLES.KEPSEK] },
       },
     ],
   },

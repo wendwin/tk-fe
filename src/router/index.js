@@ -235,6 +235,14 @@ const router = createRouter({
           component: () => import("../views/admin/observasi/gpph.vue"),
           meta: { role: [ROLES.ADMIN] },
         },
+        {
+          path: "laporan",
+          name: "KepsekLaporan",
+          component: () => import("../views/kepsek/Laporan.vue"),
+          meta: {
+            role: [ROLES.KEPSEK],
+          },
+        },
 
         // {
         //   path: "monitoring",
