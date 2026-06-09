@@ -34,7 +34,7 @@
               <option value="admin">Admin</option>
               <option value="guru">Guru</option>
               <option value="orang_tua">Orang Tua</option>
-              <option value="kepala_sekolah">Kepala Sekolah</option>
+              <option value="kepsek">Kepala Sekolah</option>
             </select>
 
             <button
@@ -155,7 +155,7 @@
           <div>
             <label class="text-sm text-gray-600">Email</label>
             <input
-              disabled
+              :disabled="isEdit"
               v-model="form.email"
               type="email"
               class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
