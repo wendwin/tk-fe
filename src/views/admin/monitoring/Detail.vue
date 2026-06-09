@@ -60,28 +60,30 @@
         </div>
 
         <div class="text-right">
-          <button
-            v-if="isAdmin || isKepsek"
-            type="button"
-            @click="handleDownloadPdf"
-            class="inline-flex items-center gap-2 px-3 py-1.5 text-slate-600 border rounded-lg hover:bg-gray-100 text-sm mb-4"
-          >
-            <Download class="w-4 h-4" />
-            Download PDF
-          </button>
-          <router-link
-            v-if="isGuru"
-            :to="{
-              name: 'AdminMonitoring',
-              query: {
-                edit_id: detail?.id,
-              },
-            }"
-            class="inline-flex items-center gap-2 px-3 py-1.5 text-slate-600 border rounded-lg hover:bg-gray-100 text-sm mb-4"
-          >
-            <SquarePen class="w-4 h-4" />
-            Edit
-          </router-link>
+          <div class="flex items-center gap-3">
+            <button
+              v-if="isAdmin || isKepsek || isGuru"
+              type="button"
+              @click="handleDownloadPdf"
+              class="inline-flex items-center gap-2 px-3 py-1.5 text-slate-600 border rounded-lg hover:bg-gray-100 text-sm mb-4"
+            >
+              <Download class="w-4 h-4" />
+              Download PDF
+            </button>
+            <router-link
+              v-if="isGuru"
+              :to="{
+                name: 'AdminMonitoring',
+                query: {
+                  edit_id: detail?.id,
+                },
+              }"
+              class="inline-flex items-center gap-2 px-3 py-1.5 text-slate-600 border rounded-lg hover:bg-gray-100 text-sm mb-4"
+            >
+              <SquarePen class="w-4 h-4" />
+              Edit
+            </router-link>
+          </div>
 
           <p class="text-2xl font-bold text-slate-600">
             {{ totalSelesai }}/{{ totalSiswa }}

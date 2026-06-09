@@ -422,11 +422,12 @@
 
       <div
         v-if="detailLocked"
-        class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700"
+        class="flex items-center gap-2 text-sm text-amber-700"
       >
-        Detail TP, KKTP, kegiatan, dan asesmen awal dikunci karena monitoring
-        siswa sudah mulai diisi. Anda masih dapat mengubah informasi umum
-        seperti topik, sub topik, minggu, dan tanggal.
+        <CircleAlert class="w-4 h-4" />
+        <span>
+          Tidak Dapat Mengubah Detail TP, KKTP, kegiatan, dan asesmen awal</span
+        >
       </div>
 
       <section class="space-y-4 mb-10">
@@ -516,6 +517,7 @@
               </p>
 
               <button
+                v-if="!detailLocked"
                 type="button"
                 @click="addKKTP(tpIndex)"
                 class="flex items-center gap-1 justify-center text-sm text-blue-600 hover:text-blue-700"
@@ -778,7 +780,7 @@ import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
-import { Minus, Plus, Calendar } from "lucide-vue-next";
+import { Minus, Plus, Calendar, CircleAlert } from "lucide-vue-next";
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 

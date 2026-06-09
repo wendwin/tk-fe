@@ -1,12 +1,25 @@
 <template>
   <div class="space-y-6">
-    <div>
-      <h1 class="text-lg text-gray-700 font-medium">
-        Monitoring Siswa, {{ route.query.nama || "Siswa" }}
-      </h1>
-      <p class="text-sm text-gray-500 mt-1">
-        Pilih minggu monitoring, lalu isi perkembangan anak.
-      </p>
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h1 class="text-lg text-gray-700 font-medium">
+          Monitoring Siswa, {{ route.query.nama || "Siswa" }}
+        </h1>
+
+        <p class="text-sm text-gray-500 mt-1">
+          Pilih minggu monitoring, lalu isi perkembangan anak.
+        </p>
+      </div>
+
+      <button
+        v-if="existingMonitoringSiswa"
+        type="button"
+        @click="handleDownloadPdf"
+        class="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-100"
+      >
+        <Download class="w-4 h-4" />
+        Download PDF
+      </button>
     </div>
 
     <section class="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
@@ -468,6 +481,7 @@
 
           <button
             type="button"
+            v-if="!isReadonly"
             @click="removeAnekdot(index)"
             class="px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100"
           >
@@ -532,6 +546,7 @@
 
           <button
             type="button"
+            v-if="!isReadonly"
             @click="removeRekomendasi(index)"
             class="px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100"
           >
@@ -612,10 +627,12 @@ import {
   createMonitoringSiswa,
   getMonitoringSiswaById,
   updateMonitoringSiswa,
+  downloadMonitoringSiswaPdf,
 } from "@/lib/services/monitoringService";
 import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
+import { Download } from "lucide-vue-next";
 
 const route = useRoute();
 const router = useRouter();
@@ -873,6 +890,19 @@ const addRekomendasi = () => {
 
 const removeRekomendasi = (index) => {
   form.rekomendasi.splice(index, 1);
+};
+
+const handleDownloadPdf = async () => {
+  if (!existingMonitoringSiswa.value?.id) {
+    showWarning("Monitoring siswa belum tersedia");
+    return;
+  }
+
+  try {
+    await downloadMonitoringSiswaPdf(existingMonitoringSiswa.value.id);
+  } catch (error) {
+    showError(error.message || "Gagal download PDF monitoring siswa");
+  }
 };
 
 const handleSubmit = async () => {

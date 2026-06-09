@@ -86,3 +86,30 @@ export const downloadMonitoringMingguanPdf = async (id) => {
   link.remove();
   window.URL.revokeObjectURL(url);
 };
+
+export const downloadMonitoringSiswaPdf = async (id) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/monitoring/siswa/${id}/download-pdf`,
+    {
+      method: "GET",
+      credentials: "include",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Gagal download PDF monitoring siswa");
+  }
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "monitoring_siswa.pdf";
+
+  document.body.appendChild(link);
+  link.click();
+
+  link.remove();
+  window.URL.revokeObjectURL(url);
+};
