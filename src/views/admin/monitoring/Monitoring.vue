@@ -47,7 +47,6 @@
         <select
           v-if="isAdmin"
           v-model="filterTahunAjaranId"
-          @change="loadMonitoring"
           class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600"
         >
           <option value="">Semua Tahun Ajaran</option>
@@ -224,7 +223,7 @@
             </router-link>
 
             <button
-              v-if="item.status === 'draft'"
+              v-if="isGuru && item.status === 'draft'"
               type="button"
               @click="handlePublish(item)"
               :disabled="
@@ -766,6 +765,7 @@ import { reactive, ref, computed, onMounted, onActivated, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/lib/stores/auth";
 
+import { getAllKelas } from "@/lib/services/kelasService";
 import {
   createMonitoringMingguan,
   getMonitoringMingguan,
@@ -899,20 +899,13 @@ const bulanFilterOptions = computed(() => {
 });
 
 const tahunAjaranList = ref([]);
-const kelasOptions = computed(() => {
-  const map = new Map();
-
-  monitoringList.value.forEach((item) => {
-    if (!item.kelas) return;
-
-    map.set(item.kelas.id, item.kelas);
-  });
-
-  return Array.from(map.values());
-});
-
 const filterTahunAjaranId = ref("");
 const filterKelasId = ref("");
+
+const handleChangeTahunAjaran = async () => {
+  filterKelasId.value = "";
+  await loadMonitoring();
+};
 
 const filteredMonitoringList = computed(() => {
   return monitoringList.value.filter((item) => {
@@ -936,6 +929,15 @@ const filteredMonitoringList = computed(() => {
   });
 });
 
+const kelasList = ref([]);
+const kelasOptions = computed(() => {
+  return kelasList.value.filter((kelas) => {
+    if (!filterTahunAjaranId.value) return true;
+
+    return Number(kelas.tahun_ajaran_id) === Number(filterTahunAjaranId.value);
+  });
+});
+
 const loadData = async () => {
   try {
     loading.value = true;
@@ -947,6 +949,12 @@ const loadData = async () => {
 
     if (!filterTahunAjaranId.value && tahunAjaranAktif.value) {
       filterTahunAjaranId.value = tahunAjaranAktif.value.id;
+    }
+
+    if (isAdmin.value) {
+      const kelasRes = await getAllKelas();
+
+      kelasList.value = kelasRes.data || [];
     }
 
     if (isGuru.value) {
@@ -1249,6 +1257,11 @@ watch(
     await handleEditQuery();
   },
 );
+
+watch(filterTahunAjaranId, async () => {
+  filterKelasId.value = "";
+  await loadMonitoring();
+});
 </script>
 
 <style scoped></style>
