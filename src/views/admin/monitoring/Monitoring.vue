@@ -3,8 +3,13 @@
     <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
       <h1 class="text-2xl font-medium text-gray-800">Monitoring Mingguan</h1>
 
-      <p class="text-sm text-gray-500 mt-1">
-        Isi data Perencanaan Pembelajaran Mendalam mingguan untuk kelas
+      <p v-if="isAdmin" class="text-sm text-gray-500 mt-1">
+        Pantau histori monitoring mingguan yang dibuat oleh guru pada setiap
+        kelas.
+      </p>
+
+      <p v-else class="text-sm text-gray-500 mt-1">
+        Isi data Perencanaan Pembelajaran Mendalam mingguan untuk kelas.
       </p>
 
       <div class="mt-4 grid md:grid-cols-3 gap-4">
@@ -39,6 +44,37 @@
       </h2>
 
       <div class="flex flex-col md:flex-row gap-3 mb-4">
+        <select
+          v-if="isAdmin"
+          v-model="filterTahunAjaranId"
+          @change="loadMonitoring"
+          class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600"
+        >
+          <option value="">Semua Tahun Ajaran</option>
+          <option
+            v-for="tahun in tahunAjaranList"
+            :key="tahun.id"
+            :value="tahun.id"
+          >
+            {{ tahun.label }}
+          </option>
+        </select>
+
+        <select
+          v-if="isAdmin"
+          v-model="filterKelasId"
+          @change="loadMonitoring"
+          class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600"
+        >
+          <option value="">Semua Kelas</option>
+          <option
+            v-for="kelas in kelasOptions"
+            :key="kelas.id"
+            :value="kelas.id"
+          >
+            {{ formatKelas(kelas) }}
+          </option>
+        </select>
         <select
           v-model="filterBulan"
           class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600"
@@ -141,7 +177,13 @@
               Progress Monitoring
             </p> -->
 
-            <div class="flex items-center justify-end gap-2">
+            <div
+              class="flex items-center gap-2"
+              :class="isAdmin ? 'justify-between' : 'justify-end'"
+            >
+              <p v-if="isAdmin" class="text-xs text-gray-500 mt-1">
+                {{ formatKelas(item.kelas) }}
+              </p>
               <span class="text-sm font-medium text-gray-700 text-gray-700">
                 {{ item.total_selesai || 0 }} /
                 {{ item.total_siswa || 0 }} siswa
@@ -201,6 +243,7 @@
     <div ref="formAnchor"></div>
 
     <form
+      v-if="isGuru"
       @submit.prevent="handleSubmit"
       class="bg-white rounded-2xl border border-gray-200 p-6 space-y-6"
     >
@@ -721,6 +764,7 @@
 <script setup>
 import { reactive, ref, computed, onMounted, onActivated, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "@/lib/stores/auth";
 
 import {
   createMonitoringMingguan,
@@ -746,6 +790,10 @@ const flatpickrConfig = {
 };
 
 const formAnchor = ref(null);
+
+const auth = useAuthStore();
+const isAdmin = computed(() => auth.role === "admin");
+const isGuru = computed(() => auth.role === "guru");
 
 const loading = ref(false);
 const route = useRoute();
@@ -773,13 +821,23 @@ const filterSemester = ref("");
 const filterStatus = ref("");
 
 const hasActiveFilter = computed(() => {
-  return filterBulan.value || filterSemester.value || filterStatus.value;
+  return (
+    filterBulan.value ||
+    filterSemester.value ||
+    filterStatus.value ||
+    filterKelasId.value ||
+    filterTahunAjaranId.value
+  );
 });
 
-const resetFilter = () => {
+const resetFilter = async () => {
   filterBulan.value = "";
   filterSemester.value = "";
   filterStatus.value = "";
+  filterKelasId.value = "";
+  filterTahunAjaranId.value = tahunAjaranAktif.value?.id || "";
+
+  await loadMonitoring();
 };
 
 const getError = (path) => {
@@ -840,6 +898,22 @@ const bulanFilterOptions = computed(() => {
   return Array.from(options);
 });
 
+const tahunAjaranList = ref([]);
+const kelasOptions = computed(() => {
+  const map = new Map();
+
+  monitoringList.value.forEach((item) => {
+    if (!item.kelas) return;
+
+    map.set(item.kelas.id, item.kelas);
+  });
+
+  return Array.from(map.values());
+});
+
+const filterTahunAjaranId = ref("");
+const filterKelasId = ref("");
+
 const filteredMonitoringList = computed(() => {
   return monitoringList.value.filter((item) => {
     const bulan = getNamaBulanMonitoring(
@@ -868,14 +942,20 @@ const loadData = async () => {
 
     const tahunRes = await getAllTahunAjaran();
 
+    tahunAjaranList.value = tahunRes.data;
     tahunAjaranAktif.value = tahunRes.data.find((item) => item.is_active);
 
-    const guruKelasRes = await getMyGuruKelas();
+    if (!filterTahunAjaranId.value && tahunAjaranAktif.value) {
+      filterTahunAjaranId.value = tahunAjaranAktif.value.id;
+    }
 
-    kelasGuru.value = guruKelasRes.data;
+    if (isGuru.value) {
+      const guruKelasRes = await getMyGuruKelas();
+      kelasGuru.value = guruKelasRes.data;
 
-    if (kelasGuru.value.length > 0) {
-      selectedKelas.value = kelasGuru.value[0];
+      if (kelasGuru.value.length > 0) {
+        selectedKelas.value = kelasGuru.value[0];
+      }
     }
 
     console.log("tahun aktif", tahunAjaranAktif.value);
@@ -889,13 +969,22 @@ const loadData = async () => {
 };
 
 const loadMonitoring = async () => {
-  if (!tahunAjaranAktif.value || !selectedKelas.value) return;
+  if (!tahunAjaranAktif.value) return;
 
-  const res = await getMonitoringMingguan({
-    kelas_id: selectedKelas.value.kelas.id,
-    tahun_ajaran_id: tahunAjaranAktif.value.id,
-  });
+  const params = {
+    tahun_ajaran_id: filterTahunAjaranId.value || tahunAjaranAktif.value.id,
+  };
 
+  if (isGuru.value) {
+    if (!selectedKelas.value) return;
+    params.kelas_id = selectedKelas.value.kelas.id;
+  }
+
+  if (isAdmin.value && filterKelasId.value) {
+    params.kelas_id = filterKelasId.value;
+  }
+
+  const res = await getMonitoringMingguan(params);
   monitoringList.value = res.data || [];
 
   if (!filterBulan.value) {

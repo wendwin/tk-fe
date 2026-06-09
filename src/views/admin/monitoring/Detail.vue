@@ -61,6 +61,7 @@
 
         <div class="text-right">
           <router-link
+            v-if="isGuru"
             :to="{
               name: 'AdminMonitoring',
               query: {
@@ -205,7 +206,7 @@
         <h2 class="font-medium text-gray-800">Daftar Siswa</h2>
 
         <button
-          v-if="canPublish"
+          v-if="isGuru && canPublish"
           @click="handlePublish"
           class="px-4 py-2 rounded-lg bg-green-600 text-white text-sm hover:bg-green-700"
         >
@@ -263,6 +264,7 @@
 
               <td class="px-4 py-3">
                 <router-link
+                  v-if="isGuru || item.sudah_diisi"
                   :to="{
                     name: 'AdminMonitoringSiswaCreate',
                     query: {
@@ -270,6 +272,7 @@
                       siswa_kelas_id: item.siswa_kelas_id,
                       kelas_id: detail.kelas.id,
                       nama: item.nama,
+                      mode: isAdmin ? 'view' : undefined,
                     },
                   }"
                   :class="
@@ -282,9 +285,11 @@
                     item.sudah_diisi ? 'Lihat Monitoring' : 'Isi Monitoring'
                   "
                 >
-                  <Eye v-if="item.sudah_diisi" class="w-4 h-4" />
+                  <Eye v-if="item.sudah_diisi || isAdmin" class="w-4 h-4" />
                   <Pencil v-else class="w-4 h-4" />
                 </router-link>
+
+                <span v-else class="text-xs text-gray-400"> - </span>
               </td>
             </tr>
           </tbody>
@@ -297,6 +302,7 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+import { useAuthStore } from "@/lib/stores/auth";
 import { ChevronRight, SquarePen, Eye, Pencil } from "lucide-vue-next";
 
 import {
@@ -309,6 +315,11 @@ import { showError, showSuccess } from "@/lib/utils/toast";
 import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 
 const route = useRoute();
+
+const auth = useAuthStore();
+
+const isAdmin = computed(() => auth.role === "admin");
+const isGuru = computed(() => auth.role === "guru");
 
 const detail = ref(null);
 const kelasDetail = ref(null);

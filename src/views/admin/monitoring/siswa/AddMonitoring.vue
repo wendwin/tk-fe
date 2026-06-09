@@ -359,6 +359,7 @@
           </div>
 
           <button
+            v-if="!isReadonly"
             type="button"
             @click="removeKarya(index)"
             class="px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100"
@@ -551,6 +552,7 @@
           </button>
 
           <button
+            v-if="isGuru"
             type="button"
             @click="isEditMode = true"
             class="px-4 py-2 rounded-lg bg-amber-500 text-white text-sm hover:bg-amber-600"
@@ -580,6 +582,7 @@
           </button>
 
           <button
+            v-if="isGuru"
             type="submit"
             :disabled="saving"
             class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-50"
@@ -601,7 +604,7 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
+import { useAuthStore } from "@/lib/stores/auth";
 import {
   getMonitoringMingguan,
   getMonitoringMingguanById,
@@ -617,6 +620,11 @@ import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 const route = useRoute();
 const router = useRouter();
 
+const auth = useAuthStore();
+
+const isAdmin = computed(() => auth.role === "admin");
+const isGuru = computed(() => auth.role === "guru");
+
 const saving = ref(false);
 const selectedMonitoringId = ref(null);
 const selectedMonitoring = ref(null);
@@ -625,7 +633,9 @@ const monitoringMingguanList = ref([]);
 const existingMonitoringSiswa = ref(null);
 const isEditMode = ref(false);
 const isReadonly = computed(() => {
-  return !!existingMonitoringSiswa.value && !isEditMode.value;
+  return (
+    isAdmin.value || (!!existingMonitoringSiswa.value && !isEditMode.value)
+  );
 });
 
 const siswaKelasId = computed(() => Number(route.query.siswa_kelas_id));
