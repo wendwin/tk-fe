@@ -60,6 +60,15 @@
         </div>
 
         <div class="text-right">
+          <button
+            v-if="isAdmin || isKepsek"
+            type="button"
+            @click="handleDownloadPdf"
+            class="inline-flex items-center gap-2 px-3 py-1.5 text-slate-600 border rounded-lg hover:bg-gray-100 text-sm mb-4"
+          >
+            <Download class="w-4 h-4" />
+            Download PDF
+          </button>
           <router-link
             v-if="isGuru"
             :to="{
@@ -303,7 +312,13 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/lib/stores/auth";
-import { ChevronRight, SquarePen, Eye, Pencil } from "lucide-vue-next";
+import {
+  ChevronRight,
+  SquarePen,
+  Eye,
+  Pencil,
+  Download,
+} from "lucide-vue-next";
 
 import {
   getMonitoringMingguanById,
@@ -311,6 +326,8 @@ import {
   publishMonitoringMingguan,
 } from "@/lib/services/monitoringService";
 import { getKelasById } from "@/lib/services/kelasService";
+import { downloadMonitoringMingguanPdf } from "@/lib/services/monitoringService";
+
 import { showError, showSuccess } from "@/lib/utils/toast";
 import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 
@@ -320,6 +337,7 @@ const auth = useAuthStore();
 
 const isAdmin = computed(() => auth.role === "admin");
 const isGuru = computed(() => auth.role === "guru");
+const isKepsek = computed(() => auth.role === "kepsek");
 
 const detail = ref(null);
 const kelasDetail = ref(null);
@@ -405,6 +423,14 @@ const formatElemen = (elemen) => {
   };
 
   return map[elemen] || elemen;
+};
+
+const handleDownloadPdf = async () => {
+  try {
+    await downloadMonitoringMingguanPdf(detail.value.id);
+  } catch (error) {
+    showError(error.message || "Gagal download PDF monitoring");
+  }
 };
 
 const loadData = async () => {
