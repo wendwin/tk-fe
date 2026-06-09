@@ -25,6 +25,23 @@ const router = createRouter({
       component: () => import("../views/auth/Register.vue"),
       meta: { layout: "AuthLayout", guestOnly: true },
     },
+    {
+      path: "/verify-email",
+      name: "VerifyEmailStatus",
+      component: () => import("../views/auth/VerifyEmailStatus.vue"),
+    },
+    {
+      path: "/forgot-password",
+      name: "ForgotPassword",
+      component: () => import("../views/auth/ForgotPassword.vue"),
+      meta: { layout: "AuthLayout", guestOnly: true },
+    },
+    {
+      path: "/reset-password",
+      name: "ResetPassword",
+      component: () => import("../views/auth/ResetPassword.vue"),
+      meta: { layout: "AuthLayout", guestOnly: true },
+    },
     // {
     //   path: "/pendaftaran",
     //   name: "Pendaftaran",
@@ -142,27 +159,14 @@ const router = createRouter({
         {
           path: "kelas-saya",
           name: "GuruKelasSaya",
-          beforeEnter: async () => {
-            const res = await getMyGuruKelas();
-
-            if (!res.data?.length) {
-              return { name: "Dashboard" };
-            }
-
-            return {
-              name: "AdminKelasDetail",
-              params: {
-                id: res.data[0].kelas.id,
-              },
-            };
-          },
+          component: () => import("../views/admin/kelas/Detail.vue"),
           meta: { role: [ROLES.GURU] },
         },
         {
           path: "kelas/:id",
           name: "AdminKelasDetail",
           component: () => import("../views/admin/kelas/Detail.vue"),
-          meta: { role: [ROLES.ADMIN] },
+          meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
         {
           path: "tahun-ajaran",
@@ -230,6 +234,14 @@ const router = createRouter({
           name: "AdminGpphObservasi",
           component: () => import("../views/admin/observasi/gpph.vue"),
           meta: { role: [ROLES.ADMIN] },
+        },
+        {
+          path: "laporan",
+          name: "KepsekLaporan",
+          component: () => import("../views/kepsek/Laporan.vue"),
+          meta: {
+            role: [ROLES.KEPSEK],
+          },
         },
 
         // {

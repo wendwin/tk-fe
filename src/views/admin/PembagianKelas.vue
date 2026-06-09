@@ -131,8 +131,9 @@
               </div>
 
               <button
+                title="Tambah"
                 @click="moveToTarget(siswa)"
-                class="text-xs px-2 py-1 rounded-lg bg-emerald-600 text-white"
+                class="text-xs px-3 py-1 rounded-md bg-emerald-600 text-white"
               >
                 <UserPlus class="w-4 h-4" />
               </button>
@@ -196,9 +197,10 @@
               </div>
 
               <button
+                title="Hapus"
                 v-if="item.isDraft"
                 @click="removeDraft(item.id)"
-                class="text-xs px-3 py-1 rounded-lg bg-red-50 text-red-600"
+                class="text-xs px-3 py-1 rounded-md bg-red-50 text-red-600"
               >
                 <UserMinus class="w-4 h-4" />
               </button>

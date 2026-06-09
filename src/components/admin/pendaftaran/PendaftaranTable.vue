@@ -210,6 +210,7 @@
 
           <td class="px-6 py-0">
             <router-link
+              title="Lihat"
               :to="{
                 name: 'AdminPendaftarDetail',
                 params: { id: item.id },

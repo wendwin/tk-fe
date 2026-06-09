@@ -83,26 +83,29 @@
 
           <td class="px-6 py-4">
             <div class="flex items-center gap-2">
+              <button
+                title="Edit"
+                @click="openEdit(item)"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-yellow-600 text-xs hover:bg-gray-100"
+              >
+                <SquarePen class="w-4 h-4" />
+              </button>
+
               <router-link
+                title="Lihat"
                 :to="{
                   name: 'AdminTahunAjaranDetail',
                   params: { id: item.id },
                 }"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-blue-600 text-xs"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-blue-600 text-xs hover:bg-gray-100"
               >
                 <Eye class="w-4 h-4" />
               </router-link>
 
               <button
-                @click="openEdit(item)"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-blue-600 text-xs"
-              >
-                <SquarePen class="w-4 h-4" />
-              </button>
-
-              <button
+                title="Hapus"
                 @click="handleDelete(item.id)"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-red-600 text-xs"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-red-600 text-xs hover:bg-gray-100"
               >
                 <Trash class="w-4 h-4" />
               </button>

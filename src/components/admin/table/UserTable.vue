@@ -34,7 +34,7 @@
               <option value="admin">Admin</option>
               <option value="guru">Guru</option>
               <option value="orang_tua">Orang Tua</option>
-              <option value="kepala_sekolah">Kepala Sekolah</option>
+              <option value="kepsek">Kepala Sekolah</option>
             </select>
 
             <button
@@ -103,15 +103,17 @@
           <td class="px-6 py-0">
             <div class="flex items-center gap-2">
               <button
+                title="Edit"
                 @click="openEdit(item)"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-green-600 text-xs"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-blue-600 text-xs hover:bg-gray-100"
               >
                 <SquarePen class="w-4 h-4" />
               </button>
 
               <button
+                title="Hapus"
                 @click="handleDelete(item.id)"
-                class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-red-600 text-xs"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-red-600 text-xs hover:bg-gray-100"
               >
                 <Trash class="w-4 h-4" />
               </button>
@@ -153,6 +155,7 @@
           <div>
             <label class="text-sm text-gray-600">Email</label>
             <input
+              :disabled="isEdit"
               v-model="form.email"
               type="email"
               class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
@@ -174,6 +177,7 @@
             <label class="text-sm text-gray-600">Role</label>
             <select
               v-model.number="form.role_id"
+              :disabled="selectedUser?.role === 'orang_tua'"
               class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
             >
               <option :value="null">Pilih role</option>

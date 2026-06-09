@@ -126,15 +126,15 @@ const handleClickOutside = (event) => {
 const handleLogout = async () => {
   try {
     await logout();
-
-    closeDropdown();
-    auth.clearAuth();
-    sessionStorage.removeItem("csrf_token");
-    clearPendaftaranId();
-
-    router.push("/login");
   } catch (err) {
     console.log(err.message);
+  } finally {
+    closeDropdown();
+
+    auth.clearAuth();
+    clearPendaftaranId();
+
+    router.replace("/login");
   }
 };
 

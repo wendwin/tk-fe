@@ -71,7 +71,7 @@
           </td>
 
           <td class="px-6 py-0">
-            {{ item.guru?.email || "-" }}
+            {{ item.guru?.full_name || "-" }}
           </td>
 
           <td class="px-6 py-0">
@@ -106,6 +106,7 @@
           <td class="px-6 py-0">
             <div class="flex items-center gap-2">
               <button
+                title="Edit"
                 @click="openEdit(item)"
                 class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-blue-600 text-xs hover:bg-gray-100"
               >
@@ -113,6 +114,7 @@
               </button>
 
               <button
+                title="Hapus"
                 @click="handleDelete(item.id)"
                 class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-red-600 text-xs hover:bg-gray-100"
               >
@@ -146,7 +148,7 @@
             >
               <option :value="null">Pilih guru</option>
               <option v-for="guru in guruList" :key="guru.id" :value="guru.id">
-                {{ guru.email }}
+                {{ guru.full_name }}
               </option>
             </select>
           </div>
@@ -286,7 +288,7 @@ const filteredList = computed(() => {
     const keyword = search.value.toLowerCase();
 
     const namaGuru =
-      item.guru?.name || item.guru?.nama || item.guru?.email || "";
+      item.guru?.full_name || item.guru?.first_name || item.guru?.email || "";
     const namaKelas = item.kelas?.nama || "";
     const tahun = item.tahun_ajaran?.label || "";
 
@@ -369,6 +371,8 @@ const loadGuruKelas = async () => {
 
     const res = await getAllGuruKelas();
     list.value = res.data || [];
+
+    console.log(JSON.parse(JSON.stringify(list.value)));
   } catch (err) {
     showError(err.message || "Gagal mengambil data guru kelas");
   } finally {

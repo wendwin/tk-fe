@@ -1,19 +1,36 @@
 <template>
   <div class="space-y-6">
-    <div>
-      <h1 class="text-lg text-gray-700 font-medium">
-        Monitoring Siswa, {{ route.query.nama || "Siswa" }}
-      </h1>
-      <p class="text-sm text-gray-500 mt-1">
-        Pilih minggu monitoring, lalu isi perkembangan anak.
-      </p>
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h1 class="text-lg text-gray-700 font-medium">
+          Monitoring Siswa, {{ route.query.nama || "Siswa" }}
+        </h1>
+
+        <p class="text-sm text-gray-500 mt-1">
+          Pilih minggu monitoring, lalu isi perkembangan anak.
+        </p>
+      </div>
+
+      <button
+        v-if="existingMonitoringSiswa"
+        type="button"
+        @click="handleDownloadPdf"
+        class="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-100"
+      >
+        <Download class="w-4 h-4" />
+        Download PDF
+      </button>
     </div>
 
     <section class="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
       <div>
-        <label class="text-sm font-medium text-gray-700">
+        <!-- <label class="text-sm font-medium text-gray-700">
           Monitoring Mingguan
-        </label>
+        </label> -->
+
+        <h2 class="font-medium text-gray-700">
+          Monitoring Mingguan <span class="text-red-500">*</span>
+        </h2>
 
         <select
           v-model.number="selectedMonitoringId"
@@ -121,7 +138,7 @@
             class="min-w-[1100px] w-full text-sm border border-gray-300 border-collapse"
           >
             <thead>
-              <tr class="bg-gray-50">
+              <tr class="bg-gray-50 font-medium text-gray-700">
                 <th class="border border-gray-300 px-4 py-3 text-center w-16">
                   No
                 </th>
@@ -355,6 +372,7 @@
           </div>
 
           <button
+            v-if="!isReadonly"
             type="button"
             @click="removeKarya(index)"
             class="px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100"
@@ -463,6 +481,7 @@
 
           <button
             type="button"
+            v-if="!isReadonly"
             @click="removeAnekdot(index)"
             class="px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100"
           >
@@ -527,6 +546,7 @@
 
           <button
             type="button"
+            v-if="!isReadonly"
             @click="removeRekomendasi(index)"
             class="px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100"
           >
@@ -547,6 +567,7 @@
           </button>
 
           <button
+            v-if="isGuru"
             type="button"
             @click="isEditMode = true"
             class="px-4 py-2 rounded-lg bg-amber-500 text-white text-sm hover:bg-amber-600"
@@ -576,6 +597,7 @@
           </button>
 
           <button
+            v-if="isGuru"
             type="submit"
             :disabled="saving"
             class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-50"
@@ -597,7 +619,7 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
+import { useAuthStore } from "@/lib/stores/auth";
 import {
   getMonitoringMingguan,
   getMonitoringMingguanById,
@@ -605,13 +627,20 @@ import {
   createMonitoringSiswa,
   getMonitoringSiswaById,
   updateMonitoringSiswa,
+  downloadMonitoringSiswaPdf,
 } from "@/lib/services/monitoringService";
 import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
+import { Download } from "lucide-vue-next";
 
 const route = useRoute();
 const router = useRouter();
+
+const auth = useAuthStore();
+
+const isAdmin = computed(() => auth.role === "admin");
+const isGuru = computed(() => auth.role === "guru");
 
 const saving = ref(false);
 const selectedMonitoringId = ref(null);
@@ -621,7 +650,9 @@ const monitoringMingguanList = ref([]);
 const existingMonitoringSiswa = ref(null);
 const isEditMode = ref(false);
 const isReadonly = computed(() => {
-  return !!existingMonitoringSiswa.value && !isEditMode.value;
+  return (
+    isAdmin.value || (!!existingMonitoringSiswa.value && !isEditMode.value)
+  );
 });
 
 const siswaKelasId = computed(() => Number(route.query.siswa_kelas_id));
@@ -859,6 +890,19 @@ const addRekomendasi = () => {
 
 const removeRekomendasi = (index) => {
   form.rekomendasi.splice(index, 1);
+};
+
+const handleDownloadPdf = async () => {
+  if (!existingMonitoringSiswa.value?.id) {
+    showWarning("Monitoring siswa belum tersedia");
+    return;
+  }
+
+  try {
+    await downloadMonitoringSiswaPdf(existingMonitoringSiswa.value.id);
+  } catch (error) {
+    showError(error.message || "Gagal download PDF monitoring siswa");
+  }
 };
 
 const handleSubmit = async () => {

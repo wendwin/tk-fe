@@ -170,6 +170,7 @@
 
           <td class="px-6 py-4">
             <router-link
+              title="Lihat"
               :to="{
                 name: 'AdminObservasiDetail',
                 params: { id: item.id },

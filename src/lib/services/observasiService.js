@@ -1,5 +1,11 @@
 import request from "@/lib/api";
 
+export const getObservasi = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+
+  return await request(`/observasi${query ? `?${query}` : ""}`);
+};
+
 export const setJadwalObservasi = async (payload) => {
   return await request("/observasi/set-jadwal", {
     method: "PUT",

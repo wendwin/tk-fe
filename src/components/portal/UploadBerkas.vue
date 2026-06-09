@@ -5,20 +5,22 @@
         class="px-6 pt-5 pb-4 border-b border-gray-200 flex items-start gap-3"
       >
         <div>
-          <h2 class="text-[16px] font-semibold mb-1">Upload Berkas Dokumen</h2>
+          <h2 class="text-[16px] font-medium text-gray-800 mb-1">
+            Upload Berkas Dokumen
+          </h2>
           <div class="flex items-start gap-2 text-sm text-gray-500 mb-2">
             <CircleAlert class="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
 
             <div class="space-y-1">
               <p>
-                Unggah dokumen pendukung dalam format JPG, PNG, atau PDF. Maks.
-                2 MB per file.
+                Unggah dokumen pendukung dalam format JPG, PNG, JPEG atau PDF.
+                Maks. 2 MB per file.
               </p>
               <p>Pastikan terbaca dengan jelas.</p>
             </div>
           </div>
           <ol class="list-decimal list-inside text-sm text-gray-500 pl-6">
-            <li>Foto Anak</li>
+            <li>Foto Anak (Background Putih)</li>
             <li>Kartu Keluarga</li>
             <li>Akta Kelahiran</li>
             <li>
@@ -79,7 +81,7 @@
                 : 'cursor-not-allowed opacity-60',
 
               uploadedDocs[doc.key]
-                ? 'border-[#1181B2] bg-[#1181B2]/5'
+                ? 'border-gray-400 bg-white'
                 : 'border-gray-200 border-dashed',
 
               dokumen.length % 2 !== 0 && index === dokumen.length - 1
@@ -176,7 +178,7 @@ const dokumen = [
   {
     key: "foto",
     label: "Pas Foto Anak",
-    hint: "Background bebas",
+    hint: "Upload Pas Foto",
     icon: ImagePlus,
   },
   {

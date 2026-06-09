@@ -1,6 +1,6 @@
 <template>
   <header
-    class="sticky top-0 flex w-full bg-white border-gray-200 z-1 dark:border-gray-800 dark:bg-gray-900 lg:border-b"
+    class="sticky top-0 flex w-full bg-white border-gray-200 z-40 dark:border-gray-800 dark:bg-gray-900 lg:border-b"
   >
     <div
       class="flex flex-col items-center justify-between grow lg:flex-row lg:px-6"
@@ -10,7 +10,7 @@
       >
         <button
           @click="handleToggle"
-          class="flex items-center justify-center w-5 h-5 text-gray-500 border-gray-200 rounded-lg z-99999 dark:border-gray-800 dark:text-gray-400 lg:h-8 lg:w-8 lg:border"
+          class="flex items-center justify-center w-5 h-5 text-gray-500 border-gray-200 rounded-lg dark:border-gray-800 dark:text-gray-400 lg:h-8 lg:w-8 lg:border"
           :class="[
             isMobileOpen
               ? 'lg:bg-transparent dark:lg:bg-transparent bg-gray-100 dark:bg-gray-800'
@@ -49,10 +49,10 @@
             />
           </svg>
         </button>
-        <HeaderLogo />
+        <!-- <HeaderLogo /> -->
         <button
           @click="toggleApplicationMenu"
-          class="flex items-center justify-center w-10 h-10 text-gray-700 rounded-lg z-99999 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 lg:hidden"
+          class="flex items-center justify-center w-10 h-10 text-gray-700 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 lg:hidden"
         >
           <svg
             width="24"

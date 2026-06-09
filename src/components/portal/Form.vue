@@ -4,9 +4,10 @@
       <div
         class="px-6 pt-5 pb-4 border-b border-gray-200 flex items-start gap-3"
       >
-        <!-- text -->
         <div>
-          <h2 class="text-[16px] font-medium">Formulir Pendaftaran</h2>
+          <h2 class="text-[16px] font-medium text-slate-800">
+            Formulir Pendaftaran
+          </h2>
           <p class="text-sm text-gray-500">
             Isi data peserta didik, data kesehatan, data orang tua, dan
             informasi tambahan dengan lengkap.
@@ -16,7 +17,6 @@
 
       <form @submit.prevent="simpanFormulir">
         <div class="p-6">
-          <!-- program -->
           <div class="mb-6">
             <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
               <School />Pilihan Pendaftaran
@@ -81,7 +81,6 @@
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-              <!-- kiri -->
               <div class="space-y-3">
                 <!-- nama lengkap -->
                 <div>
@@ -189,20 +188,28 @@
                     Tanggal Lahir <span class="text-red-500">*</span>
                   </label>
 
-                  <input
-                    id="tanggal_lahir"
-                    name="tanggal_lahir"
-                    v-model="form.peserta.tanggal_lahir"
-                    :readonly="isLocked"
-                    type="date"
-                    required
-                    :class="
-                      getError('peserta.tanggal_lahir')
-                        ? 'border-red-500 focus:ring-red-500'
-                        : 'border-gray-300'
-                    "
-                    class="h-9 w-full rounded-lg border px-3 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:outline-hidden focus:ring-brand-500/10"
-                  />
+                  <div class="relative">
+                    <flat-pickr
+                      id="tanggal_lahir"
+                      name="tanggal_lahir"
+                      v-model="form.peserta.tanggal_lahir"
+                      :config="flatpickrConfig"
+                      :disabled="isLocked"
+                      placeholder="Pilih tanggal lahir"
+                      class="h-9 w-full rounded-lg border px-3 pr-10 text-sm focus:outline-none focus:ring-2"
+                      :class="
+                        getError('peserta.tanggal_lahir')
+                          ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                          : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10'
+                      "
+                    />
+
+                    <span
+                      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+                    >
+                      <Calendar class="w-4 h-4" />
+                    </span>
+                  </div>
 
                   <p
                     v-if="getError('peserta.tanggal_lahir')"
@@ -314,7 +321,6 @@
                 </div>
               </div>
 
-              <!-- kanan -->
               <div class="space-y-3">
                 <!-- no kk -->
                 <div>
@@ -432,6 +438,7 @@
                   <input
                     id="no_telp"
                     name="no_telp"
+                    placeholder="08xxxxxxxxxx"
                     v-model="form.peserta.no_telp"
                     :readonly="isLocked"
                     type="text"
@@ -1392,20 +1399,28 @@
                     Tanggal Lahir <span class="text-red-500">*</span>
                   </label>
 
-                  <input
-                    id="ayah_tanggal_lahir"
-                    name="ayah_tanggal_lahir"
-                    v-model="form.peserta.orang_tua[0].tanggal_lahir"
-                    :readonly="isLocked"
-                    required
-                    type="date"
-                    class="h-9 w-full rounded-lg border px-3 text-sm focus:outline-none focus:ring-2"
-                    :class="
-                      getError('peserta.orang_tua.0.tanggal_lahir')
-                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
-                        : 'border-gray-300 focus:border-blue-400 focus:ring-blue-500/20'
-                    "
-                  />
+                  <div class="relative">
+                    <flat-pickr
+                      id="ayah_tanggal_lahir"
+                      name="ayah_tanggal_lahir"
+                      v-model="form.peserta.orang_tua[0].tanggal_lahir"
+                      :config="flatpickrConfig"
+                      :disabled="isLocked"
+                      placeholder="Pilih tanggal lahir"
+                      class="h-9 w-full rounded-lg border px-3 pr-10 text-sm focus:outline-none focus:ring-2"
+                      :class="
+                        getError('peserta.orang_tua.0.tanggal_lahir')
+                          ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                          : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10'
+                      "
+                    />
+
+                    <span
+                      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+                    >
+                      <Calendar class="w-4 h-4" />
+                    </span>
+                  </div>
 
                   <p
                     v-if="getError('peserta.orang_tua.0.tanggal_lahir')"
@@ -1568,6 +1583,7 @@
                     v-model="form.peserta.orang_tua[0].no_hp"
                     :readonly="isLocked"
                     required
+                    placeholder="08xxxxxxxxxx"
                     type="text"
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
@@ -1600,6 +1616,7 @@
                     v-model="form.peserta.orang_tua[0].email"
                     :readonly="isLocked"
                     required
+                    placeholder="user@gmail.com"
                     type="email"
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
@@ -1726,19 +1743,28 @@
                     Tanggal Lahir <span class="text-red-500">*</span>
                   </label>
 
-                  <input
-                    id="ibu_tanggal_lahir"
-                    name="ibu_tanggal_lahir"
-                    v-model="form.peserta.orang_tua[1].tanggal_lahir"
-                    :readonly="isLocked"
-                    type="date"
-                    class="h-9 w-full rounded-lg border px-3 text-sm focus:outline-none focus:ring-2"
-                    :class="
-                      getError('peserta.orang_tua.1.tanggal_lahir')
-                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
-                        : 'border-gray-300 focus:border-blue-400 focus:ring-blue-500/20'
-                    "
-                  />
+                  <div class="relative">
+                    <flat-pickr
+                      id="ibu_tanggal_lahir"
+                      name="ibu_tanggal_lahir"
+                      v-model="form.peserta.orang_tua[1].tanggal_lahir"
+                      :config="flatpickrConfig"
+                      :disabled="isLocked"
+                      placeholder="Pilih tanggal lahir"
+                      class="h-9 w-full rounded-lg border px-3 pr-10 text-sm focus:outline-none focus:ring-2"
+                      :class="
+                        getError('peserta.orang_tua.1.tanggal_lahir')
+                          ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                          : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10'
+                      "
+                    />
+
+                    <span
+                      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+                    >
+                      <Calendar class="w-4 h-4" />
+                    </span>
+                  </div>
 
                   <p
                     v-if="getError('peserta.orang_tua.1.tanggal_lahir')"
@@ -1895,6 +1921,7 @@
                   <input
                     id="ibu_no_hp"
                     name="ibu_no_hp"
+                    placeholder="08xxxxxxxxxx"
                     v-model="form.peserta.orang_tua[1].no_hp"
                     :readonly="isLocked"
                     type="text"
@@ -1926,6 +1953,7 @@
                   <input
                     id="ibu_email"
                     name="ibu_email"
+                    placeholder="user@gmail.com"
                     v-model="form.peserta.orang_tua[1].email"
                     :readonly="isLocked"
                     type="email"
@@ -2323,6 +2351,8 @@ import { watch } from "vue";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { createPendaftaran } from "@/lib/services/pendaftaranService";
 import { setPendaftaranId } from "@/lib/utils/storage";
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
 
 import ConfirmModal from "@/components/common/ConfirmModal.vue";
 
@@ -2334,6 +2364,7 @@ import {
   Hospital,
   Users,
   Info,
+  Calendar,
 } from "lucide-vue-next";
 
 const props = defineProps({
@@ -2351,6 +2382,13 @@ const loading = ref(false);
 const errors = ref({});
 const getError = (path) => {
   return path.split(".").reduce((obj, key) => obj?.[key], errors.value)?.[0];
+};
+
+const flatpickrConfig = {
+  dateFormat: "Y-m-d",
+  altInput: true,
+  altFormat: "d F Y",
+  allowInput: true,
 };
 
 const form = reactive({
@@ -2543,11 +2581,13 @@ const doSubmit = async () => {
   try {
     const res = await createPendaftaran(payloadRef.value);
 
-    setPendaftaranId(res.data.id);
+    const id = res.data.id;
+
+    setPendaftaranId(id);
 
     showSuccess("Formulir berhasil disimpan");
 
-    emit("saved");
+    emit("saved", id);
   } catch (err) {
     console.log(err);
 
