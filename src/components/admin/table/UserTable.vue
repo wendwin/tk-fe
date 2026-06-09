@@ -155,6 +155,7 @@
           <div>
             <label class="text-sm text-gray-600">Email</label>
             <input
+              disabled
               v-model="form.email"
               type="email"
               class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
@@ -176,6 +177,7 @@
             <label class="text-sm text-gray-600">Role</label>
             <select
               v-model.number="form.role_id"
+              :disabled="selectedUser?.role === 'orang_tua'"
               class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
             >
               <option :value="null">Pilih role</option>
