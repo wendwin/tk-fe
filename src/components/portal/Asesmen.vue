@@ -37,11 +37,19 @@
 
             <textarea
               v-model="item.value"
+              @input="delete errors[item.id]"
               :readonly="isSubmitted"
               rows="2"
-              placeholder="Tulis jawaban Anda..."
-              class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-brand-300 focus:ring-2 focus:ring-brand-500/10"
+              :class="[
+                'w-full rounded-lg px-4 py-2 text-sm focus:outline-none',
+                errors[item.id]
+                  ? 'border border-red-500 error-field'
+                  : 'border border-gray-300 focus:border-brand-300 focus:ring-2 focus:ring-brand-500/10',
+              ]"
             ></textarea>
+            <div v-if="errors[item.id]" class="mt-1 text-xs text-red-500">
+              {{ errors[item.id] }}
+            </div>
           </div>
         </div>
 
@@ -49,7 +57,7 @@
           <button
             @click="submitAsesmen"
             :disabled="loading || isSubmitted"
-            class="h-9 px-5 rounded-lg bg-brand-500 text-white text-sm hover:bg-brand-600 disabled:opacity-50"
+            class="h-9 px-5 rounded-lg text-white text-sm bg-[#1181B2] hover:bg-[#0f6f98] disabled:opacity-50"
           >
             {{
               isSubmitted
@@ -90,16 +98,31 @@ const props = defineProps({
   },
 });
 
+const errors = ref({});
 const emit = defineEmits(["submitted"]);
 
 const submitAsesmen = async () => {
   try {
-    const isValid = pertanyaanList.value.every(
-      (item) => item.value && item.value.trim() !== "",
+    errors.value = {};
+
+    const invalidQuestions = pertanyaanList.value.filter(
+      (item) => !item.value || item.value.trim() === "",
     );
 
-    if (!isValid) {
-      showWarning("Semua pertanyaan wajib diisi");
+    if (invalidQuestions.length) {
+      invalidQuestions.forEach((item) => {
+        errors.value[item.id] = "Jawaban wajib diisi";
+      });
+
+      showWarning("Masih ada pertanyaan yang belum diisi");
+
+      setTimeout(() => {
+        document.querySelector(".error-field")?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 0);
+
       return;
     }
 
