@@ -19,7 +19,16 @@
     <div v-if="loading" class="text-sm text-gray-600">Memuat pertanyaan...</div>
 
     <div v-else class="space-y-4">
-      <div v-for="item in pertanyaan" :key="item.id" class="">
+      <div
+        v-for="item in pertanyaan"
+        :key="item.id"
+        :class="[
+          'rounded-lg p-4 transition',
+          errors[item.id]
+            ? 'border border-red-400 bg-red-50/30 error-field'
+            : 'border border-gray-200',
+        ]"
+      >
         <div class="flex items-start justify-between gap-4 mb-3">
           <div>
             <p class="text-sm font-medium text-gray-800">
@@ -27,34 +36,42 @@
             </p>
 
             <p class="text-sm text-gray-700">
-              {{ item.urutan }}.
-              {{ item.kemampuan_anak }}
+              {{ item.urutan }}. {{ item.kemampuan_anak }}
+              <span class="text-red-500">*</span>
             </p>
           </div>
         </div>
 
-        <div class="flex gap-6 mb-3 text-sm">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input
-              v-model="jawaban[item.id]"
-              type="radio"
-              :name="`kpsp-${item.id}`"
-              value="ya"
-              :disabled="isSubmitted || readonly"
-            />
-            Ya
-          </label>
+        <div class="">
+          <div class="flex gap-6 mb-2 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                v-model="jawaban[item.id]"
+                type="radio"
+                :name="`kpsp-${item.id}`"
+                value="ya"
+                :disabled="isSubmitted || readonly"
+                @change="delete errors[item.id]"
+              />
+              Ya
+            </label>
 
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input
-              v-model="jawaban[item.id]"
-              type="radio"
-              :name="`kpsp-${item.id}`"
-              value="tidak"
-              :disabled="isSubmitted || readonly"
-            />
-            Tidak
-          </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                v-model="jawaban[item.id]"
+                type="radio"
+                :name="`kpsp-${item.id}`"
+                value="tidak"
+                :disabled="isSubmitted || readonly"
+                @change="delete errors[item.id]"
+              />
+              Tidak
+            </label>
+          </div>
+
+          <div v-if="errors[item.id]" class="text-xs text-red-500">
+            {{ errors[item.id] }}
+          </div>
         </div>
 
         <textarea
@@ -62,7 +79,7 @@
           :disabled="isSubmitted || readonly"
           rows="2"
           placeholder="Keterangan"
-          class="w-full border rounded-lg px-3 py-2 text-sm"
+          class="w-full border rounded-lg px-3 py-2 text-sm mt-2"
         />
       </div>
 
@@ -147,6 +164,7 @@ const props = defineProps({
   },
 });
 
+const errors = ref({});
 const loading = ref(false);
 const submitting = ref(false);
 
@@ -238,8 +256,21 @@ const isComplete = computed(() => {
 });
 
 const handleSubmit = async () => {
-  if (!isComplete.value) {
+  errors.value = {};
+
+  const unanswered = pertanyaan.value.filter((item) => !jawaban.value[item.id]);
+
+  if (unanswered.length) {
+    unanswered.forEach((item) => {
+      errors.value[item.id] = "Pertanyaan wajib diisi";
+    });
+
     showWarning("Semua pertanyaan KPSP wajib diisi");
+
+    document.querySelector(".border-red-300")?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
 
     return;
   }
