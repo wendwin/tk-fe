@@ -80,9 +80,11 @@
                 ? 'cursor-pointer hover:border-[#1181B2]'
                 : 'cursor-not-allowed opacity-60',
 
-              uploadedDocs[doc.key]
-                ? 'border-gray-400 bg-white'
-                : 'border-gray-200 border-dashed',
+              errors[doc.key]
+                ? 'border-red-400 border-dashed'
+                : uploadedDocs[doc.key]
+                  ? 'border-gray-400 bg-white'
+                  : 'border-gray-200 border-dashed',
 
               dokumen.length % 2 !== 0 && index === dokumen.length - 1
                 ? 'sm:col-span-2 sm:max-w-[50%] sm:justify-self-center w-full'
@@ -101,7 +103,11 @@
             <div
               class="mb-2"
               :class="
-                uploadedDocs[doc.key] ? 'text-green-500' : 'text-[#1181B2]'
+                errors[doc.key]
+                  ? 'text-red-500'
+                  : uploadedDocs[doc.key]
+                    ? 'text-green-500'
+                    : 'text-[#1181B2]'
               "
             >
               <component :is="doc.icon" class="w-6 h-6" />
@@ -113,6 +119,10 @@
 
             <div class="text-xs text-gray-500 mb-2">
               {{ doc.hint }}
+            </div>
+
+            <div v-if="errors[doc.key]" class="text-xs text-red-500 mb-2">
+              {{ errors[doc.key] }}
             </div>
 
             <div
@@ -135,6 +145,12 @@
 
           <button
             @click="simpanBerkas"
+            class="px-5 py-2.5 rounded-lg text-sm font-medium text-white transition bg-[#1181B2] hover:bg-[#0f6f98]"
+          >
+            Simpan
+          </button>
+          <!-- <button
+            @click="simpanBerkas"
             :disabled="!berkasLengkap || !canUpload"
             class="px-5 py-2.5 rounded-lg text-sm font-medium text-white transition"
             :class="
@@ -144,7 +160,7 @@
             "
           >
             Simpan
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
@@ -171,6 +187,8 @@ const props = defineProps({
     default: "belum_upload",
   },
 });
+
+const errors = reactive({});
 const uploadedDocs = reactive({});
 const emit = defineEmits(["saved"]);
 
@@ -217,20 +235,50 @@ const canUpload = computed(() => {
   );
 });
 
+const allowedTypes = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "application/pdf",
+];
+
 const handleUpload = (key, event) => {
   const file = event.target.files[0];
   if (!file) return;
 
+  if (!allowedTypes.includes(file.type)) {
+    errors[key] = "Format harus JPG, PNG, atau PDF";
+    event.target.value = "";
+    return;
+  }
+
   const maxSize = 2 * 1024 * 1024;
+
   if (file.size > maxSize) {
-    showWarning("Maksimal ukuran file 2MB");
+    errors[key] = "Ukuran file maksimal 2 MB";
+    event.target.value = "";
     return;
   }
 
   uploadedDocs[key] = file;
+  delete errors[key];
 };
 
 const simpanBerkas = async () => {
+  const missingDocs = dokumen.filter((doc) => !uploadedDocs[doc.key]);
+
+  if (missingDocs.length) {
+    missingDocs.forEach((doc) => {
+      errors[doc.key] = "Dokumen wajib diunggah";
+    });
+
+    showWarning(
+      `Lengkapi dokumen: ${missingDocs.map((d) => d.label).join(", ")}`,
+    );
+
+    return;
+  }
+
   if (!props.pendaftaranId) {
     showWarning("Silakan isi formulir terlebih dahulu");
     return;

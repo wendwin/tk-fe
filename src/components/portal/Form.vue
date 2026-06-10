@@ -737,7 +737,7 @@
                     for="kabupaten"
                     class="mb-1.5 block text-sm font-medium text-gray-700"
                   >
-                    Kabupaten <span class="text-red-500">*</span>
+                    Kabupaten/Kota <span class="text-red-500">*</span>
                   </label>
 
                   <input
