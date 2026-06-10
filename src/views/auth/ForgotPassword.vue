@@ -53,8 +53,8 @@
           </button>
         </form>
 
-        <p v-if="success" class="text-green-600 text-sm text-center mt-4">
-          Link reset password berhasil dikirim.
+        <p v-if="success" class="text-gray-600 text-sm text-center mt-4">
+          {{ success }}
         </p>
       </div>
     </div>
@@ -98,11 +98,13 @@ const submit = async () => {
   }
 
   loading.value = true;
-  success.value = false;
+  success.value = "";
 
   try {
-    await forgotPassword(form.value);
-    success.value = true;
+    const res = await forgotPassword(form.value);
+
+    success.value = res.message;
+
     startCooldown();
   } catch (err) {
     showError(err.message || "Gagal mengirim link reset password");
