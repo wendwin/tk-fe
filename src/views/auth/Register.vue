@@ -240,11 +240,11 @@
                     <button
                       type="submit"
                       :disabled="loading"
-                      class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+                      class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-[#284945] hover:bg-[#1c3431]shadow-theme-xs"
                       :class="
                         loading
                           ? 'bg-gray-400 cursor-not-allowed text-white'
-                          : 'bg-brand-500 hover:bg-brand-600 text-white'
+                          : 'bg-[#284945] hover:bg-[#1c3431] text-white'
                       "
                     >
                       <span v-if="loading">Loading...</span>
@@ -269,7 +269,7 @@
           </div>
         </div>
         <div
-          class="relative items-center hidden w-full h-full lg:w-1/2 bg-brand-950 dark:bg-white/5 lg:grid"
+          class="relative items-center hidden w-full h-full lg:w-1/2 bg-[#284945] dark:bg-white/5 lg:grid"
         >
           <div class="flex items-center justify-center z-1">
             <common-grid-shape />
