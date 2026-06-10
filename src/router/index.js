@@ -142,7 +142,7 @@ const router = createRouter({
           path: "siswa/:id",
           name: "AdminSiswaDetail",
           component: () => import("../views/shared/siswa/Detail.vue"),
-          meta: { role: [ROLES.ADMIN] },
+          meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
         {
           path: "pembagian-kelas",
