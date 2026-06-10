@@ -73,9 +73,7 @@
                 0123 0456 78
               </div>
 
-              <div class="text-xs text-gray-600">
-                a.n. Yayasan Pendidikan XYZ
-              </div>
+              <div class="text-xs text-gray-600">a.n. Evi Ariani</div>
             </div>
 
             <div class="mt-6 pt-4 border-t">

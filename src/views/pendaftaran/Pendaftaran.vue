@@ -29,8 +29,8 @@
           backgroundPosition: 'center',
         }"
       >
-        <h2 class="text-xl font-bold text-slate-50">
-          Pendaftaran Peserta Didik Baru
+        <h2 class="text-lg md:text-xl lg:text-2xl font-bold text-slate-50">
+          Pendaftaran Murid Baru
         </h2>
         <h3 class="text-xl font-bold text-slate-50">
           KB & TK Masjid Syuhada Yogyakarta
