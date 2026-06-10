@@ -87,7 +87,7 @@
       <div v-if="activeTab === 'formulir'" key="formulir">
         <Form :initial-data="pendaftaranData" @saved="handleFormSaved" />
       </div>
-      <div v-else-if="activeTab === 'berkas' && pendaftaranId" key="berkas">
+      <div v-else-if="activeTab === 'berkas'" key="berkas">
         <UploadBerkas
           :pendaftaran-id="pendaftaranId"
           :status-berkas="pendaftaranData?.status_berkas || 'belum_upload'"
