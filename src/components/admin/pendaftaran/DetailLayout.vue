@@ -35,7 +35,7 @@
             </div>
 
             <p v-if="showCreatedAt" class="text-gray-600 text-sm">
-              Daftar: {{ formatDateTimeID(detail.meta.created_at) }}
+              Daftar: {{ formatDateTimeID(detail.meta.tanggal_daftar) }}
             </p>
           </div>
 

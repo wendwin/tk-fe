@@ -47,6 +47,7 @@ export function usePendaftaranDetail(id) {
         id: data.id,
         no_pendaftaran: data.no_pendaftaran,
         created_at: data.created_at,
+        tanggal_daftar: data.tanggal_daftar,
         status: data.status,
         status_berkas: data.status_berkas,
         status_pembayaran: data.status_pembayaran,
