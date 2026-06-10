@@ -11,18 +11,59 @@
 
               <input
                 v-model="search"
-                @keyup.enter="loadSiswa(1)"
                 type="text"
                 placeholder="Search"
-                class="h-9 w-[280px] rounded-lg border border-gray-200 bg-white py-2 pl-10 pr-3 text-sm"
+                class="h-9 w-[280px] rounded-lg border border-gray-200 bg-white py-2 pl-10 pr-9 text-sm"
               />
+
+              <button
+                v-if="search"
+                @click="clearSearch"
+                type="button"
+                class="absolute -translate-y-1/2 right-3 top-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X class="w-4 h-4" />
+              </button>
             </div>
 
-            <button
-              @click="loadSiswa(1)"
-              class="text-sm px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+            <select
+              v-model="jenis"
+              class="h-9 border border-gray-200 text-gray-600 rounded-lg text-sm px-3"
             >
-              Cari
+              <option value="">Jenis</option>
+              <option value="kb">KB</option>
+              <option value="tk">TK</option>
+            </select>
+
+            <select
+              v-model="program"
+              class="h-9 border border-gray-200 text-gray-600 rounded-lg text-sm px-3"
+            >
+              <option value="">Program</option>
+              <option value="reguler">Reguler</option>
+              <option value="halfday">Halfday</option>
+              <option value="fullday">Fullday</option>
+            </select>
+
+            <select
+              v-model="tahunAjaranId"
+              class="h-9 border border-gray-200 text-gray-600 rounded-lg text-sm px-3"
+            >
+              <option value="">Tahun Ajaran</option>
+              <option
+                v-for="item in tahunAjaranList"
+                :key="item.id"
+                :value="item.id"
+              >
+                {{ item.label }}
+              </option>
+            </select>
+
+            <button
+              @click="resetAllFilter"
+              class="h-9 px-3 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-100"
+            >
+              Reset
             </button>
           </template>
         </TableToolbar>
@@ -109,9 +150,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onActivated } from "vue";
+import { ref, onMounted, onActivated, watch } from "vue";
 import { useRoute } from "vue-router";
-import { Eye, Search } from "lucide-vue-next";
+import { Eye, Search, X, Download } from "lucide-vue-next";
 
 import BaseTable from "@/components/admin/common/BaseTable.vue";
 import TableToolbar from "@/components/admin/common/TableToolbar.vue";
@@ -119,6 +160,7 @@ import TablePagination from "@/components/admin/common/TablePagination.vue";
 import StatusBadge from "@/components/admin/common/StatusBadge.vue";
 
 import { getAllSiswa } from "@/lib/services/siswaService";
+import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 
 const route = useRoute();
 
@@ -127,6 +169,18 @@ const meta = ref({});
 const loading = ref(false);
 const search = ref("");
 const lastFetch = ref(null);
+
+const jenis = ref("");
+const program = ref("");
+const tahunAjaranId = ref("");
+const tahunAjaranList = ref([]);
+
+let searchTimeout = null;
+
+const loadTahunAjaran = async () => {
+  const res = await getAllTahunAjaran();
+  tahunAjaranList.value = res.data || [];
+};
 
 const detailRoute = (id) => {
   const isGuru = route.path.startsWith("/dashboard/guru");
@@ -155,8 +209,12 @@ const loadSiswa = async (page = 1) => {
       page,
     });
 
-    if (search.value) {
-      params.append("search", search.value);
+    if (search.value) params.append("search", search.value);
+    if (jenis.value) params.append("jenis", jenis.value);
+    if (program.value) params.append("program", program.value);
+
+    if (tahunAjaranId.value) {
+      params.append("tahun_ajaran_id", tahunAjaranId.value);
     }
 
     const res = await getAllSiswa(`?${params.toString()}`);
@@ -172,7 +230,33 @@ const loadSiswa = async (page = 1) => {
   }
 };
 
+const clearSearch = () => {
+  search.value = "";
+};
+
+const resetAllFilter = () => {
+  search.value = "";
+  jenis.value = "";
+  program.value = "";
+  tahunAjaranId.value = "";
+
+  loadSiswa(1);
+};
+
+watch(search, () => {
+  clearTimeout(searchTimeout);
+
+  searchTimeout = setTimeout(() => {
+    loadSiswa(1);
+  }, 500);
+});
+
+watch([jenis, program, tahunAjaranId], () => {
+  loadSiswa(1);
+});
+
 onMounted(() => {
+  loadTahunAjaran();
   loadSiswa();
 });
 
