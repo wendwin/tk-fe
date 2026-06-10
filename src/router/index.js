@@ -94,12 +94,12 @@ const router = createRouter({
       ],
     },
     {
-      path: "/dashboard/admin",
+      path: "/dashboard",
       component: () => import("../views/admin/Admin.vue"),
       meta: {
         requiresAuth: true,
         layout: "AdminLayout",
-        role: [ROLES.ADMIN, ROLES.GURU, ROLES.KEPSEK],
+        role: [ROLES.ADMIN, ROLES.KEPSEK],
       },
       children: [
         {

@@ -3,9 +3,11 @@ import { ROLES } from "@/lib/constants/roles";
 export const redirectByRole = (role) => {
   switch (role) {
     case ROLES.ADMIN:
-    case ROLES.GURU:
     case ROLES.KEPSEK:
-      return "/dashboard/admin";
+      return "/dashboard";
+
+    case ROLES.GURU:
+      return "/dashboard/observasi";
 
     case ROLES.ORTU:
       return "/portal";
