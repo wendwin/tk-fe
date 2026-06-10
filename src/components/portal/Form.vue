@@ -75,7 +75,7 @@
           </div>
 
           <!-- section 1 peserta -->
-          <div class="">
+          <div class="mb-12 md:mb-16">
             <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
               <User /> Data Peserta Didik
             </h3>
@@ -562,7 +562,7 @@
           </div>
 
           <!-- section 2 alamat domisili -->
-          <div class="">
+          <div class="mb-12 md:mb-16">
             <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
               <MapPinCheck /> Alamat Domisili
             </h3>
@@ -809,7 +809,7 @@
           </div>
 
           <!-- section 3 alamat  -->
-          <div class="mt-8" v-if="!samaDenganKK">
+          <div class="mb-12 md:mb-16" v-if="!samaDenganKK">
             <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
               <MapPin /> Alamat
             </h3>
@@ -1046,7 +1046,7 @@
           </div>
 
           <!-- section 4 kesehatan -->
-          <div class="mt-8">
+          <div class="mb-12 md:mb-16">
             <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
               <Hospital /> Data Kesehatan Anak
             </h3>
@@ -1318,7 +1318,7 @@
           </div>
 
           <!-- section 5 wali murid -->
-          <div class="mt-8">
+          <div class="mb-12 md:mb-16">
             <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
               <Users /> Data Orang Tua / Wali Murid
             </h3>
@@ -2008,7 +2008,7 @@
           </div>
 
           <!-- section 6 informasi -->
-          <div class="mt-8">
+          <div class="mb-12 md:mb-16">
             <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
               <Info /> Informasi Lain-lain
             </h3>

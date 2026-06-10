@@ -66,8 +66,20 @@
                         id="fname"
                         name="fname"
                         placeholder="Masukkan nama depan"
+                        :class="[
+                          fieldErrors.first_name
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
+                            : '',
+                        ]"
                         class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                       />
+
+                      <p
+                        v-if="fieldErrors.first_name"
+                        class="text-red-500 text-xs mt-1"
+                      >
+                        {{ fieldErrors.first_name[0] }}
+                      </p>
                     </div>
 
                     <div class="sm:col-span-1">
@@ -83,8 +95,20 @@
                         id="lname"
                         name="lname"
                         placeholder="Masukkan nama belakang"
+                        :class="[
+                          fieldErrors.last_name
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
+                            : '',
+                        ]"
                         class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                       />
+
+                      <p
+                        v-if="fieldErrors.last_name"
+                        class="text-red-500 text-xs mt-1"
+                      >
+                        {{ fieldErrors.last_name[0] }}
+                      </p>
                     </div>
                   </div>
                   <!-- Email -->
@@ -233,6 +257,12 @@
                           </span>
                         </p>
                       </label>
+                      <p
+                        v-if="fieldErrors.agreeToTerms"
+                        class="text-red-500 text-xs mt-1"
+                      >
+                        {{ fieldErrors.agreeToTerms[0] }}
+                      </p>
                     </div>
                   </div>
                   <!-- Button -->
@@ -332,6 +362,10 @@ const validateForm = () => {
     errors.first_name = ["Nama depan wajib diisi"];
   }
 
+  if (!lastName.value.trim()) {
+    errors.last_name = ["Nama belakang wajib diisi"];
+  }
+
   if (!email.value) {
     errors.email = ["Email wajib diisi"];
   } else if (!/^\S+@\S+\.\S+$/.test(email.value)) {
@@ -342,6 +376,10 @@ const validateForm = () => {
     errors.password = ["Password wajib diisi"];
   } else if (password.value.length < 8) {
     errors.password = ["Password minimal 8 karakter"];
+  }
+
+  if (!agreeToTerms.value) {
+    errors.agreeToTerms = ["Anda harus menyetujui Syarat dan Ketentuan"];
   }
 
   fieldErrors.value = errors;
