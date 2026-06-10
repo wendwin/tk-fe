@@ -144,20 +144,33 @@
             <label class="text-sm text-gray-600">Guru</label>
             <select
               v-model.number="form.guru_id"
-              class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+              :class="[
+                'w-full mt-1 border rounded-lg px-3 py-2 text-sm',
+                errors.guru_id
+                  ? 'border-red-500 error-field'
+                  : 'border-gray-300',
+              ]"
             >
               <option :value="null">Pilih guru</option>
               <option v-for="guru in guruList" :key="guru.id" :value="guru.id">
                 {{ guru.full_name }}
               </option>
             </select>
+            <p v-if="errors.guru_id" class="text-xs text-red-500 mt-1">
+              {{ errors.guru_id }}
+            </p>
           </div>
 
           <div>
             <label class="text-sm text-gray-600">Tahun Ajaran</label>
             <select
               v-model.number="form.tahun_ajaran_id"
-              class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+              :class="[
+                'w-full mt-1 border rounded-lg px-3 py-2 text-sm',
+                errors.tahun_ajaran_id
+                  ? 'border-red-500 error-field'
+                  : 'border-gray-300',
+              ]"
             >
               <option :value="null">Pilih tahun ajaran</option>
               <option
@@ -168,13 +181,21 @@
                 {{ tahun.label }}
               </option>
             </select>
+            <p v-if="errors.tahun_ajaran_id" class="text-xs text-red-500 mt-1">
+              {{ errors.tahun_ajaran_id }}
+            </p>
           </div>
 
           <div>
             <label class="text-sm text-gray-600">Kelas</label>
             <select
               v-model.number="form.kelas_id"
-              class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+              :class="[
+                'w-full mt-1 border rounded-lg px-3 py-2 text-sm',
+                errors.kelas_id
+                  ? 'border-red-500 error-field'
+                  : 'border-gray-300',
+              ]"
             >
               <option :value="null">Pilih kelas</option>
               <option
@@ -185,18 +206,29 @@
                 {{ formatKelas(kelas) }}
               </option>
             </select>
+
+            <p v-if="errors.kelas_id" class="text-xs text-red-500 mt-1">
+              {{ errors.kelas_id }}
+            </p>
           </div>
 
           <div>
             <label class="text-sm text-gray-600">Role Guru</label>
             <select
               v-model="form.peran"
-              class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+              :class="[
+                'w-full mt-1 border rounded-lg px-3 py-2 text-sm',
+                errors.peran ? 'border-red-500 error-field' : 'border-gray-300',
+              ]"
             >
               <option value="">Pilih role</option>
               <option value="wali kelas">Wali Kelas</option>
               <option value="pendamping">Pendamping</option>
             </select>
+
+            <p v-if="errors.peran" class="text-xs text-red-500 mt-1">
+              {{ errors.peran }}
+            </p>
           </div>
 
           <!-- <label class="flex items-center gap-2 text-sm text-gray-600">
@@ -246,6 +278,7 @@ import { getAllKelas } from "@/lib/services/kelasService";
 import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 import { getGuruUsers } from "@/lib/services/userService";
 
+const errors = reactive({});
 const list = ref([]);
 const kelasList = ref([]);
 const guruList = ref([]);
@@ -334,6 +367,8 @@ const resetForm = () => {
   form.kelas_id = null;
   form.tahun_ajaran_id = null;
   form.peran = "";
+
+  Object.keys(errors).forEach((key) => delete errors[key]);
 };
 
 const formatKelas = (kelas) => {
@@ -440,27 +475,39 @@ const closeModal = () => {
 };
 
 const validateForm = () => {
+  Object.keys(errors).forEach((key) => delete errors[key]);
+
+  let isValid = true;
+
   if (!form.guru_id) {
-    showWarning("Guru wajib dipilih");
-    return false;
+    errors.guru_id = "Guru wajib dipilih";
+    isValid = false;
   }
 
   if (!form.tahun_ajaran_id) {
-    showWarning("Tahun ajaran wajib dipilih");
-    return false;
+    errors.tahun_ajaran_id = "Tahun ajaran wajib dipilih";
+    isValid = false;
   }
 
   if (!form.kelas_id) {
-    showWarning("Kelas wajib dipilih");
-    return false;
+    errors.kelas_id = "Kelas wajib dipilih";
+    isValid = false;
   }
 
   if (!form.peran) {
-    showWarning("peran guru wajib dipilih");
-    return false;
+    errors.peran = "Peran guru wajib dipilih";
+    isValid = false;
   }
 
-  return true;
+  if (!isValid) {
+    showWarning("Lengkapi data yang wajib diisi");
+
+    document
+      .querySelector(".error-field")
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  return isValid;
 };
 
 const handleSubmit = async () => {
@@ -514,6 +561,34 @@ watch(
     if (!isSettingEditForm.value) {
       form.kelas_id = null;
     }
+  },
+);
+
+watch(
+  () => form.guru_id,
+  (val) => {
+    if (val) delete errors.guru_id;
+  },
+);
+
+watch(
+  () => form.tahun_ajaran_id,
+  (val) => {
+    if (val) delete errors.tahun_ajaran_id;
+  },
+);
+
+watch(
+  () => form.kelas_id,
+  (val) => {
+    if (val) delete errors.kelas_id;
+  },
+);
+
+watch(
+  () => form.peran,
+  (val) => {
+    if (val) delete errors.peran;
   },
 );
 
