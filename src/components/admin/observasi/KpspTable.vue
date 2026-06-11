@@ -89,14 +89,23 @@
           <td class="px-6 py-4">{{ item.kemampuan_anak }}</td>
 
           <td class="px-6 py-4">
-            <StatusBadge
+            <!-- <StatusBadge
               :label="item.is_active ? 'Aktif' : 'Nonaktif'"
               :custom-class="
                 item.is_active
                   ? 'bg-green-100 text-green-700'
                   : 'bg-red-100 text-red-700'
               "
-            />
+            /> -->
+             <span
+                class="px-2 py-1 rounded-full text-sm font-medium"
+                :class="
+                  item.is_active
+                    ? 'text-emerald-600' : ' text-gray-600'"
+                "
+              >
+                {{ item.is_active ? "Aktif" : "Nonaktif" }}
+              </span>
           </td>
 
           <td class="px-6 py-4">
@@ -110,7 +119,7 @@
 
               <button
                 v-if="item.is_active"
-                @click="handleNonaktif(item.id)"
+                @click="handleNonaktif(item)"
                 class="px-2 py-1 rounded-md border text-gray-600 hover:text-red-600 hover:bg-gray-50"
               >
                 <EyeOff class="w-4 h-4" />
@@ -118,7 +127,7 @@
 
               <button
                 v-else
-                @click="handleAktif(item.id)"
+                @click="handleAktif(item)"
                 class="px-2 py-1 rounded-md border text-gray-600 hover:text-green-600 hover:bg-gray-50"
               >
                 <Eye class="w-4 h-4" />
@@ -234,10 +243,12 @@
       </div>
     </div>
 
-    <ConfirmModal
+    <AdminConfirmModal
       :show="confirmModal.show"
       :title="confirmModal.title"
       :message="confirmModal.message"
+      :target-name="confirmModal.targetName"
+      confirm-text="Konfirmasi"
       @confirm="handleConfirmModal"
       @cancel="closeConfirmModal"
     />
@@ -251,7 +262,7 @@ import { Search, X, SquarePen, EyeOff, Eye } from "lucide-vue-next";
 import BaseTable from "@/components/admin/common/BaseTable.vue";
 import TableToolbar from "@/components/admin/common/TableToolbar.vue";
 import StatusBadge from "@/components/admin/common/StatusBadge.vue";
-import ConfirmModal from "@/components/common/ConfirmModal.vue";
+import AdminConfirmModal from "@/components/admin/common/AdminConfirmModal.vue";
 
 import {
   getMasterPertanyaanKpsp,
@@ -296,6 +307,7 @@ const confirmModal = reactive({
   show: false,
   title: "",
   message: "",
+  targetName: "",
   action: null,
 });
 
@@ -484,10 +496,16 @@ const handleSubmit = async () => {
   }
 };
 
-const openConfirmModal = ({ title, message, action }) => {
+const openConfirmModal = ({
+  title,
+  message,
+  targetName = "",
+  action,
+}) => {
   confirmModal.show = true;
   confirmModal.title = title;
   confirmModal.message = message;
+  confirmModal.targetName = targetName;
   confirmModal.action = action;
 };
 
@@ -495,6 +513,7 @@ const closeConfirmModal = () => {
   confirmModal.show = false;
   confirmModal.title = "";
   confirmModal.message = "";
+  confirmModal.targetName = "";
   confirmModal.action = null;
 };
 
@@ -506,36 +525,38 @@ const handleConfirmModal = async () => {
   closeConfirmModal();
 };
 
-const handleNonaktif = (id) => {
+const handleNonaktif = (item) => {
   openConfirmModal({
     title: "Nonaktifkan Pertanyaan",
     message:
-      "Pertanyaan tidak akan tampil pada observasi KPSP baru. Riwayat observasi lama tetap aman karena menggunakan snapshot.",
+      "Pertanyaan tidak akan tampil pada observasi KPSP baru.",
+    targetName: item.kemampuan_anak,
     action: async () => {
       try {
-        await nonaktifkanMasterPertanyaanKpsp(id);
+        await nonaktifkanMasterPertanyaanKpsp(item.id);
+
         showSuccess("Pertanyaan berhasil dinonaktifkan");
         fetchPertanyaan();
       } catch (err) {
-        console.error(err);
         showError("Gagal menonaktifkan pertanyaan");
       }
     },
   });
 };
 
-const handleAktif = (id) => {
+const handleAktif = (item) => {
   openConfirmModal({
     title: "Aktifkan Pertanyaan",
     message:
-      "Pertanyaan akan tampil kembali pada observasi KPSP sesuai usia. Lanjutkan?",
+      "Pertanyaan akan tampil kembali pada observasi KPSP.",
+    targetName: item.kemampuan_anak,
     action: async () => {
       try {
-        await aktifkanMasterPertanyaanKpsp(id);
+        await aktifkanMasterPertanyaanKpsp(item.id);
+
         showSuccess("Pertanyaan berhasil diaktifkan");
         fetchPertanyaan();
       } catch (err) {
-        console.error(err);
         showError("Gagal mengaktifkan pertanyaan");
       }
     },
