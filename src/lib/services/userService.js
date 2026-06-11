@@ -31,3 +31,9 @@ export const deleteUser = async (id) => {
     method: "DELETE",
   });
 };
+
+export const restoreUser = async (id) => {
+  return await request(`/users/${id}/restore`, {
+    method: "PATCH",
+  });
+};
