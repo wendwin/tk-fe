@@ -44,21 +44,20 @@
             :key="item.id"
             class="border-t border-gray-100"
           >
-            <td class="px-4 py-3">
+            <td class="px-4 py-3 text-gray-600">
               {{ item.urutan || "-" }}
             </td>
 
-            <td class="px-4 py-3">
+            <td class="px-4 py-3 text-gray-600">
               {{ item.pertanyaan }}
             </td>
 
             <td class="px-4 py-3 text-center">
               <span
-                class="px-2 py-1 text-xs rounded-full"
+                class="px-2 py-1 rounded-full text-sm font-medium"
                 :class="
                   item.is_active
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-700'
+                    ? 'text-emerald-600' : ' text-gray-600'"
                 "
               >
                 {{ item.is_active ? "Aktif" : "Nonaktif" }}
@@ -75,7 +74,7 @@
 
               <button
                 v-if="item.is_active"
-                @click="handleNonaktif(item.id)"
+                @click="openNonaktifModal(item)"
                 class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-red-600 text-xs hover:bg-gray-50"
               >
                 <EyeOff class="w-4 h-4" />
@@ -158,6 +157,16 @@
       </div>
     </div>
   </div>
+  <AdminConfirmModal
+    :show="showConfirm"
+    title="Nonaktifkan Pertanyaan"
+    message="Pertanyaan berikut tidak akan tampil pada asesmen pendaftaran baru."
+    :target-name="selectedQuestion?.pertanyaan"
+    confirm-text="Nonaktifkan"
+    variant="danger"
+    @confirm="handleNonaktif"
+    @cancel="closeConfirmModal"
+  />
 </template>
 
 <script setup>
@@ -170,6 +179,8 @@ import {
   aktifkanPertanyaanAsesmen,
 } from "@/lib/services/asesmenService";
 import { SquarePen, EyeOff, Eye } from "lucide-vue-next";
+import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
+import AdminConfirmModal from "@/components/admin/common/AdminConfirmModal.vue";
 
 const pertanyaanList = ref([]);
 const loading = ref(false);
@@ -177,6 +188,10 @@ const submitting = ref(false);
 const showModal = ref(false);
 const isEdit = ref(false);
 const selectedId = ref(null);
+
+const showConfirm = ref(false);
+const selectedIdConfirm = ref(null);
+const selectedQuestion = ref(null);
 
 const form = reactive({
   pertanyaan: "",
@@ -192,7 +207,7 @@ const fetchPertanyaan = async () => {
     pertanyaanList.value = res.data || [];
   } catch (error) {
     console.error(error);
-    alert("Gagal mengambil data pertanyaan");
+    showError("Gagal mengambil data pertanyaan");
   } finally {
     loading.value = false;
   }
@@ -238,19 +253,28 @@ const closeModal = () => {
   resetForm();
 };
 
-const handleNonaktif = async (id) => {
-  const confirmed = confirm(
-    "Pertanyaan tidak akan tampil pada asesmen baru. Lanjutkan?",
-  );
+const openNonaktifModal = (item) => {
+  selectedQuestion.value = item;
+  selectedIdConfirm.value = item.id;
+  showConfirm.value = true;
+};
 
-  if (!confirmed) return;
+const closeConfirmModal = () => {
+  selectedIdConfirm.value = null;
+  showConfirm.value = false;
+};
 
+const handleNonaktif = async () => {
   try {
-    await nonaktifkanPertanyaanAsesmen(id);
+    await nonaktifkanPertanyaanAsesmen(selectedIdConfirm.value);
 
+    showSuccess("Pertanyaan berhasil dinonaktifkan");
+
+    closeConfirmModal();
     fetchPertanyaan();
   } catch (error) {
     console.error(error);
+    showError("Gagal menonaktifkan pertanyaan");
   }
 };
 
@@ -266,7 +290,7 @@ const handleAktif = async (id) => {
 
 const handleSubmit = async () => {
   if (!form.pertanyaan) {
-    alert("Pertanyaan wajib diisi");
+    showWarning("Pertanyaan harus diisi");
     return;
   }
 
@@ -281,17 +305,17 @@ const handleSubmit = async () => {
   try {
     if (isEdit.value) {
       await updatePertanyaanAsesmen(selectedId.value, payload);
-      alert("Pertanyaan berhasil diupdate");
+      showSuccess("Pertanyaan berhasil diupdate");
     } else {
       await createPertanyaanAsesmen(payload);
-      alert("Pertanyaan berhasil dibuat");
+      showSuccess("Pertanyaan berhasil dibuat");
     }
 
     closeModal();
     fetchPertanyaan();
   } catch (error) {
     console.error(error);
-    alert("Gagal menyimpan pertanyaan");
+    showError("Gagal menyimpan pertanyaan");
   } finally {
     submitting.value = false;
   }
@@ -303,11 +327,11 @@ const handleDelete = async (id) => {
 
   try {
     await deletePertanyaanAsesmen(id);
-    alert("Pertanyaan berhasil dihapus");
+    showSuccess("Pertanyaan berhasil dihapus");
     fetchPertanyaan();
   } catch (error) {
     console.error(error);
-    alert("Gagal menghapus pertanyaan");
+    showError("Gagal menghapus pertanyaan");
   }
 };
 
