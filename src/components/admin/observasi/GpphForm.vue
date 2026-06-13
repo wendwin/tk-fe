@@ -29,7 +29,12 @@
       <div
         v-for="item in pertanyaan"
         :key="item.id"
-        class="border border-gray-200 rounded-lg p-4"
+        :class="[
+          'rounded-lg p-4 border',
+          errors[item.id]
+            ? 'border-red-400 bg-red-50/30 error-field'
+            : 'border-gray-200',
+        ]"
       >
         <div class="flex items-start gap-3">
           <!-- <div
@@ -41,6 +46,7 @@
           <div class="flex-1">
             <p class="text-sm text-gray-700 mb-3">
               {{ item.urutan }}. {{ item.pertanyaan }}
+              <span class="text-red-500">*</span>
             </p>
 
             <div class="flex flex-wrap gap-8">
@@ -55,12 +61,16 @@
                   :name="`gpph-${item.id}`"
                   :value="nilai.value"
                   :disabled="isSubmitted"
+                  @change="delete errors[item.id]"
                   class="w-4 h-4"
                 />
                 <span>{{ nilai.label }}</span>
               </label>
             </div>
           </div>
+        </div>
+        <div v-if="errors[item.id]" class="mt-2 text-xs text-red-500">
+          {{ errors[item.id] }}
         </div>
       </div>
 
@@ -149,6 +159,7 @@ const props = defineProps({
   },
 });
 
+const errors = ref({});
 const loading = ref(false);
 const submitting = ref(false);
 const pertanyaan = ref([]);
@@ -192,8 +203,26 @@ const isComplete = computed(() => {
 });
 
 const handleSubmit = async () => {
-  if (!isComplete.value) {
-    showWarning("Semua pertanyaan GPPH wajib diisi");
+  errors.value = {};
+
+  const invalidQuestions = pertanyaan.value.filter(
+    (item) => jawaban.value[item.id] === null,
+  );
+
+  if (invalidQuestions.length) {
+    invalidQuestions.forEach((item) => {
+      errors.value[item.id] = "Jawaban wajib dipilih";
+    });
+
+    showWarning("Masih ada pertanyaan yang belum dijawab");
+
+    setTimeout(() => {
+      document.querySelector(".error-field")?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 0);
+
     return;
   }
 

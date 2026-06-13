@@ -153,20 +153,40 @@
 
           <div>
             <label class="text-sm text-gray-600">Tanggal Mulai</label>
-            <input
-              v-model="form.tanggal_mulai"
-              type="date"
-              class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
-            />
+
+            <div class="relative mt-1">
+              <flat-pickr
+                v-model="form.tanggal_mulai"
+                :config="flatpickrConfig"
+                placeholder="Pilih tanggal mulai"
+                class="h-10 w-full rounded-lg border border-gray-300 px-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/10 focus:border-brand-300"
+              />
+
+              <span
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+              >
+                <Calendar class="w-4 h-4" />
+              </span>
+            </div>
           </div>
 
           <div>
             <label class="text-sm text-gray-600">Tanggal Selesai</label>
-            <input
-              v-model="form.tanggal_selesai"
-              type="date"
-              class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
-            />
+
+            <div class="relative mt-1">
+              <flat-pickr
+                v-model="form.tanggal_selesai"
+                :config="flatpickrConfig"
+                placeholder="Pilih tanggal selesai"
+                class="h-10 w-full rounded-lg border border-gray-300 px-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/10 focus:border-brand-300"
+              />
+
+              <span
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+              >
+                <Calendar class="w-4 h-4" />
+              </span>
+            </div>
           </div>
 
           <label class="flex items-center gap-2 text-sm text-gray-600">
@@ -198,12 +218,15 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from "vue";
-import { Search, SquarePen, Trash, Eye } from "lucide-vue-next";
+import { Search, SquarePen, Trash, Eye, Calendar } from "lucide-vue-next";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 
 import BaseTable from "@/components/admin/common/BaseTable.vue";
 import TableToolbar from "@/components/admin/common/TableToolbar.vue";
 import TablePagination from "@/components/admin/common/TablePagination.vue";
+
+import FlatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
 
 import {
   getAllTahunAjaran,
@@ -232,6 +255,13 @@ const form = reactive({
   tanggal_selesai: "",
   is_active: false,
 });
+
+const flatpickrConfig = {
+  dateFormat: "Y-m-d",
+  altInput: true,
+  altFormat: "d F Y",
+  allowInput: true,
+};
 
 const filteredList = computed(() => {
   return list.value.filter((item) => {

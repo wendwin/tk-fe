@@ -27,9 +27,14 @@
                 id="password_baru"
                 v-model="form.password"
                 :type="showPassword ? 'text' : 'password'"
-                class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 text-sm"
+                class="w-full rounded-lg border px-3 py-2 pr-10 text-sm"
+                :class="fieldClass(errors.password)"
                 placeholder="Masukkan password baru"
               />
+
+              <p v-if="errors.password" class="mt-1 text-xs text-red-500">
+                {{ errors.password }}
+              </p>
 
               <button
                 type="button"
@@ -55,9 +60,17 @@
                 id="konfirmasi_password"
                 v-model="confirmPassword"
                 :type="showConfirmPassword ? 'text' : 'password'"
-                class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 text-sm"
+                class="w-full rounded-lg border px-3 py-2 pr-10 text-sm"
+                :class="fieldClass(errors.confirmPassword)"
                 placeholder="Ulangi password baru"
               />
+
+              <p
+                v-if="errors.confirmPassword"
+                class="mt-1 text-xs text-red-500"
+              >
+                {{ errors.confirmPassword }}
+              </p>
 
               <button
                 type="button"
@@ -108,6 +121,33 @@ const loading = ref(false);
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
+const errors = ref({});
+
+const fieldClass = (error) =>
+  error
+    ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+    : "border-gray-300 focus:ring-[#284945] focus:border-[#284945]";
+
+const validateForm = () => {
+  const newErrors = {};
+
+  if (!form.value.password) {
+    newErrors.password = "Password wajib diisi";
+  } else if (form.value.password.length < 8) {
+    newErrors.password = "Password minimal 8 karakter";
+  }
+
+  if (!confirmPassword.value) {
+    newErrors.confirmPassword = "Konfirmasi password wajib diisi";
+  } else if (form.value.password !== confirmPassword.value) {
+    newErrors.confirmPassword = "Konfirmasi password tidak sesuai";
+  }
+
+  errors.value = newErrors;
+
+  return Object.keys(newErrors).length === 0;
+};
+
 const submit = async () => {
   if (loading.value) return;
 
@@ -116,15 +156,7 @@ const submit = async () => {
     return;
   }
 
-  if (!form.value.password || !confirmPassword.value) {
-    showWarning("Password dan konfirmasi password wajib diisi");
-    return;
-  }
-
-  if (form.value.password !== confirmPassword.value) {
-    showWarning("Konfirmasi password tidak sesuai");
-    return;
-  }
+  if (!validateForm()) return;
 
   loading.value = true;
 
@@ -132,6 +164,11 @@ const submit = async () => {
     await resetPassword(form.value);
 
     showSuccess("Password berhasil direset");
+
+    errors.value = {};
+    form.value.password = "";
+    confirmPassword.value = "";
+
     setTimeout(() => {
       router.replace("/login");
     }, 3000);

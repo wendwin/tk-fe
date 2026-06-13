@@ -152,10 +152,14 @@
             <label class="text-sm text-gray-600">Tahun Ajaran</label>
 
             <select
-              v-model.number="form.tahun_ajaran_id"
+              v-model="form.tahun_ajaran_id"
               class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+              :class="
+                errors.tahun_ajaran_id ? 'border-red-500 error-field' : ''
+              "
             >
-              <option value="">Pilih tahun ajaran</option>
+              <option :value="null">Pilih tahun ajaran</option>
+
               <option
                 v-for="tahun in tahunOptions"
                 :key="tahun.id"
@@ -164,6 +168,10 @@
                 {{ tahun.label }}
               </option>
             </select>
+
+            <p v-if="errors.tahun_ajaran_id" class="text-xs text-red-500 mt-1">
+              {{ errors.tahun_ajaran_id }}
+            </p>
           </div>
 
           <div>
@@ -173,7 +181,12 @@
               type="text"
               placeholder="Contoh: Ayyub"
               class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+              :class="errors.nama ? 'border-red-500 error-field' : ''"
             />
+
+            <p v-if="errors.nama" class="text-xs text-red-500 mt-1">
+              {{ errors.nama }}
+            </p>
           </div>
 
           <div>
@@ -181,19 +194,25 @@
             <select
               v-model="form.jenjang"
               class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+              :class="errors.jenjang ? 'border-red-500 error-field' : ''"
             >
               <option value="">Pilih jenjang</option>
               <option value="kb">KB</option>
               <option value="tk">TK</option>
             </select>
+
+            <p v-if="errors.jenjang" class="text-xs text-red-500 mt-1">
+              {{ errors.jenjang }}
+            </p>
           </div>
 
           <div>
             <label class="text-sm text-gray-600">Kelompok</label>
             <select
               v-model="form.kelompok"
-              class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
               :disabled="form.jenjang === 'kb'"
+              class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+              :class="errors.kelompok ? 'border-red-500 error-field' : ''"
             >
               <option :value="null">Tidak ada</option>
               <option value="a">A</option>
@@ -207,6 +226,7 @@
               v-model.number="form.kapasitas"
               type="number"
               class="w-full mt-1 border rounded-lg px-3 py-2 text-sm"
+              :class="errors.kapasitas ? 'border-red-500 error-field' : ''"
             />
           </div>
         </div>
@@ -256,6 +276,7 @@ import {
 } from "@/lib/services/kelasService";
 import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 
+const errors = reactive({});
 const tahunAjaranList = ref([]);
 
 const list = ref([]);
@@ -390,32 +411,51 @@ const closeModal = () => {
 };
 
 const validateForm = () => {
+  errors.tahun_ajaran_id = "";
+  errors.nama = "";
+  errors.jenjang = "";
+  errors.kelompok = "";
+  errors.kapasitas = "";
+
+  let isValid = true;
+
   if (!form.tahun_ajaran_id) {
-    showWarning("Tahun ajaran wajib diisi");
-    return false;
+    errors.tahun_ajaran_id = "Tahun ajaran wajib dipilih";
+    isValid = false;
   }
 
-  if (!form.nama) {
-    showWarning("Nama kelas wajib diisi");
-    return false;
+  if (!form.nama?.trim()) {
+    errors.nama = "Nama kelas wajib diisi";
+    isValid = false;
   }
 
   if (!form.jenjang) {
-    showWarning("Jenjang wajib dipilih");
-    return false;
+    errors.jenjang = "Jenjang wajib dipilih";
+    isValid = false;
   }
 
   if (form.jenjang === "tk" && !form.kelompok) {
-    showWarning("Kelompok wajib dipilih untuk jenjang TK");
-    return false;
+    errors.kelompok = "Kelompok wajib dipilih";
+    isValid = false;
   }
 
   if (!form.kapasitas || form.kapasitas < 1) {
-    showWarning("Kapasitas wajib diisi");
-    return false;
+    errors.kapasitas = "Kapasitas minimal 1";
+    isValid = false;
   }
 
-  return true;
+  if (!isValid) {
+    showWarning("Lengkapi data yang masih kosong");
+
+    setTimeout(() => {
+      document.querySelector(".error-field")?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 100);
+  }
+
+  return isValid;
 };
 
 const handleSubmit = async () => {
@@ -425,7 +465,7 @@ const handleSubmit = async () => {
     saving.value = true;
 
     const payload = {
-      tahun_ajaran_id: form.tahun_ajaran_id,
+      tahun_ajaran_id: Number(form.tahun_ajaran_id),
       nama: form.nama,
       jenjang: form.jenjang,
       kelompok: form.jenjang === "kb" ? null : form.kelompok,
@@ -470,6 +510,31 @@ watch(
       form.kelompok = null;
     }
   },
+);
+
+watch(
+  () => form.tahun_ajaran_id,
+  () => delete errors.tahun_ajaran_id,
+);
+
+watch(
+  () => form.nama,
+  () => delete errors.nama,
+);
+
+watch(
+  () => form.jenjang,
+  () => delete errors.jenjang,
+);
+
+watch(
+  () => form.kelompok,
+  () => delete errors.kelompok,
+);
+
+watch(
+  () => form.kapasitas,
+  () => delete errors.kapasitas,
 );
 
 onMounted(async () => {

@@ -354,7 +354,7 @@
                   type="file"
                   accept="image/*"
                   @change="handleKaryaImage($event, index)"
-                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                  class="w-full rounded-lg border border-gray-200 px-0 py-0 text-sm file:mr-4 file:border-0 file:border-r file:border-gray-200 file:bg-gray-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-gray-700 file:cursor-pointer hover:file:bg-gray-100"
                 />
               </div>
 

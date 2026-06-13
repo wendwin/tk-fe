@@ -105,3 +105,37 @@ export const downloadSuratPernyataan = async () => {
   link.remove();
   window.URL.revokeObjectURL(url);
 };
+
+export const downloadBuktiPendaftaranPdf = async (id) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/pendaftaran/${id}/bukti-pendaftaran`,
+    {
+      method: "GET",
+      credentials: "include",
+    },
+  );
+
+  if (!response.ok) {
+    let message = "Gagal download bukti pendaftaran";
+
+    try {
+      const error = await response.json();
+      message = error.message || message;
+    } catch {}
+
+    throw new Error(message);
+  }
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `bukti_pendaftaran_${id}.pdf`;
+
+  document.body.appendChild(link);
+  link.click();
+
+  link.remove();
+  window.URL.revokeObjectURL(url);
+};

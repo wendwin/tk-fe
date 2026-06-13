@@ -73,9 +73,7 @@
                 0123 0456 78
               </div>
 
-              <div class="text-xs text-gray-600">
-                a.n. Yayasan Pendidikan XYZ
-              </div>
+              <div class="text-xs text-gray-600">a.n. Evi Ariani</div>
             </div>
 
             <div class="mt-6 pt-4 border-t">
@@ -98,9 +96,11 @@
                     ? 'cursor-pointer hover:border-[#1181B2] hover:shadow-sm'
                     : 'cursor-not-allowed opacity-60',
 
-                  uploadedDocs.bukti_tf
-                    ? 'border-[#1181B2] bg-[#1181B2]/5'
-                    : 'border-gray-200 border-dashed',
+                  errors.bukti_tf
+                    ? 'border-red-400 border-dashed'
+                    : uploadedDocs.bukti_tf
+                      ? 'border-[#1181B2] bg-[#1181B2]/5'
+                      : 'border-gray-200 border-dashed',
                 ]"
               >
                 <input
@@ -115,7 +115,11 @@
                 <div
                   class="mb-2"
                   :class="
-                    uploadedDocs.bukti_tf ? 'text-green-500' : 'text-[#1181B2]'
+                    errors.bukti_tf
+                      ? 'text-red-500'
+                      : uploadedDocs.bukti_tf
+                        ? 'text-green-500'
+                        : 'text-[#1181B2]'
                   "
                 >
                   <FileUp class="w-7 h-7" />
@@ -135,6 +139,11 @@
                 >
                   Berhasil diunggah
                 </div>
+
+                <div v-if="errors.bukti_tf" class="text-xs text-red-500 mb-2">
+                  {{ errors.bukti_tf }}
+                </div>
+
                 <div v-else class="text-xs text-gray-400">
                   Klik untuk unggah
                 </div>
@@ -146,6 +155,12 @@
         <div class="mt-4 flex justify-end">
           <button
             @click="submitPembayaran"
+            class="px-5 py-2.5 rounded-lg text-sm font-medium text-white transition bg-[#1181B2] hover:bg-[#0f6f98]"
+          >
+            Daftar
+          </button>
+          <!-- <button
+            @click="submitPembayaran"
             :disabled="!uploadedDocs.bukti_tf || !canUpload"
             class="px-5 py-2.5 rounded-lg text-sm font-medium text-white transition"
             :class="
@@ -155,7 +170,7 @@
             "
           >
             Bayar
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
@@ -176,7 +191,6 @@ import {
   XCircle,
 } from "lucide-vue-next";
 
-const uploadedDocs = reactive({});
 const props = defineProps({
   statusPembayaran: {
     type: String,
@@ -187,20 +201,11 @@ const props = defineProps({
     required: true,
   },
 });
+
+const errors = reactive({});
+const uploadedDocs = reactive({});
+
 const emit = defineEmits(["saved", "update-status"]);
-
-const handleUpload = async (key, event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const maxSize = 2 * 1024 * 1024;
-  if (file.size > maxSize) {
-    showWarning("Maksimal ukuran file 2MB");
-    return;
-  }
-
-  uploadedDocs[key] = file;
-};
 
 const canUpload = computed(() => {
   return (
@@ -208,7 +213,37 @@ const canUpload = computed(() => {
   );
 });
 
+const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+
+const handleUpload = (key, event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!allowedTypes.includes(file.type)) {
+    errors[key] = "Format harus JPG, PNG, atau PDF";
+    event.target.value = "";
+    return;
+  }
+
+  const maxSize = 2 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    errors[key] = "Ukuran file maksimal 2 MB";
+    event.target.value = "";
+    return;
+  }
+
+  uploadedDocs[key] = file;
+  delete errors[key];
+};
+
 const submitPembayaran = async () => {
+  if (!uploadedDocs.bukti_tf) {
+    errors.bukti_tf = "Bukti transfer wajib diunggah";
+    showWarning("Bukti transfer wajib diunggah");
+    return;
+  }
+
   if (!props.pendaftaranId) {
     showWarning("Silakan isi formulir terlebih dahulu");
     return;

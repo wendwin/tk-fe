@@ -57,6 +57,7 @@
           <th class="px-6 py-3">Email</th>
           <th class="px-6 py-3">Role</th>
           <th class="px-6 py-3">Verifikasi</th>
+          <th class="px-6 py-3">Status</th>
           <th class="px-6 py-3">Dibuat</th>
           <th class="px-6 py-3">Aksi</th>
         </tr>
@@ -73,7 +74,7 @@
           </td>
 
           <td class="px-6 py-0">
-            {{ meta.from ? meta.from + index : index + 1 }}
+            {{ ((meta.page || 1) - 1) * (meta.per_page || 10) + index + 1 }}
           </td>
 
           <td class="px-6 py-0">
@@ -97,6 +98,14 @@
           </td>
 
           <td class="px-6 py-0">
+            <span
+              :class="item.is_active ? 'text-emerald-600' : 'text-gray-600'"
+            >
+              {{ item.is_active ? "Aktif" : "Nonaktif" }}
+            </span>
+          </td>
+
+          <td class="px-6 py-0">
             {{ formatDate(item.created_at) }}
           </td>
 
@@ -111,11 +120,21 @@
               </button>
 
               <button
-                title="Hapus"
-                @click="handleDelete(item.id)"
+                v-if="item.is_active"
+                title="Nonaktifkan"
+                @click="openDeleteConfirm(item)"
                 class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-red-600 text-xs hover:bg-gray-100"
               >
                 <Trash class="w-4 h-4" />
+              </button>
+
+              <button
+                v-else
+                title="Aktifkan kembali"
+                @click="handleRestore(item.id)"
+                class="px-3 py-1.5 rounded-lg text-gray-600 border hover:text-emerald-600 text-xs hover:bg-gray-100"
+              >
+                Aktifkan
               </button>
             </div>
           </td>
@@ -213,6 +232,21 @@
       </div>
     </div>
   </div>
+
+  <AdminConfirmModal
+    :show="showConfirm"
+    title="Nonaktifkan User"
+    message="Apakah Anda yakin ingin menonaktifkan user berikut?"
+    :target-name="
+      selectedDeleteUser
+        ? `${selectedDeleteUser.first_name} ${selectedDeleteUser.last_name} (${selectedDeleteUser.email})`
+        : ''
+    "
+    confirm-text="Nonaktifkan"
+    variant="danger"
+    @confirm="confirmDelete"
+    @cancel="closeDeleteConfirm"
+  />
 </template>
 
 <script setup>
@@ -220,6 +254,7 @@ import { onMounted, reactive, ref, watch } from "vue";
 import { Search, SquarePen, Trash } from "lucide-vue-next";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 
+import AdminConfirmModal from "@/components/admin/common/AdminConfirmModal.vue";
 import BaseTable from "@/components/admin/common/BaseTable.vue";
 import TablePagination from "@/components/admin/common/TablePagination.vue";
 import TableToolbar from "@/components/admin/common/TableToolbar.vue";
@@ -229,6 +264,7 @@ import {
   createUser,
   updateUser,
   deleteUser,
+  restoreUser,
 } from "@/lib/services/userService";
 
 const list = ref([]);
@@ -242,6 +278,10 @@ const roleFilter = ref("");
 const showModal = ref(false);
 const isEdit = ref(false);
 const selectedId = ref(null);
+
+const showConfirm = ref(false);
+const selectedDeleteId = ref(null);
+const selectedDeleteUser = ref(null);
 
 const meta = ref({});
 const isFirstLoad = ref(true);
@@ -284,6 +324,7 @@ const loadUsers = async (page = 1) => {
 
     params.append("page", page);
     params.append("per_page", 10);
+    params.append("status", "all");
 
     if (search.value) params.append("search", search.value);
     if (roleFilter.value) params.append("role", roleFilter.value);
@@ -358,6 +399,39 @@ const validateForm = () => {
   return true;
 };
 
+const openDeleteConfirm = (user) => {
+  selectedDeleteUser.value = user;
+  selectedDeleteId.value = user.id;
+  showConfirm.value = true;
+};
+
+const closeDeleteConfirm = () => {
+  selectedDeleteId.value = null;
+  selectedDeleteUser.value = null;
+  showConfirm.value = false;
+};
+
+const confirmDelete = async () => {
+  try {
+    await deleteUser(selectedDeleteId.value);
+    showSuccess("User berhasil dinonaktifkan");
+    closeDeleteConfirm();
+    await loadUsers();
+  } catch (err) {
+    showError(err.message || "Gagal menonaktifkan user");
+  }
+};
+
+const handleRestore = async (id) => {
+  try {
+    await restoreUser(id);
+    showSuccess("User berhasil diaktifkan");
+    await loadUsers();
+  } catch (err) {
+    showError(err.message || "Gagal mengaktifkan user");
+  }
+};
+
 const handleSubmit = async () => {
   if (!validateForm()) return;
 
@@ -390,16 +464,6 @@ const handleSubmit = async () => {
     showError(err.message || "Gagal menyimpan user");
   } finally {
     saving.value = false;
-  }
-};
-
-const handleDelete = async (id) => {
-  try {
-    await deleteUser(id);
-    showSuccess("User berhasil dihapus");
-    await loadUsers();
-  } catch (err) {
-    showError(err.message || "Gagal menghapus user");
   }
 };
 

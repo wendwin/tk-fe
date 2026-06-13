@@ -160,8 +160,8 @@
 
           <button
             @click="handleSave"
-            :disabled="selectedDraft.length === 0 || saving"
-            class="px-4 py-2 rounded-lg bg-blue-500 text-white text-sm hover:bg-blue-600"
+            :disabled="saving"
+            class="px-4 py-2 rounded-lg bg-blue-500 text-white text-sm hover:bg-blue-600 disabled:opacity-50"
           >
             {{ saving ? "Menyimpan..." : "Simpan" }}
           </button>
@@ -421,7 +421,15 @@ const handleGenerate = async () => {
 
 const handleSave = async () => {
   try {
-    if (selectedDraft.value.length === 0) return;
+    if (!tahunAjaranId.value || !kelasId.value) {
+      showWarning("Pilih tahun ajaran dan kelas terlebih dahulu");
+      return;
+    }
+
+    if (selectedDraft.value.length === 0) {
+      showWarning("Pilih siswa terlebih dahulu");
+      return;
+    }
 
     saving.value = true;
 

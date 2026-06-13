@@ -29,8 +29,8 @@
           backgroundPosition: 'center',
         }"
       >
-        <h2 class="text-xl font-bold text-slate-50">
-          Pendaftaran Peserta Didik Baru
+        <h2 class="text-lg md:text-xl lg:text-2xl font-bold text-slate-50">
+          Pendaftaran Murid Baru
         </h2>
         <h3 class="text-xl font-bold text-slate-50">
           KB & TK Masjid Syuhada Yogyakarta
@@ -87,7 +87,7 @@
       <div v-if="activeTab === 'formulir'" key="formulir">
         <Form :initial-data="pendaftaranData" @saved="handleFormSaved" />
       </div>
-      <div v-else-if="activeTab === 'berkas' && pendaftaranId" key="berkas">
+      <div v-else-if="activeTab === 'berkas'" key="berkas">
         <UploadBerkas
           :pendaftaran-id="pendaftaranId"
           :status-berkas="pendaftaranData?.status_berkas || 'belum_upload'"

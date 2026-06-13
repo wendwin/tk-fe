@@ -46,6 +46,8 @@
             </div>
 
             <button
+              type="button"
+              @click="handleDownloadBuktiPendaftaran"
               class="mt-3 h-9 px-4 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700"
             >
               Download PDF
@@ -66,6 +68,8 @@
 <script setup>
 import { computed } from "vue";
 import { CircleAlert } from "lucide-vue-next";
+import { downloadBuktiPendaftaranPdf } from "@/lib/services/pendaftaranService";
+import { showError } from "@/lib/utils/toast";
 
 const props = defineProps({
   data: {
@@ -156,6 +160,14 @@ const nextStep = computed(() => {
 //     year: "numeric",
 //   });
 // };
+
+const handleDownloadBuktiPendaftaran = async () => {
+  try {
+    await downloadBuktiPendaftaranPdf(data.value.id);
+  } catch (error) {
+    showError(error.message || "Gagal download bukti pendaftaran");
+  }
+};
 </script>
 
 <style lang="scss" scoped></style>

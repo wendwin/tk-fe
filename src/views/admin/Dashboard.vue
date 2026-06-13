@@ -181,9 +181,10 @@
             </div>
 
             <span
-              class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600 capitalize"
+              class="text-xs px-2 py-1 rounded-full capitalize"
+              :class="statusConfig(item.status).class"
             >
-              {{ item.status }}
+              {{ statusConfig(item.status).label }}
             </span>
           </div>
         </div>
@@ -256,6 +257,7 @@ import { getAllKelas } from "@/lib/services/kelasService";
 import { getMonitoringMingguan } from "@/lib/services/monitoringService";
 import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 import { formatDateTimeID } from "@/lib/utils/formatDateTimeID";
+import { statusConfig } from "@/lib/utils/status";
 
 const loading = ref(false);
 
@@ -278,10 +280,14 @@ const countBy = (field, value) => {
   return pendaftaranList.value.filter((item) => item[field] === value).length;
 };
 
+const totalPendaftar = computed(() => {
+  return pendaftaranList.value.filter((item) => item.tanggal_daftar).length;
+});
+
 const summaryCards = computed(() => [
   {
     title: "Total Pendaftar",
-    value: pendaftaranList.value.length,
+    value: totalPendaftar.value,
     description: "Total pendaftar",
     icon: Users,
   },
@@ -448,7 +454,10 @@ const monitoringProgress = computed(() => {
 });
 
 const latestPendaftaran = computed(() => {
-  return pendaftaranList.value.slice(0, 5);
+  return [...pendaftaranList.value]
+    .filter((item) => item.tanggal_daftar)
+    .sort((a, b) => new Date(b.tanggal_daftar) - new Date(a.tanggal_daftar))
+    .slice(0, 5);
 });
 
 const loadDashboard = async () => {

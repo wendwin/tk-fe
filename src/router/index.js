@@ -94,12 +94,12 @@ const router = createRouter({
       ],
     },
     {
-      path: "/dashboard/admin",
+      path: "/dashboard",
       component: () => import("../views/admin/Admin.vue"),
       meta: {
         requiresAuth: true,
         layout: "AdminLayout",
-        role: [ROLES.ADMIN, ROLES.GURU, ROLES.KEPSEK],
+        role: [ROLES.ADMIN, ROLES.KEPSEK],
       },
       children: [
         {
@@ -142,7 +142,7 @@ const router = createRouter({
           path: "siswa/:id",
           name: "AdminSiswaDetail",
           component: () => import("../views/shared/siswa/Detail.vue"),
-          meta: { role: [ROLES.ADMIN] },
+          meta: { role: [ROLES.ADMIN, ROLES.GURU] },
         },
         {
           path: "pembagian-kelas",

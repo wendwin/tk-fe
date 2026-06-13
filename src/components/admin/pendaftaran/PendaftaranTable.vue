@@ -191,7 +191,7 @@
           </td>
 
           <td class="px-6 py-0">
-            {{ formatDateTimeID(item.created_at) }}
+            {{ formatDateTimeID(item.tanggal_daftar) }}
           </td>
 
           <td class="px-6 py-0">
