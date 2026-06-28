@@ -89,7 +89,17 @@
                       <div class="p-2">
                         <MenuItem v-slot="{ active }">
                           <router-link
-                            to="/profil/visi-misi"
+                            :class="[
+                              active ? 'bg-gray-100' : '',
+                              'block rounded-lg px-4 py-3 text-sm text-slate-700',
+                            ]"
+                          >
+                            Profil
+                          </router-link>
+                        </MenuItem>
+
+                        <MenuItem v-slot="{ active }">
+                          <router-link
                             :class="[
                               active ? 'bg-gray-100' : '',
                               'block rounded-lg px-4 py-3 text-sm text-slate-700',
@@ -101,25 +111,25 @@
 
                         <MenuItem v-slot="{ active }">
                           <router-link
-                            to="/profil/sejarah"
+                            to=""
                             :class="[
                               active ? 'bg-gray-100' : '',
                               'block rounded-lg px-4 py-3 text-sm text-slate-700',
                             ]"
                           >
-                            Sejarah
+                            Program
                           </router-link>
                         </MenuItem>
 
                         <MenuItem v-slot="{ active }">
                           <router-link
-                            to="/profil/kurikulum"
+                            to=""
                             :class="[
                               active ? 'bg-gray-100' : '',
                               'block rounded-lg px-4 py-3 text-sm text-slate-700',
                             ]"
                           >
-                            Kurikulum
+                            Dokumentasi
                           </router-link>
                         </MenuItem>
 
