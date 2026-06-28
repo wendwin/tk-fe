@@ -35,38 +35,23 @@
 </template>
 
 <script setup>
+import img1 from "@/assets/images/kegiatan/1.jpeg";
+import img2 from "@/assets/images/kegiatan/2.jpg";
+import img3 from "@/assets/images/kegiatan/3.jpg";
+import img4 from "@/assets/images/kegiatan/4.jpg";
+import img5 from "@/assets/images/kegiatan/5.jpg";
+import img6 from "@/assets/images/kegiatan/6.jpg";
+import img7 from "@/assets/images/kegiatan/7.jpg";
+import img8 from "@/assets/images/kegiatan/8.jpg";
+
 const centers = [
-  {
-    title: "Polisi Sahabat Anak",
-    image: "/src/assets/images/kegiatan/1.jpeg",
-  },
-  {
-    title: "HUT Kota Yogyakarta",
-    image: "/src/assets/images/kegiatan/2.jpg",
-  },
-  {
-    title: "Outbond",
-    image: "/src/assets/images/kegiatan/3.jpg",
-  },
-  {
-    title: "Belajar Memasak",
-    image: "/src/assets/images/kegiatan/4.jpg",
-  },
-  {
-    title: "",
-    image: "/src/assets/images/kegiatan/5.jpg",
-  },
-  {
-    title: "Manasik haji",
-    image: "/src/assets/images/kegiatan/6.jpg",
-  },
-  {
-    title: "Sentra Musik",
-    image: "/src/assets/images/kegiatan/7.jpg",
-  },
-  {
-    title: "",
-    image: "/src/assets/images/kegiatan/8.jpg",
-  },
+  { title: "Polisi Sahabat Anak", image: img1 },
+  { title: "HUT Kota Yogyakarta", image: img2 },
+  { title: "Outbond", image: img3 },
+  { title: "Belajar Memasak", image: img4 },
+  { title: "", image: img5 },
+  { title: "Manasik haji", image: img6 },
+  { title: "Sentra Musik", image: img7 },
+  { title: "", image: img8 },
 ];
 </script>
