@@ -32,11 +32,11 @@
             Daftar Sekarang
           </button>
 
-          <button
+          <!-- <button
             class="px-5 py-3 rounded-full font-bold text-sm border-2 border-on-primary text-on-primary hover:bg-on-primary hover:text-primary transition-all duration-300"
           >
             Hubungi Kami
-          </button>
+          </button> -->
         </div>
       </div>
     </div>

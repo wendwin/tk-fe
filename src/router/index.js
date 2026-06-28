@@ -14,6 +14,12 @@ const router = createRouter({
       meta: { layout: "MainLayout" },
     },
     {
+      path: "/spmb/informasi",
+      name: "InformasiSPMB",
+      component: () => import("../views/SpmbView.vue"),
+      meta: { layout: "MainLayout" },
+    },
+    {
       path: "/login",
       name: "Login",
       component: () => import("../views/auth/Login.vue"),
@@ -299,6 +305,20 @@ const router = createRouter({
     },
   ],
   history: createWebHistory(),
+
+  scrollBehavior(to) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: "smooth",
+        top: 80,
+      };
+    }
+
+    return {
+      top: 0,
+    };
+  },
 });
 
 router.beforeEach(async (to, from, next) => {

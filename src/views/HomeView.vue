@@ -1,13 +1,13 @@
 <script setup>
 import AppNavbar from "@/components/layout/AppNavbar.vue";
-import HeroSection from "@/components/sections/HeroSection.vue";
-import AboutSection from "@/components/sections/AboutSection.vue";
-import VisionMissionSection from "@/components/sections/VisionMissionSection.vue";
-import LearningCenterSection from "@/components/sections/LearningCenterSection.vue";
-import TestimonialsSection from "@/components/sections/TestimonialsSection.vue";
-import PPDBSection from "@/components/sections/PPDBSection.vue";
+import HeroSection from "@/components/sections/landingpage/HeroSection.vue";
+import AboutSection from "@/components/sections/landingpage/AboutSection.vue";
+import VisionMissionSection from "@/components/sections/landingpage/VisionMissionSection.vue";
+import LearningCenterSection from "@/components/sections/landingpage/LearningCenterSection.vue";
+import TestimonialsSection from "@/components/sections/landingpage/TestimonialsSection.vue";
+import PPDBSection from "@/components/sections/landingpage/PPDBSection.vue";
 import CTASection from "@/components/sections/CTASection.vue";
-import ProgramSection from "@/components/sections/ProgramSection.vue";
+import ProgramSection from "@/components/sections/landingpage/ProgramSection.vue";
 import AppFooter from "@/components/layout/AppFooter.vue";
 import WhatsappWidget from "@/components/common/WhatsappWidget.vue";
 </script>

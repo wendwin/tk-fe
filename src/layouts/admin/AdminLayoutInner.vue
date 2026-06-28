@@ -16,7 +16,7 @@
 
 <script setup>
 import AppSidebar from "@/components/sidebar/AppSidebar.vue";
-import AppHeader from "@/components/navbar/AppHeader.vue";
+import AppHeader from "@/components/layout/AppHeader.vue";
 import Backdrop from "@/layouts/admin/Backdrop.vue";
 import { useSidebar } from "@/composables/useSidebar";
 

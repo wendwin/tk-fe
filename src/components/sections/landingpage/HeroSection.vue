@@ -103,39 +103,41 @@
         class="mx-auto max-w-7xl flex flex-col-reverse items-center gap-10 md:flex-row md:justify-around"
       >
         <div class="max-w-xl md:text-left">
-          <h1 class="text-sm font-bold leading-tight md:text-4xl">
+          <h1 class="text-xl md:text-3xl lg:text-4xl font-bold leading-tight">
             Penerimaan Murid Baru
           </h1>
 
-          <h2 class="mt-2 text-sm font-bold md:text-3xl text-yellow-400">
+          <h2
+            class="mt-2 text-xl md:text-3xl lg:text-3xl font-bold text-yellow-400"
+          >
             KB & TK Masjid Syuhada Yogyakarta
           </h2>
 
-          <p class="mt-2 text-sm font-bold md:text-2xl">
+          <p class="md:mt-2 text-xl md:text-3xl lg:text-3xl font-bold">
             Tahun Ajaran 2026/2027
           </p>
 
-          <p class="text-xs md:text-sm max-w-md mt-6 text-gray-100">
+          <p class="text-sm md:text-base max-w-md mt-6 text-gray-100">
             " Tiada suatu pemberian yang lebih utama dari orang tua kepada
             anaknya selain pendidikan yang baik "
           </p>
 
-          <p class="text-xs md:text-sm mt-2 font-bold text-gray-100">
+          <p class="text-sm md:text-base mt-2 font-bold text-gray-100">
             (HR. Al Hakim : 7679)
           </p>
 
           <button
-            class="px-5 py-3 rounded-full font-bold text-sm bg-on-primary text-primary border-2 border-on-primary hover:bg-primary hover:text-on-primary hover:border-on-primary transition-all duration-300"
+            class="px-5 py-3 mt-4 md:mt-8 rounded-full font-bold text-sm bg-on-primary text-primary border-2 border-on-primary hover:bg-primary hover:text-on-primary hover:border-on-primary transition-all duration-300"
           >
             Daftar Sekarang
           </button>
 
-          <router-link
+          <!-- <router-link
             to="/login"
             class="inline-flex mt-4 md:mt-8 items-center rounded-full bg-yellow-400 px-5 py-3 text-sm font-bold text-yellow-800 hover:bg-gray-200 hover:text-slate-800 transition-all duration-300"
           >
             Daftar Sekarang
-          </router-link>
+          </router-link> -->
         </div>
 
         <div class="w-full max-w-md md:max-w-lg">

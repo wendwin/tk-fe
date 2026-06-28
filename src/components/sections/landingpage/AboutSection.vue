@@ -4,7 +4,6 @@
     class="py-section-gap-desktop px-margin-page max-w-container-max-width mx-auto"
   >
     <div class="grid md:grid-cols-2 gap-20 items-center">
-      <!-- IMAGE -->
       <div class="relative">
         <div
           class="absolute -top-10 -left-10 w-60 h-60 bg-primary/10 rounded-full blur-3xl"
@@ -23,7 +22,6 @@
         </div>
       </div>
 
-      <!-- CONTENT -->
       <div class="space-y-8">
         <h2 class="text-3xl text-primary leading-tight font-medium">
           Tentang Kami
@@ -44,7 +42,6 @@
           pendidikan modern.
         </p> -->
 
-        <!-- TIMELINE -->
         <div
           class="space-y-8 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-primary/20"
         >

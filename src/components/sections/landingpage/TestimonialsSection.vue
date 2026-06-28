@@ -134,7 +134,7 @@ const testimonials = [
             class="bg-white rounded-3xl shadow-md p-8 h-full border border-slate-100"
           >
             <span
-              class="material-symbols-outlined text-primary text-5xl opacity-20"
+              class="material-symbols-outlined text-primary text-5xl opacity-70"
             >
               format_quote
             </span>
