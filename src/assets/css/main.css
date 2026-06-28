@@ -4,6 +4,43 @@ layer(base);
 
 @import "tailwindcss";
 
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+@theme {
+  --color-primary: #005c55;
+  --color-secondary: #2e6a41;
+  --color-tertiary: #694d00;
+
+  --color-background: #fcf9f4;
+  --color-surface: #fcf9f4;
+
+  --color-on-primary: #ffffff;
+  --color-on-surface: #1c1c19;
+  --color-on-surface-variant: #3e4947;
+
+  --color-primary-container: #0f766e;
+  --color-secondary-container: #b1f2be;
+  --color-tertiary-container: #876400;
+
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f6f3ee;
+  --color-surface-container-highest: #e5e2dd;
+
+  --font-display-lg: "Plus Jakarta Sans", sans-serif;
+  --font-headline-xl: "Plus Jakarta Sans", sans-serif;
+  --font-body-md: "DM Sans", sans-serif;
+
+  --spacing-margin-page: 32px;
+  --spacing-container-max-width: 1280px;
+  --spacing-section-gap-desktop: 120px;
+}
+
 /* @import "flowbite/src/themes/default"; */
 /* @plugin "flowbite/plugin";
 @source "../../node_modules/flowbite"; */
