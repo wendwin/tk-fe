@@ -4,8 +4,6 @@
 
     <ScheduleSection />
 
-    <ProgramSection />
-
     <RegistrationFlowSection />
 
     <RequirementSection />
@@ -25,7 +23,6 @@
 <script setup>
 import HeroSection from "@/components/sections/spmb/HeroSection.vue";
 import ScheduleSection from "@/components/sections/spmb/ScheduleSection.vue";
-import ProgramSection from "@/components/sections/spmb/ProgramSection.vue";
 import RegistrationFlowSection from "@/components/sections/spmb/RegistrationFlowSection.vue";
 import RequirementSection from "@/components/sections/spmb/RequirementSection.vue";
 import DownloadSection from "@/components/sections/spmb/DownloadSection.vue";

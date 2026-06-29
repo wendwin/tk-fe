@@ -1,5 +1,5 @@
 <template>
-  <section id="program" class="py-24 bg-slate-50">
+  <section id="program" class="py-20 mb bg-slate-50">
     <div class="max-w-7xl mx-auto px-6">
       <!-- Heading -->
       <div class="text-center max-w-3xl mx-auto mb-16">
