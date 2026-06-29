@@ -23,11 +23,11 @@
                 {{ wave.title }}
               </h3>
 
-              <p class="lg:text-lg text-on-surface mb-0">
+              <p class="lg:text-lg text-on-surface-variant mb-0">
                 {{ wave.period }}
               </p>
 
-              <p class="lg:text-lg text-on-surface mb-0">
+              <p class="lg:text-lg text-on-surface-variant mb-0">
                 {{ wave.discount }}
               </p>
 
