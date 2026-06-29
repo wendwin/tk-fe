@@ -61,11 +61,11 @@
           Program Unggulan
         </h3>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <div
             v-for="item in unggulan"
             :key="item"
-            class="bg-white rounded-2xl border border-slate-200 px-5 py-6 text-center font-medium hover:border-primary hover:text-primary transition"
+            class="bg-white text-on-surface-variant rounded-xl border border-slate-200 px-5 py-6 text-center font-medium hover:border-primary hover:bg-primary hover:text-white transition"
           >
             {{ item }}
           </div>
@@ -157,7 +157,7 @@ const unggulan = [
   "Calistung",
   "Manasik Haji",
   "Pekan Budaya",
-  "Outbound & Outing Class",
+  "Outbound",
   "PHBN & PHBI",
   "Family Day",
   "Parents Week",
