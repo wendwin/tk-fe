@@ -2,25 +2,30 @@
   <div>
     <Disclosure
       as="nav"
-      v-slot="{ open }"
+      v-slot="{ open: mobileOpen }"
       :class="[
-        'fixed top-0 left-0 right-0 z-99 transition-all duration-300',
-        isScrolled ? 'bg-white shadow-md backdrop-blur-sm' : 'bg-transparent',
+        'fixed top-0 left-0 right-0 z-[999] transition-all duration-300',
+        mobileOpen || isScrolled ? 'bg-white shadow-md' : 'bg-transparent',
       ]"
     >
-      <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div
+        :class="[
+          'mx-auto max-w-7xl px-2 sm:px-6 lg:px-8',
+          mobileOpen && !isScrolled ? 'bg-white' : '',
+        ]"
+      >
         <div class="relative flex h-16 items-center justify-between">
           <!-- mobile menu -->
           <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
             <DisclosureButton
               :class="[
                 'p-2 transition-colors duration-300',
-                isScrolled
+                isScrolled || mobileOpen
                   ? 'text-slate-800 hover:text-slate-600'
                   : 'text-white hover:text-gray-200',
               ]"
             >
-              <Bars3Icon v-if="!open" class="size-6" />
+              <Bars3Icon v-if="!mobileOpen" class="size-6" />
               <XMarkIcon v-else class="size-6" />
             </DisclosureButton>
           </div>
@@ -31,13 +36,13 @@
             <div class="flex items-center">
               <img
                 class="h-10 transition-all duration-300"
-                :src="isScrolled ? logoDark : logo"
+                :src="isScrolled || mobileOpen ? logoDark : logo"
                 alt="Logo KB & TK Masjid Syuhada"
               />
               <div
                 :class="[
                   'text-sm ml-2 transition-colors duration-300',
-                  isScrolled ? 'text-slate-800' : 'text-white',
+                  isScrolled || mobileOpen ? 'text-slate-800' : 'text-white',
                 ]"
               >
                 <h6>KB & TK</h6>
@@ -52,12 +57,12 @@
                   to="/"
                   :class="[
                     'px-3 py-2 text-sm font-medium transition-colors',
-                    isScrolled ? 'text-slate-800' : 'text-white',
+                    isScrolled || mobileOpen ? 'text-slate-800' : 'text-white',
                   ]"
                 >
                   Home
                 </router-link>
-                <Menu as="div" class="relative" v-slot="{ open }">
+                <Menu as="div" class="relative" v-slot="{ open: profileOpen }">
                   <MenuButton
                     :class="[
                       'flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors',
@@ -70,7 +75,7 @@
                       :size="16"
                       :class="[
                         'transition-transform duration-200',
-                        open ? 'rotate-180' : '',
+                        profileOpen ? 'rotate-180' : '',
                       ]"
                     />
                   </MenuButton>
@@ -139,7 +144,7 @@
                   </transition>
                 </Menu>
 
-                <Menu as="div" class="relative" v-slot="{ open }">
+                <Menu as="div" class="relative" v-slot="{ open: spmbOpen }">
                   <MenuButton
                     :class="[
                       'flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors',
@@ -152,7 +157,7 @@
                       :size="16"
                       :class="[
                         'transition-transform duration-200',
-                        open ? 'rotate-180' : '',
+                        spmbOpen ? 'rotate-180' : '',
                       ]"
                     />
                   </MenuButton>
@@ -201,7 +206,7 @@
                 to="/pendaftaran"
                 :class="[
                   'px-3 py-2 transition-colors duration-300',
-                  isScrolled ? 'text-slate-800' : 'text-white',
+                  isScrolled || mobileOpen ? 'text-slate-800' : 'text-white',
                 ]"
               >
                 Dashboard
@@ -231,9 +236,9 @@
                 to="/login"
                 :class="[
                   'inline-flex mr-3 items-center rounded-md border px-4 py-2 text-sm font-medium transition-all duration-300',
-                  isScrolled
-                    ? 'border-[#3A6A59] text-[#3A6A59] hover:bg-[#3A6A59] hover:text-white'
-                    : 'border-white text-white hover:bg-white hover:text-slate-800',
+                  isScrolled || mobileOpen
+                    ? 'border-[#3A6A59] text-[#3A6A59]'
+                    : 'border-white text-white',
                 ]"
               >
                 Login
@@ -243,9 +248,9 @@
                 to="/register"
                 :class="[
                   'inline-flex items-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-300',
-                  isScrolled
-                    ? 'bg-[#3A6A59] text-white hover:bg-[#2f5748]'
-                    : 'bg-yellow-400 text-yellow-900 hover:bg-yellow-300',
+                  isScrolled || mobileOpen
+                    ? 'bg-[#3A6A59] text-white'
+                    : 'bg-yellow-400 text-yellow-900',
                 ]"
               >
                 Register
@@ -256,15 +261,58 @@
       </div>
 
       <!-- mobile menu -->
-      <DisclosurePanel class="sm:hidden px-2 pb-3">
-        <router-link
-          v-for="item in navigation"
-          :key="item.name"
-          :to="item.route"
-          class="block px-3 py-2 text-gray-300 hover:bg-white/5 hover:text-white"
-        >
-          {{ item.name }}
-        </router-link>
+      <DisclosurePanel
+        v-slot="{ close }"
+        class="sm:hidden bg-white shadow-lg border-t border-slate-100"
+      >
+        <div class="px-4 py-4 space-y-1">
+          <router-link
+            v-for="item in mobileMenu"
+            :key="item.title"
+            :to="item.route"
+            @click="close()"
+            class="block rounded-lg px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100 transition"
+          >
+            {{ item.title }}
+          </router-link>
+
+          <div class="border-t border-slate-100 my-3"></div>
+
+          <template v-if="isAuthenticated">
+            <router-link
+              @click="close()"
+              to="/pendaftaran"
+              class="block rounded-lg px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Dashboard
+            </router-link>
+
+            <button
+              @click="handleLogout"
+              class="w-full text-left rounded-lg px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50"
+            >
+              Logout
+            </button>
+          </template>
+
+          <template v-else>
+            <router-link
+              to="/login"
+              @click="close()"
+              class="block rounded-lg px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Login
+            </router-link>
+
+            <router-link
+              to="/register"
+              @click="close()"
+              class="block rounded-lg px-4 py-3 text-sm font-medium bg-primary text-white text-center"
+            >
+              Register
+            </router-link>
+          </template>
+        </div>
       </DisclosurePanel>
     </Disclosure>
   </div>
@@ -308,7 +356,42 @@ const handleLogout = async () => {
   router.push("/login");
 };
 
+const mobileMenu = [
+  {
+    title: "Home",
+    route: "/",
+  },
+  {
+    title: "Tentang Sekolah",
+    route: "/#tentang",
+  },
+  {
+    title: "Visi & Misi",
+    route: "/#visi-misi",
+  },
+  {
+    title: "Program Pendidikan",
+    route: "/#program",
+  },
+  {
+    title: "Dokumentasi",
+    route: "/#dokumentasi",
+  },
+  {
+    title: "Informasi Pendaftaran",
+    route: "/spmb/informasi",
+  },
+  {
+    title: "FAQ",
+    route: {
+      path: "/spmb/informasi",
+      hash: "#faq",
+    },
+  },
+];
+
 onMounted(() => {
+  handleScroll();
   window.addEventListener("scroll", handleScroll);
 });
 
