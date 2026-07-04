@@ -75,7 +75,9 @@
     <div
       class="px-margin-page max-w-container-max-width mx-auto mt-16 py-8 border-t border-outline-variant/30 flex flex-col md:flex-row justify-between gap-4"
     >
-      <p>© 2026 KB & TK Masjid Syuhada Yogyakarta.</p>
+      <p>
+        &copy; {{ new Date().getFullYear() }} KB & TK Masjid Syuhada Yogyakarta
+      </p>
 
       <div class="flex gap-6">
         <a href="#">Kebijakan Privasi</a>

@@ -22,7 +22,7 @@
         <div class="px-6 pb-6 -mt-10">
           <div class="flex items-end justify-between">
             <div
-              class="w-20 h-20 rounded-2xl bg-gray-200 flex items-center justify-center overflow-hidden shadow"
+              class="w-24 h-24 rounded-2xl bg-gray-200 flex items-center justify-center overflow-hidden shadow"
             >
               <img
                 v-if="detail.foto?.file_path"

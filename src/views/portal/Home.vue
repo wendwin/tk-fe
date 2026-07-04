@@ -79,110 +79,111 @@ const handleLogout = async () => {
 <style lang="scss" scoped></style> -->
 
 <template>
-  <div class="min-h-screen bg-gray-50 pt-20 px-4 pb-10">
-    <div class="max-w-6xl mx-auto space-y-8">
-      <section
-        class="bg-white rounded-xl border border-gray-100 p-6 md:p-8 shadow-sm"
-      >
-        <div
-          class="flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+  <div class="min-h-screen bg-gray-50 pt-20 flex flex-col">
+    <div class="flex-1">
+      <div class="max-w-6xl mx-auto space-y-8 px-4">
+        <section
+          class="bg-white rounded-xl border border-gray-100 p-6 md:p-8 shadow-sm"
         >
-          <div>
-            <p
-              class="text-xs font-semibold tracking-widest text-[#1181B2] uppercase mb-2"
-            >
-              Syuhada School Portal
-            </p>
-            <h1 class="mb-2 text-xl md:text-2xl font-semibold text-gray-800">
-              Selamat Datang, {{ fullName }}!
-            </h1>
-
-            <!-- <p class="text-base font-medium text-[#1181B2]">
-              Selamat Datang di Syuhada School Portal
-            </p> -->
-
-            <p class="mt-1 text-sm text-gray-500 max-w-xl leading-6">
-              KB & TK Masjid Syuhada Yogyakarta. Kelola pendaftaran dan pantau
-              perkembangan belajar dalam satu tempat
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div
-          class="bg-white rounded-xl border border-gray-100 p-6 space-y-5 shadow-sm"
-        >
-          <div class="flex items-start justify-between gap-10">
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+          >
             <div>
-              <h2 class="text-lg font-semibold text-gray-800">Pendaftaran</h2>
+              <p
+                class="text-xs font-semibold tracking-widest text-[#1181B2] uppercase mb-2"
+              >
+                Syuhada School Portal
+              </p>
+              <h1 class="mb-2 text-xl md:text-2xl font-semibold text-gray-800">
+                Selamat Datang, {{ fullName }}!
+              </h1>
+
+              <p class="mt-1 text-sm text-gray-500 max-w-xl leading-6">
+                KB & TK Masjid Syuhada Yogyakarta. Kelola pendaftaran dan pantau
+                perkembangan belajar dalam satu tempat
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div
+            class="bg-white rounded-xl border border-gray-100 p-6 space-y-5 shadow-sm"
+          >
+            <div class="flex items-start justify-between gap-10">
+              <div>
+                <h2 class="text-lg font-semibold text-gray-800">Pendaftaran</h2>
+                <p class="text-sm text-gray-500 mt-1">
+                  Lanjutkan pendaftaran yang sudah dibuat atau daftarkan anak
+                  baru
+                </p>
+              </div>
+
+              <RouterLink
+                :to="{ name: 'Pendaftaran' }"
+                class="shrink-0 px-4 py-2 rounded-md bg-[#1181B2] text-white text-sm hover:bg-[#0d6f9b]"
+              >
+                Daftar Baru
+              </RouterLink>
+            </div>
+
+            <div
+              v-if="loadingPendaftaran"
+              class="text-sm text-center text-gray-400"
+            >
+              Memuat data pendaftaran...
+            </div>
+
+            <div
+              v-else-if="pendaftaranList.length === 0"
+              class="rounded-lg p-6 text-center"
+            >
+              <p class="text-base font-medium text-gray-700">
+                Belum ada pendaftaran
+              </p>
               <p class="text-sm text-gray-500 mt-1">
-                Lanjutkan pendaftaran yang sudah dibuat atau daftarkan anak baru
+                Silakan mulai pendaftaran murid baru
               </p>
             </div>
 
-            <RouterLink
-              :to="{ name: 'Pendaftaran' }"
-              class="shrink-0 px-4 py-2 rounded-md bg-[#1181B2] text-white text-sm hover:bg-[#0d6f9b]"
-            >
-              Daftar Baru
-            </RouterLink>
-          </div>
+            <div v-else class="space-y-3">
+              <div
+                v-for="item in pendaftaranList"
+                :key="item.id"
+                class="border border-gray-200 rounded-xl p-4 hover:border-[#1181B2]/30 hover:bg-blue-50/30 transition hover:cursor-pointer"
+              >
+                <RouterLink
+                  :to="{ name: 'Pendaftaran', query: { id: item.id } }"
+                >
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 class="font-semibold text-gray-800">
+                        {{
+                          item.peserta.nama_lengkap ||
+                          "Nama anak belum tersedia"
+                        }}
+                      </h3>
 
-          <div
-            v-if="loadingPendaftaran"
-            class="text-sm text-center text-gray-400"
-          >
-            Memuat data pendaftaran...
-          </div>
+                      <p class="text-sm text-gray-500 mt-1">
+                        No. {{ item.no_pendaftaran }}
+                        {{ formatJenis(item.jenis) }} -
+                        {{ item.tahun_ajaran.label || "-" }}
+                      </p>
 
-          <div
-            v-else-if="pendaftaranList.length === 0"
-            class="rounded-lg p-6 text-center"
-          >
-            <p class="text-base font-medium text-gray-700">
-              Belum ada pendaftaran
-            </p>
-            <p class="text-sm text-gray-500 mt-1">
-              Silakan mulai pendaftaran murid baru
-            </p>
-          </div>
+                      <p class="text-sm text-gray-500 mt-1">
+                        {{ item.gelombang.nama }}
+                      </p>
+                    </div>
 
-          <div v-else class="space-y-3">
-            <div
-              v-for="item in pendaftaranList"
-              :key="item.id"
-              class="border border-gray-200 rounded-xl p-4 hover:border-[#1181B2]/30 hover:bg-blue-50/30 transition hover:cursor-pointer"
-            >
-              <RouterLink :to="{ name: 'Pendaftaran', query: { id: item.id } }">
-                <div class="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 class="font-semibold text-gray-800">
-                      {{
-                        item.peserta.nama_lengkap || "Nama anak belum tersedia"
-                      }}
-                    </h3>
-
-                    <p class="text-sm text-gray-500 mt-1">
-                      No. {{ item.no_pendaftaran }}
-                      {{ formatJenis(item.jenis) }} -
-                      {{ item.tahun_ajaran.label || "-" }}
-                    </p>
-
-                    <p class="text-sm text-gray-500 mt-1">
-                      {{ item.gelombang.nama }}
-                    </p>
+                    <span
+                      class="px-2.5 py-1 rounded-full text-xs font-medium"
+                      :class="statusClass(item.status)"
+                    >
+                      {{ formatStatus(item.status) }}
+                    </span>
                   </div>
 
-                  <span
-                    class="px-2.5 py-1 rounded-full text-xs font-medium"
-                    :class="statusClass(item.status)"
-                  >
-                    {{ formatStatus(item.status) }}
-                  </span>
-                </div>
-
-                <!-- <div class="grid grid-cols-2 gap-3 mt-4 text-xs">
+                  <!-- <div class="grid grid-cols-2 gap-3 mt-4 text-xs">
                   <div class="bg-gray-50 rounded-xl p-3">
                     <p class="text-gray-400">Berkas</p>
                     <p class="mt-1 font-medium text-gray-700">
@@ -198,53 +199,58 @@ const handleLogout = async () => {
                   </div>
                 </div> -->
 
-                <RouterLink
-                  :to="{ name: 'Pendaftaran', query: { id: item.id } }"
-                  class="flex justify-end mt-0 text-sm font-medium text-[#1181B2] hover:underline"
-                >
-                  {{
-                    item.status === "draft" ? "Lanjutkan" : "Lihat Pendaftaran"
-                  }}
+                  <RouterLink
+                    :to="{ name: 'Pendaftaran', query: { id: item.id } }"
+                    class="flex justify-end mt-0 text-sm font-medium text-[#1181B2] hover:underline"
+                  >
+                    {{
+                      item.status === "draft"
+                        ? "Lanjutkan"
+                        : "Lihat Pendaftaran"
+                    }}
+                  </RouterLink>
                 </RouterLink>
-              </RouterLink>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div
-          class="bg-white rounded-xl border border-gray-100 p-6 space-y-5 shadow-sm"
-        >
-          <div class="border-b border-gray-200 pb-4">
-            <h2 class="text-lg font-semibold text-gray-800">
-              Monitoring Perkembangan
-            </h2>
+          <div
+            class="bg-white rounded-xl border border-gray-100 p-6 space-y-5 shadow-sm"
+          >
+            <div class="border-b border-gray-200 pb-4">
+              <h2 class="text-lg font-semibold text-gray-800">
+                Monitoring Perkembangan
+              </h2>
 
-            <p class="text-sm text-gray-500 mt-1">
-              Lihat jurnal perkembangan pembelajaran yang sudah dipublikasikan
-              guru
-            </p>
-          </div>
+              <p class="text-sm text-gray-500 mt-1">
+                Lihat jurnal perkembangan pembelajaran yang sudah dipublikasikan
+                guru
+              </p>
+            </div>
 
-          <div>
-            <!-- <p class="text-sm font-medium text-gray-700">
+            <div>
+              <!-- <p class="text-sm font-medium text-gray-700">
               Jurnal Perkembangan Ananda
             </p> -->
 
-            <p class="text-sm text-gray-500 mt-1 leading-5">
-              Monitoring akan muncul jika sudah menjadi siswa dan guru telah
-              mempublikasikan jurnal mingguan
-            </p>
+              <p class="text-sm text-gray-500 mt-1 leading-5">
+                Monitoring akan muncul jika sudah menjadi siswa dan guru telah
+                mempublikasikan jurnal mingguan
+              </p>
 
-            <RouterLink
-              :to="{ name: 'Monitoring' }"
-              class="inline-block mt-4 px-4 py-2 rounded-lg bg-green-600 text-white text-sm hover:bg-green-700"
-            >
-              Lihat Monitoring
-            </RouterLink>
+              <RouterLink
+                :to="{ name: 'Monitoring' }"
+                class="inline-block mt-4 px-4 py-2 rounded-lg bg-green-600 text-white text-sm hover:bg-green-700"
+              >
+                Lihat Monitoring
+              </RouterLink>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
+
+    <FooterPortal />
   </div>
 </template>
 
@@ -254,6 +260,7 @@ import { useRouter } from "vue-router";
 import { getMyPendaftaran } from "@/lib/services/pendaftaranService";
 import { showError } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/stores/auth";
+import FooterPortal from "@/components/layout/FooterPortal.vue";
 
 const auth = useAuthStore();
 const router = useRouter();

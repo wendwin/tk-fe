@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-blue-50 py-5 mt-14">
+  <div class="bg-blue-50 pt-5 mt-14">
     <div
       class="max-w-6xl mx-auto bg-white p-6 border border-white rounded-lg shadow-md"
     >
@@ -117,6 +117,8 @@
         <Informasi :data="pendaftaranData" />
       </div>
     </div>
+
+    <FooterPortal class="mt-14" />
   </div>
 </template>
 
@@ -143,6 +145,7 @@ import UploadPayment from "@/components/portal/UploadPayment.vue";
 import Asesmen from "@/components/portal/Asesmen.vue";
 import pattern from "@/assets/images/hero-pattern.svg";
 import Informasi from "@/components/portal/Informasi.vue";
+import FooterPortal from "@/components/layout/FooterPortal.vue";
 
 const route = useRoute();
 const router = useRouter();
