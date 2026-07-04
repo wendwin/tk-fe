@@ -201,6 +201,8 @@
       </div>
     </div>
   </div>
+
+  <FooterPortal />
 </template>
 
 <script setup>
@@ -210,6 +212,7 @@ import { House } from "lucide-vue-next";
 import { getPortalMonitoring } from "@/lib/services/portalMonitoringService";
 import { formatPeriodeID } from "@/lib/utils/formatDateTimeID";
 import { showError } from "@/lib/utils/toast";
+import FooterPortal from "@/components/layout/FooterPortal.vue";
 
 const router = useRouter();
 
