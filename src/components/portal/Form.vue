@@ -2346,8 +2346,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
-import { watch } from "vue";
+import { ref, reactive, computed, watch } from "vue";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
 import { createPendaftaran } from "@/lib/services/pendaftaranService";
 import { setPendaftaranId } from "@/lib/utils/storage";
@@ -2372,6 +2371,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  tahunAjaranAktif: {
+    type: Object,
+    default: null,
+  },
 });
 const isLocked = computed(() => !!props.initialData);
 const emit = defineEmits(["saved"]);
@@ -2392,7 +2395,7 @@ const flatpickrConfig = {
 };
 
 const form = reactive({
-  tahun_ajaran_id: 1,
+  tahun_ajaran_id: null,
   jenis: "",
   program: "",
   peserta: {
@@ -2506,6 +2509,16 @@ const normalizeKebutuhanKhusus = () => {
 };
 
 watch(
+  () => props.tahunAjaranAktif,
+  (val) => {
+    if (val) {
+      form.tahun_ajaran_id = val.id;
+    }
+  },
+  { immediate: true },
+);
+
+watch(
   () => form.peserta.alamat_domisili,
   (val) => {
     if (samaDenganKK.value) {
@@ -2549,7 +2562,7 @@ const mapKesehatan = (k) => {
 
 const simpanFormulir = () => {
   payloadRef.value = {
-    tahun_ajaran_id: 1,
+    tahun_ajaran_id: form.tahun_ajaran_id,
     jenis: form.jenis,
     program: form.program,
 

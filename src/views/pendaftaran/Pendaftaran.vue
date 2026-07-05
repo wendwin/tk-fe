@@ -35,7 +35,9 @@
         <h3 class="text-xl font-bold text-slate-50">
           KB & TK Masjid Syuhada Yogyakarta
         </h3>
-        <h3 class="text-xl font-bold text-slate-50">Tahun Ajaran 2026/2027</h3>
+        <h3 class="text-xl font-bold text-slate-50">
+          Tahun Ajaran {{ tahunAjaranAktif?.label || "-" }}
+        </h3>
         <h5 class="max-w-md mx-auto text-slate-50 text-sm mt-3">
           Lengkapi data untuk memulai perjalanan tumbuh kembang si kecil di
           lingkungan yang penuh kasih dan ceria
@@ -85,7 +87,11 @@
       </div>
 
       <div v-if="activeTab === 'formulir'" key="formulir">
-        <Form :initial-data="pendaftaranData" @saved="handleFormSaved" />
+        <Form
+          :initial-data="pendaftaranData"
+          :tahun-ajaran-aktif="tahunAjaranAktif"
+          @saved="handleFormSaved"
+        />
       </div>
       <div v-else-if="activeTab === 'berkas'" key="berkas">
         <UploadBerkas
@@ -138,6 +144,7 @@ import {
   getPertanyaanAsesmenAktif,
   getJawabanAsesmen,
 } from "@/lib/services/asesmenService";
+import { getAllTahunAjaran } from "@/lib/services/tahunAjaranService";
 
 import Form from "@/components/portal/Form.vue";
 import UploadBerkas from "@/components/portal/UploadBerkas.vue";
@@ -168,8 +175,19 @@ const asesmenDone = computed(() => asesmenJawaban.value.length > 0);
 
 const pendaftaranId = ref(null);
 const pendaftaranData = ref(null);
+const tahunAjaranAktif = ref(null);
 const asesmenPertanyaan = ref([]);
 const asesmenJawaban = ref([]);
+
+const loadTahunAjaranAktif = async () => {
+  try {
+    const res = await getAllTahunAjaran();
+
+    tahunAjaranAktif.value = res.data?.find((item) => item.is_active) || null;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const loadAsesmen = async (id) => {
   try {
@@ -311,6 +329,7 @@ const handleAsesmenSubmitted = async () => {
 };
 
 onMounted(async () => {
+  await loadTahunAjaranAktif();
   await loadPendaftaran();
   await loadAsesmen(pendaftaranId.value);
 
