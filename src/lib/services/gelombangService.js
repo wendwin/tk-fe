@@ -4,6 +4,10 @@ export const getGelombangByTahunAjaran = async (tahunAjaranId) => {
   return await request(`/gelombang/tahun-ajaran/${tahunAjaranId}`);
 };
 
+export const getActiveGelombang = async () => {
+  return await request("/gelombang/active");
+};
+
 export const createGelombang = async (payload) => {
   return await request("/gelombang", {
     method: "POST",

@@ -50,7 +50,7 @@
         <h4 class="font-bold mb-6 text-primary">Informasi PMB</h4>
 
         <div class="space-y-3">
-          <a href="#" class="block">Alur PMB 2026</a>
+          <a href="#" class="block">Alur PMB {{ new Date().getFullYear() }}</a>
           <a href="#" class="block">Biaya Pendidikan</a>
           <a href="#" class="block">Brosur Digital</a>
           <a href="#" class="block">Hubungi Kami</a>

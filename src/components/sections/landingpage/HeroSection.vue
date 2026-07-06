@@ -114,7 +114,7 @@
           </h2>
 
           <p class="md:mt-2 text-xl md:text-3xl lg:text-3xl font-bold">
-            Tahun Ajaran 2026/2027
+            Tahun Ajaran {{ tahunAjaran || "-" }}
           </p>
 
           <p class="text-sm md:text-base max-w-md mt-6 text-gray-100">
@@ -140,7 +140,7 @@
           </router-link> -->
         </div>
 
-        <div class="w-full max-w-md md:max-w-lg">
+        <div class="w-full max-w-xs md:max-w-md lg:max-w-lg">
           <img
             :src="hero"
             class="w-full drop-shadow-xl"
@@ -155,7 +155,14 @@
 
 <script setup>
 import pattern from "@/assets/images/hero-pattern.svg";
-import hero from "@/assets/images/logo/hero.svg";
+import hero from "@/assets/images/logo/hero.webp";
+
+defineProps({
+  tahunAjaran: {
+    type: String,
+    default: "",
+  },
+});
 </script>
 
 <style lang="scss" scoped></style>
