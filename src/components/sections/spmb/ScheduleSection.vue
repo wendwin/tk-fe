@@ -48,32 +48,51 @@
 </template>
 
 <script setup>
-const registrationWaves = [
-  {
-    id: 1,
-    title: "Gelombang 1",
-    period: "Oktober - Desember 2026",
-    discount: "Potongan Rp 1.000.000",
-    status: "nonaktif",
-    label: "Pendaftaran Ditutup",
+defineProps({
+  registrationWaves: {
+    type: Array,
+    default: () => [],
   },
-  {
-    id: 2,
-    title: "Gelombang 2",
-    period: "Januari - Maret 2027",
-    discount: "Potongan Rp 500.000",
-    status: "nonaktif",
-    label: "Pendaftaran Ditutup",
-  },
-  {
-    id: 3,
-    title: "Gelombang 3",
-    period: "April - Juni 2027",
-    discount: "Potongan Rp -",
-    status: "active",
-    label: "Pendaftaran Dibuka",
-  },
-];
+});
+
+// const waveMeta = {
+//   "Gelombang 1": {
+//     discount: "Potongan Rp 1.000.000",
+//   },
+//   "Gelombang 2": {
+//     discount: "Potongan Rp 500.000",
+//   },
+//   "Gelombang 3": {
+//     discount: "Potongan Rp -",
+//   },
+// };
+
+// const registrationWaves = [
+//   {
+//     id: 1,
+//     title: "Gelombang 1",
+//     period: "Oktober - Desember 2026",
+//     discount: "Potongan Rp 1.000.000",
+//     status: "nonaktif",
+//     label: "Pendaftaran Ditutup",
+//   },
+//   {
+//     id: 2,
+//     title: "Gelombang 2",
+//     period: "Januari - Maret 2027",
+//     discount: "Potongan Rp 500.000",
+//     status: "nonaktif",
+//     label: "Pendaftaran Ditutup",
+//   },
+//   {
+//     id: 3,
+//     title: "Gelombang 3",
+//     period: "April - Juni 2027",
+//     discount: "Potongan Rp -",
+//     status: "active",
+//     label: "Pendaftaran Dibuka",
+//   },
+// ];
 </script>
 
 <style lang="scss" scoped></style>

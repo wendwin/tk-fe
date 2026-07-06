@@ -4,6 +4,10 @@ export const getAllTahunAjaran = async () => {
   return await request("/tahun-ajaran");
 };
 
+export const getActiveTahunAjaran = async () => {
+  return await request("/tahun-ajaran/active");
+};
+
 export const getTahunAjaranById = async (id) => {
   return await request(`/tahun-ajaran/${id}`);
 };

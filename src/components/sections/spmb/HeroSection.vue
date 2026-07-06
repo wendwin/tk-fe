@@ -25,7 +25,7 @@
         </p>
 
         <span class="md:text-lg text-white/80">
-          Tahun Pelajaran 2026/2027
+          Tahun Ajaran {{ tahunAjaran || "-" }}
         </span>
       </div>
     </section>
@@ -34,6 +34,13 @@
 
 <script setup>
 import pattern from "@/assets/images/hero-pattern.svg";
+
+defineProps({
+  tahunAjaran: {
+    type: String,
+    default: "",
+  },
+});
 </script>
 
 <style lang="scss" scoped></style>
