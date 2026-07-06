@@ -89,7 +89,7 @@
 
 <template>
   <div
-    class="relative h-screen bg-[#3A6A59]"
+    class="relative min-h-screen bg-[#3A6A59]"
     :style="{
       backgroundImage: `url(${pattern})`,
       backgroundSize: 'cover',
@@ -98,9 +98,9 @@
   >
     <div class="absolute inset-0 bg-black/40 z-10"></div>
 
-    <div class="absolute z-50 w-full mt-32 px-6 text-white">
+    <div class="absolute inset-0 z-50 flex items-center px-6 text-white">
       <div
-        class="mx-auto max-w-7xl flex flex-col-reverse items-center gap-10 md:flex-row md:justify-around"
+        class="mx-auto w-full max-w-7xl flex flex-col-reverse items-center gap-16 md:flex-row md:justify-between md:px-8 lg:px-12"
       >
         <div class="max-w-xl md:text-left">
           <h1 class="text-xl md:text-3xl lg:text-4xl font-bold leading-tight">
