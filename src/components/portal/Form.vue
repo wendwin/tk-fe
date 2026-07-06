@@ -303,6 +303,9 @@
                     placeholder="Lihat di KK"
                     type="text"
                     inputmode="numeric"
+                    maxlength="16"
+                    pattern="[0-9]*"
+                    @input="numericOnly"
                     required
                     :class="
                       getError('peserta.nik')
@@ -337,6 +340,9 @@
                     v-model="form.peserta.no_kk"
                     :readonly="isLocked"
                     type="text"
+                    maxlength="16"
+                    pattern="[0-9]*"
+                    @input="numericOnly"
                     inputmode="numeric"
                     required
                     :class="
@@ -443,6 +449,9 @@
                     :readonly="isLocked"
                     type="text"
                     inputmode="numeric"
+                    maxlength="13"
+                    @input="numericOnly"
+                    pattern="[0-9]*"
                     required
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
@@ -475,7 +484,10 @@
                     v-model="form.peserta.anak_ke"
                     :readonly="isLocked"
                     placeholder="Berdasarkan KK"
-                    type="number"
+                    type="text"
+                    inputmode="numeric"
+                    @input="numericOnly"
+                    pattern="[0-9]*"
                     required
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
@@ -508,7 +520,10 @@
                     v-model="form.peserta.jumlah_saudara"
                     :readonly="isLocked"
                     placeholder="Tidak termasuk anak ysb"
-                    type="number"
+                    type="text"
+                    inputmode="numeric"
+                    @input="numericOnly"
+                    pattern="[0-9]*"
                     required
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
@@ -615,6 +630,9 @@
                     v-model="form.peserta.alamat_domisili.rt"
                     :readonly="isLocked"
                     type="text"
+                    pattern="[0-9]*"
+                    @input="numericOnly"
+                    inputmode="numeric"
                     required
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
@@ -647,6 +665,9 @@
                     v-model="form.peserta.alamat_domisili.rw"
                     :readonly="isLocked"
                     type="text"
+                    pattern="[0-9]*"
+                    @input="numericOnly"
+                    inputmode="numeric"
                     required
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
@@ -778,6 +799,10 @@
                     v-model="form.peserta.alamat_domisili.kode_pos"
                     :readonly="isLocked"
                     type="text"
+                    @input="numericOnly"
+                    maxlength="5"
+                    pattern="[0-9]*"
+                    inputmode="numeric"
                     required
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
@@ -1067,7 +1092,9 @@
                   v-model="form.peserta.kesehatan.berat_badan"
                   :readonly="isLocked"
                   required
-                  type="number"
+                  @input="decimalOnly"
+                  type="text"
+                  inputmode="decimal"
                   placeholder="kg"
                   class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                   :class="
@@ -1100,7 +1127,9 @@
                   v-model="form.peserta.kesehatan.tinggi_badan"
                   :readonly="isLocked"
                   required
-                  type="number"
+                  type="text"
+                  @input="decimalOnly"
+                  inputmode="decimal"
                   placeholder="cm"
                   class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                   :class="
@@ -1133,7 +1162,9 @@
                   v-model="form.peserta.kesehatan.lingkar_kepala"
                   :readonly="isLocked"
                   required
-                  type="number"
+                  type="text"
+                  @input="decimalOnly"
+                  inputmode="decimal"
                   placeholder="cm"
                   class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                   :class="
@@ -1447,6 +1478,9 @@
                     required
                     type="text"
                     inputmode="numeric"
+                    @input="numericOnly"
+                    maxlength="16"
+                    pattern="[0-9]*"
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
                       getError('peserta.orang_tua.0.nik')
@@ -1551,7 +1585,10 @@
                     v-model="form.peserta.orang_tua[0].pendapatan"
                     :readonly="isLocked"
                     required
-                    type="number"
+                    pattern="[0-9]*"
+                    inputmode="numeric"
+                    type="text"
+                    @input="numericOnly"
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
                       getError('peserta.orang_tua.0.pendapatan')
@@ -1585,6 +1622,10 @@
                     required
                     placeholder="08xxxxxxxxxx"
                     type="text"
+                    @input="numericOnly"
+                    maxlength="13"
+                    pattern="[0-9]*"
+                    inputmode="numeric"
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
                       getError('peserta.orang_tua.0.no_hp')
@@ -1789,6 +1830,10 @@
                     v-model="form.peserta.orang_tua[1].nik"
                     :readonly="isLocked"
                     type="text"
+                    pattern="[0-9]*"
+                    @input="numericOnly"
+                    maxlength="16"
+                    inputmode="numeric"
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
                       getError('peserta.orang_tua.1.nik')
@@ -1892,7 +1937,10 @@
                     name="ibu_pendapatan"
                     v-model="form.peserta.orang_tua[1].pendapatan"
                     :readonly="isLocked"
-                    type="number"
+                    type="text"
+                    @input="numericOnly"
+                    pattern="[0-9]*"
+                    inputmode="numeric"
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
                       getError('peserta.orang_tua.1.pendapatan')
@@ -1925,6 +1973,9 @@
                     v-model="form.peserta.orang_tua[1].no_hp"
                     :readonly="isLocked"
                     type="text"
+                    inputmode="numeric"
+                    @input="numericOnly"
+                    maxlength="13"
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                     :class="
                       getError('peserta.orang_tua.1.no_hp')
@@ -2100,8 +2151,10 @@
                   <input
                     id="jarak_sekolah"
                     name="jarak_sekolah"
-                    type="number"
-                    step="0.1"
+                    type="text"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    @input="numericOnly"
                     v-model="form.peserta.informasi.jarak_sekolah"
                     :readonly="isLocked"
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
@@ -2133,6 +2186,9 @@
                     id="waktu_tempuh"
                     name="waktu_tempuh"
                     type="text"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    @input="numericOnly"
                     v-model="form.peserta.informasi.waktu_tempuh"
                     :readonly="isLocked"
                     class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
@@ -2211,6 +2267,9 @@
                       v-model="form.peserta.informasi.npsn"
                       :readonly="isLocked"
                       type="text"
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      @input="numericOnly"
                       class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                       :class="
                         getError('peserta.informasi.npsn')
@@ -2240,6 +2299,8 @@
                       v-model="form.peserta.informasi.nisn"
                       :readonly="isLocked"
                       type="text"
+                      inputmode="numeric"
+                      @input="numericOnly"
                       class="h-9 w-full rounded-lg border px-4 text-sm focus:outline-none focus:ring-2"
                       :class="
                         getError('peserta.informasi.nisn')
@@ -2348,6 +2409,7 @@
 <script setup>
 import { ref, reactive, computed, watch } from "vue";
 import { showSuccess, showError, showWarning } from "@/lib/utils/toast";
+import { numericOnly, decimalOnly } from "@/lib/utils/input";
 import { createPendaftaran } from "@/lib/services/pendaftaranService";
 import { setPendaftaranId } from "@/lib/utils/storage";
 import flatPickr from "vue-flatpickr-component";
