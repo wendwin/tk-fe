@@ -80,7 +80,7 @@ const handleLogout = async () => {
 
 <template>
   <div class="min-h-screen bg-gray-50 pt-20 flex flex-col">
-    <div class="flex-1">
+    <div class="flex-1 mb-8 lg:mb-0">
       <div class="max-w-6xl mx-auto space-y-8 px-4">
         <section
           class="bg-white rounded-xl border border-gray-100 p-6 md:p-8 shadow-sm"
