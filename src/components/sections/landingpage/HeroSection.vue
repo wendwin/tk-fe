@@ -126,11 +126,12 @@
             (HR. Al Hakim : 7679)
           </p>
 
-          <button
-            class="px-5 py-3 mt-4 md:mt-8 rounded-full font-bold text-sm bg-on-primary text-primary border-2 border-on-primary hover:bg-primary hover:text-on-primary hover:border-on-primary transition-all duration-300"
+          <RouterLink
+            to="/register"
+            class="inline-block px-5 py-3 mt-4 md:mt-8 rounded-full font-bold text-sm bg-on-primary text-primary border-2 border-on-primary hover:bg-primary hover:text-on-primary hover:border-on-primary transition-all duration-300"
           >
             Daftar Sekarang
-          </button>
+          </RouterLink>
 
           <!-- <router-link
             to="/login"

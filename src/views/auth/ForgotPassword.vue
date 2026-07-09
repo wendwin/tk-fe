@@ -2,58 +2,89 @@
   <div class="min-h-screen flex items-center justify-center px-4">
     <div class="w-full max-w-md">
       <div class="bg-white rounded-2xl shadow-md p-8">
-        <div class="text-center mb-6">
+        <!-- Back -->
+        <router-link
+          :to="{ name: 'Home' }"
+          class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#284945] transition-colors mb-6"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+
+          <span>Kembali ke Beranda</span>
+        </router-link>
+
+        <!-- Header -->
+        <div class="text-center mb-8">
           <router-link :to="{ name: 'Home' }">
             <img
               src="@/assets/images/logo/logo-tk.png"
               alt="Logo"
-              class="h-16 mx-auto mb-4"
+              class="h-16 mx-auto mb-5"
             />
           </router-link>
 
           <h1 class="text-2xl font-semibold text-[#284945]">Lupa Password</h1>
 
-          <p class="text-sm text-gray-500 mt-2">
-            Masukkan email yang terdaftar untuk menerima link reset password.
+          <p class="mt-2 text-sm leading-6 text-gray-500">
+            Masukkan email yang terdaftar untuk menerima tautan reset password.
           </p>
         </div>
 
+        <!-- Form -->
         <form @submit.prevent="submit">
           <div>
             <label
               for="email"
-              class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+              class="mb-2 block text-sm font-medium text-gray-700"
             >
-              Email<span class="text-error-500">*</span>
+              Email
+              <span class="text-error-500">*</span>
             </label>
 
             <input
               id="email"
               v-model="form.email"
               type="email"
-              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
               placeholder="Masukkan email"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#284945] focus:ring-2 focus:ring-[#284945]/20 outline-none transition"
             />
           </div>
 
           <button
             :disabled="loading || cooldown > 0"
-            class="w-full mt-6 rounded-lg py-2.5 text-white font-medium transition"
+            class="mt-6 w-full rounded-lg py-2.5 font-medium text-white transition"
             :class="
               loading || cooldown > 0
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-[#284945] hover:bg-[#1c3431]'
+                ? 'cursor-not-allowed bg-gray-400'
+                : 'bg-[#284945] hover:bg-[#1f3b38]'
             "
           >
-            <span class="text-sm" v-if="loading">Mengirim...</span>
-            <span class="text-sm" v-else-if="cooldown > 0">
+            <span v-if="loading">Mengirim...</span>
+
+            <span v-else-if="cooldown > 0">
               Kirim ulang dalam {{ cooldown }} detik
             </span>
-            <span class="text-sm" v-else>Kirim Link Reset</span>
+
+            <span v-else> Kirim Link Reset </span>
           </button>
         </form>
 
-        <p v-if="success" class="text-gray-600 text-sm text-center mt-4">
+        <p
+          v-if="success"
+          class="mt-5 rounded-lg bg-green-50 px-4 py-3 text-center text-sm text-green-700"
+        >
           {{ success }}
         </p>
       </div>
