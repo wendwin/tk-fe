@@ -26,11 +26,18 @@
         </p>
 
         <div class="flex flex-wrap gap-4">
-          <button
+          <RouterLink
+            to="/register"
             class="px-5 py-3 rounded-full font-bold text-sm bg-on-primary text-primary border-2 border-on-primary hover:bg-primary hover:text-on-primary hover:border-on-primary transition-all duration-300"
           >
             Daftar Sekarang
-          </button>
+          </RouterLink>
+          <!-- 
+          <button
+            class=""
+          >
+            Daftar Sekarang
+          </button> -->
 
           <!-- <button
             class="px-5 py-3 rounded-full font-bold text-sm border-2 border-on-primary text-on-primary hover:bg-on-primary hover:text-primary transition-all duration-300"
