@@ -124,7 +124,7 @@
       </div>
     </div>
 
-    <FooterPortal class="mt-14" />
+    <FooterPortal class="mt-14" variant="portal" />
   </div>
 </template>
 
