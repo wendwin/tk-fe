@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <h1 class="text-lg font-semibold text-gray-700 mb-4">Laporan</h1>
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-lg font-semibold text-gray-700">Laporan</h1>
     <!-- <p class="text-sm text-gray-500">
         Rekap pendaftaran, observasi, dan monitoring.
       </p> -->
-  </div>
-  <div class="space-y-5">
+
     <div class="flex items-center justify-end gap-4">
       <select
         v-model="filterTahunAjaranId"
@@ -25,7 +24,8 @@
         Export PDF
       </button>
     </div>
-
+  </div>
+  <div class="space-y-5">
     <!-- Summary -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
       <div
