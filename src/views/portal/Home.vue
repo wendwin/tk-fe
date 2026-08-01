@@ -250,7 +250,7 @@ const handleLogout = async () => {
       </div>
     </div>
 
-    <FooterPortal />
+    <FooterPortal variant="portal" />
   </div>
 </template>
 

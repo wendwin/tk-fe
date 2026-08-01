@@ -313,7 +313,7 @@
                   draggable="false"
                 />
               </router-link>
-              <p class="text-center text-gray-400 dark:text-white/60">
+              <p class="text-center text-gray-100 dark:text-white/60">
                 Selamat Datang di TK Masjid Syuhada Yogyakarta
               </p>
             </div>
