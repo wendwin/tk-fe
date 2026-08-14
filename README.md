@@ -64,6 +64,12 @@ Copy-Item .env.example .env
 
 Kemudian sesuaikan konfigurasi pada file `.env`.
 
+Contoh:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
 ---
 
 ## Run Development Server
@@ -139,29 +145,6 @@ Konfigurasi API dapat diubah melalui:
 
 ```
 .env
-```
-
----
-
-## Deployment
-
-Project frontend dapat dilakukan deployment menggunakan static hosting seperti:
-
-- Vercel
-- Netlify
-- AWS S3 + CloudFront
-- Nginx
-
-Pastikan environment production telah disesuaikan sebelum melakukan build.
-
----
-
-## Related Repository
-
-Backend Repository:
-
-```
-https://github.com/wendwin/tk-be.git
 ```
 
 ---
