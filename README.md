@@ -6,16 +6,16 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 
 # Monitoring Perkembangan Anak - Frontend
 
-Frontend aplikasi **Sistem Monitoring Perkembangan Anak** berbasis web yang dikembangkan menggunakan **Vue.js**. Aplikasi ini menyediakan antarmuka pengguna untuk pengelolaan data siswa, observasi perkembangan anak, monitoring jurnal perkembangan, dan fitur pendukung lainnya.
+Frontend aplikasi **Sistem Monitoring Perkembangan Anak** berbasis web yang dikembangkan menggunakan **Vue.js**. Aplikasi ini menyediakan antarmuka pengguna untuk proses pendaftaran murid baru, pengelolaan data siswa, observasi perkembangan anak, monitoring jurnal perkembangan, dan fitur pendukung lainnya.
 
 ## Tech Stack
 
-* Vue.js 3
-* Vite
-* JavaScript
-* Tailwind CSS
-* Vue Router
-* Pinia
+- Vue.js 3
+- Vite
+- JavaScript
+- Tailwind CSS
+- Vue Router
+- Pinia
 
 ---
 
@@ -23,8 +23,8 @@ Frontend aplikasi **Sistem Monitoring Perkembangan Anak** berbasis web yang dike
 
 Pastikan telah menginstal:
 
-* Node.js 18 atau lebih baru
-* npm
+- Node.js 18 atau lebih baru
+- npm
 
 ---
 
@@ -149,20 +149,6 @@ Konfigurasi API dapat diubah melalui:
 
 ---
 
-## Deployment
-
-Project frontend dapat dilakukan deployment menggunakan static hosting seperti:
-
-* Vercel
-* Netlify
-* AWS S3 + CloudFront
-* Nginx
-
-Pastikan environment production telah disesuaikan sebelum melakukan build.
-
----
-
 ## License
 
 This project is developed for educational purposes.
-
